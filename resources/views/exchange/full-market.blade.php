@@ -1,0 +1,1807 @@
+@extends('layouts.app')
+@section('title', $event->event_name . ' - winbook24')
+
+@push('styles')
+<style>
+  .fm-banner {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #fff;
+    height: 100px;
+    padding: 6px 12px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    position: relative;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+  }
+  .fm-banner.sport-4 { background-image: url("/assets/banners/cricket.jpg"); }
+  .fm-banner.sport-1 { background-image: url("/assets/banners/soccer.jpg"); }
+  .fm-banner.sport-2 { background-image: url("/assets/banners/tennis.jpg"); }
+  .fm-banner.sport-7, .fm-banner.sport-4339 { background-image: url("/assets/banners/horseRacing.jpg"); }
+
+  .fm-game-status {
+    background: #000;
+    color: #fff;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.4px;
+    z-index: 2;
+  }
+  .fm-game-time {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    z-index: 2;
+  }
+  .fm-bet-started {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7ed321;
+    text-align: center;
+    z-index: 2;
+  }
+
+  /* Official Powered By Universe Score Live Scoreboard (1:1 with winbook24.com) */
+  .wb-universe-scorecard {
+    min-height: 150px;
+    background-color: #000000;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-bottom: 6px;
+    overflow: hidden;
+    user-select: none;
+  }
+  .wb-sc-row {
+    padding: 2px 10px;
+    border-bottom: 1px solid #80808085;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    min-height: 28px;
+  }
+  .wb-sc-row:last-child {
+    border-bottom: none;
+  }
+  .wb-sc-head {
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .wb-sc-brand {
+    color: #00a826;
+    font-weight: 700;
+    margin-left: 3px;
+  }
+  .wb-sc-col-hdr {
+    color: #f8e71c;
+    font-weight: 700;
+    text-align: center;
+  }
+  .wb-sc-score-green {
+    color: #7ed321;
+    font-weight: 700;
+  }
+  .wb-sc-ball {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 2px;
+    background: #3a3a3a;
+  }
+  .wb-sc-ball.ball-4 { background: #27ae60; }
+  .wb-sc-ball.ball-6 { background: #8e44ad; }
+  .wb-sc-ball.ball-w { background: #dc3545; }
+  .wb-sc-marquee {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+  }
+  .wb-sc-marquee-inner {
+    display: inline-block;
+    animation: wbScMarquee 16s linear infinite;
+  }
+  @keyframes wbScMarquee {
+    0% { transform: translateX(40%); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* Filter Pills Bar */
+  .fm-filter-bar {
+    background: #e1e4e8;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+  }
+  .fm-filter-pill {
+    background: #ffffff;
+    color: #1e1e1e;
+    border: 1px solid #243a48;
+    border-radius: 16px;
+    padding: 3px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .fm-filter-pill.active,
+  .fm-filter-pill:hover {
+    background: linear-gradient(-180deg, #2E4B5E 0%, #243A48 82%);
+    color: #ffffff;
+  }
+
+  /* Market Card Header */
+  .fm-card {
+    background: #fff;
+    border: 1px solid #c8ced3;
+    margin-bottom: 8px;
+  }
+  .fm-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #c8ced3;
+    background: #fff;
+    padding-right: 10px;
+  }
+  .fm-head-tab {
+    background: linear-gradient(-180deg, #2E4B5E 0%, #243A48 82%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 5px 14px;
+    border-radius: 0 15px 0 0;
+    min-width: 145px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .fm-cashout-btn {
+    background: #e9ecef;
+    border: 1px solid #adb5bd;
+    color: #212529;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+  .fm-cashout-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #2bd13f;
+    display: inline-block;
+    box-shadow: 0 0 4px #2bd13f;
+  }
+  .fm-matched-txt {
+    font-size: 12px;
+    color: #23282c;
+  }
+
+  /* Odds Table Rows */
+  .fm-subhead {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #c8ced3;
+    font-size: 12px;
+    font-weight: 700;
+    background: #fff;
+  }
+  .fm-runner-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #c8ced3;
+    position: relative;
+    min-height: 40px;
+  }
+  .fm-runner-name {
+    flex: 1;
+    padding: 4px 10px;
+    font-weight: 700;
+    font-size: 12px;
+    color: #1e1e1e;
+  }
+  .fm-odds-6 {
+    width: 348px;
+    display: flex;
+    gap: 2px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .fm-odd-cell {
+    width: 56px;
+    height: 38px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1e1e1e;
+    text-decoration: none;
+    line-height: 1.1;
+    user-select: none;
+  }
+  .fm-odd-cell strong {
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .fm-odd-cell small {
+    font-size: 10px;
+    font-weight: 400;
+    color: #222;
+    margin-top: 1px;
+  }
+  .fm-suspend-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 26, 33, 0.76);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    pointer-events: all;
+    cursor: not-allowed;
+  }
+  .fm-suspend-overlay span {
+    color: #ff2a2a;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  /* Inline Bet Slip inside Match Odds / Bookmaker / Fancy */
+  .fm-inline-slip {
+    background: #beddf4;
+    border-bottom: 2px solid #7e97a7;
+    padding: 8px 10px;
+  }
+  .fm-inline-slip.lay-mode {
+    background: #f3dce2;
+  }
+  .fm-stake-chip {
+    background: #f9f9f9;
+    border: 1px solid #243a48;
+    border-radius: 4px;
+    color: #000;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 0;
+    width: 100%;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .fm-stake-chip:hover {
+    background: #e2ecf5;
+  }
+
+  /* To Win The Match Green Sportsbook Box */
+  .fm-sb-green-body {
+    background-image: linear-gradient(90deg, #82dda6cc, #82ddb059 49%, #82dda6cc) !important;
+    padding: 8px 12px;
+  }
+  .fm-sb-pill {
+    width: 100%;
+    max-width: 310px;
+    min-height: 56px;
+    background: linear-gradient(to bottom, #c9bf34, #f7eb4c, #c9bf34) !important;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #000 !important;
+    text-decoration: none !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.14);
+  }
+  .fm-sb-pill-left {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .fm-sb-pill-right {
+    width: 60%;
+    min-height: 56px;
+    border-left: 3px dashed #000;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  @media (max-width: 767px) {
+    .fm-odds-6 .box-hide-mbl {
+      display: none !important;
+    }
+    .fm-odds-6 {
+      width: 116px;
+    }
+  }
+
+  /* ================= 1:1 WINBOOK24 APP-MARKET-TABS (FANCY BET & SPORTSBOOK) ================= */
+  .wb-market-tabs-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    border: none;
+    border-radius: 0.25rem;
+    margin-top: 2px;
+    padding: 0;
+    background: none;
+    margin-bottom: 1.5rem;
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
+  }
+  .wb-market-tabs-card .p-rltv {
+    position: relative;
+  }
+  .wb-market-tabs-card #fancyBetHeadNew.fancy-head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    zoom: 1;
+    z-index: 2;
+  }
+  .wb-market-tabs-card .fancy-head h4 {
+    position: relative;
+    height: 25px;
+    line-height: 25px;
+    font-size: 12px;
+    color: #fff;
+    z-index: 1;
+    float: left;
+    margin: 0;
+    zoom: 1;
+  }
+  .wb-market-tabs-card .fancy-head h4 span {
+    min-width: 72px;
+    line-height: 30px;
+    padding: 0 14px 0 8px;
+    vertical-align: top;
+    display: inline-block;
+    background: linear-gradient(180deg, #0a92a5 15%, #076875 100%);
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .wb-market-tabs-card .fancy-head .in-play-sportbook span {
+    background: linear-gradient(180deg, #f26d1c 15%, #d14100 100%);
+    color: #ffffff;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+    padding: 0 10px;
+  }
+  .wb-market-tabs-card .btn-fancybet_rules,
+  .wb-market-tabs-card .btn-sportsbook_rules {
+    vertical-align: top;
+    margin-left: -4px;
+    height: 30px;
+    width: 41px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background: linear-gradient(180deg, #1cb0b5 15%, #1cb0b5 100%);
+    clip-path: polygon(100% 100%, 79% 22%, 76% 15%, 74% 12%, 72% 9%, 68% 6%, 59% 3%, 78% 2%, 0% 0%, 0% 100%);
+    color: #ffffff !important;
+    cursor: pointer;
+  }
+  .wb-market-tabs-card .btn-sportsbook_rules {
+    background: linear-gradient(180deg, #f58b30 15%, #f58b30 100%);
+  }
+  .wb-market-tabs-card .btn-fancybet_rules svg,
+  .wb-market-tabs-card .btn-sportsbook_rules svg {
+    width: 15px;
+    height: 15px;
+    margin: 8px 14px;
+    display: block;
+  }
+  .wb-market-tabs-card .fancy_bet_tab-wrap {
+    display: flex;
+    background: linear-gradient(180deg, #f26d1c 15%, #d14100 100%);
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    height: 30px;
+    width: 100%;
+  }
+  .wb-market-tabs-card .fancy_bet_tab-wrap.fancy_bet_back {
+    background: linear-gradient(180deg, #0a92a5 15%, #076875 100%);
+  }
+  .wb-market-tabs-card .special_bets-tab {
+    display: flex;
+    width: auto;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    margin: 3px 0 3px 21px;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .wb-market-tabs-card .special_bets-tab li {
+    list-style: none;
+    padding: 2px;
+  }
+  .wb-market-tabs-card .special_bets-tab a {
+    min-width: 70px;
+    height: 18px;
+    line-height: 18px;
+    color: #000000;
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 0 5px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  .wb-market-tabs-card .special_bets-tab li.select a {
+    background: #ffffff !important;
+    color: #000000 !important;
+    text-decoration: none;
+  }
+
+  /* Sportsbook Market Card (.sportbookmarket) */
+  .wb-market-tabs-card .fancy-card.sportbookmarket {
+    border: 1px solid #c8ced3 !important;
+    border-radius: 4px 4px 2px 2px;
+    background: #ffffff;
+    margin-top: 2px;
+    overflow: hidden;
+  }
+  .wb-market-tabs-card .card-header.sportbook.inner-sportbook {
+    background: linear-gradient(180deg, #f26d1c 15%, #d14100 100%);
+    color: #ffffff;
+    padding: 4px 8px !important;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    border-radius: 3px 3px 0 0;
+    cursor: pointer;
+    box-shadow: inset 0 1px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .wb-market-tabs-card .tooltip-betlimit {
+    font-size: 14px;
+    color: #ffffff;
+  }
+  .wb-sb-minmax-pop {
+    position: absolute;
+    right: 22px;
+    top: -2px;
+    background: #ffffff;
+    color: #1e1e1e;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    z-index: 10;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+    background: #ffffff !important;
+    table-layout: fixed;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl tr.odd-row {
+    border-bottom: 1px solid #7e97a7 !important;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td {
+    vertical-align: middle;
+    border-top: none;
+    padding: 3px 0 !important;
+    font-size: 12px;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td.team-name.sportbook-name {
+    width: 66%;
+    text-align: left;
+    padding-left: 6px !important;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td.team-name.sportbook-name .title {
+    color: #23282C !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    display: block !important;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth {
+    width: 11%;
+    background: #72e3a0 !important;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth:hover,
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth.active,
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth.select {
+    background: #16a660 !important;
+    color: #ffffff !important;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth a.back {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #1e1e1e;
+    text-decoration: none !important;
+    line-height: 1.25;
+    padding: 2px 0;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth a.back span {
+    display: block;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth:hover a.back,
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth.active a.back,
+  .wb-market-tabs-card .sportbook-market-tbl td.back-1.sportbook-minwidth.select a.back {
+    color: #ffffff !important;
+  }
+  .wb-market-tabs-card .sportbook-market-tbl td.td-end-hide {
+    width: 23%;
+    background: #ffffff;
+  }
+  .wb-market-tabs-card .suspend-sportbook-cell {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(36, 58, 72, 0.55);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: not-allowed;
+  }
+  .wb-market-tabs-card .suspend-sportbook-cell span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ff2a2a;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+  }
+  .wb-market-tabs-card tr.betslipback td {
+    background: #d3edd0 !important;
+    padding: 0 !important;
+  }
+</style>
+@endpush
+
+@section('content')
+@php
+  $moList = $livePayload['matchOddsData'] ?? [];
+  $bmList = $livePayload['bookmakersData'] ?? [];
+  $sbList = $livePayload['sportsbookData'] ?? [];
+  $fancyList = $livePayload['fancyData'] ?? [];
+  $winSbList = array_values(array_filter($sbList, fn ($m) => strcasecmp(trim((string) ($m['marketName'] ?? '')), 'To Win The Match') === 0));
+  $hasMainMarkets = !empty($moList) || !empty($bmList);
+  $defaultTab = (empty($fancyList) && !empty($sbList)) ? 'SPORTSBOOK' : 'Fancy';
+
+  $formatVolume = function ($v) {
+    $n = (float) $v;
+    if ($n <= 0) return '0';
+    if ($n >= 1000000) return round($n / 1000000, 1) . 'M';
+    if ($n >= 1000) return round($n / 1000, 1) . 'K';
+    return (string) round($n, 2);
+  };
+
+  $bannerTimeStr = '';
+  try {
+    $bannerTimeStr = \Carbon\Carbon::parse($event->event_time)->setTimezone('Asia/Kolkata')->format('d-m-Y h:i:s A');
+  } catch (\Throwable $e) {
+    $bannerTimeStr = $event->event_time;
+  }
+
+  $sportIdStr = (string) ($event->sport_id ?: '4');
+  $sc = $liveScore ?? null;
+  $hasUniverseScore = is_array($sc) && (!isset($sc['isScore']) || $sc['isScore'] !== false);
+@endphp
+
+<!-- 1. Official Powered By Universe Score Live Scoreboard OR Official Sport Banner (1:1 with winbook24.com) -->
+<div id="wbTopScoreboardOrBanner" data-event-name="{{ $event->event_name }}" class="{{ (!$hasMainMarkets && !$hasUniverseScore) ? 'd-none' : '' }}">
+  @if($hasUniverseScore && $sportIdStr === '4')
+    @php
+      $isTest = !empty($sc['isTestMatch']);
+      $t1Name = $sc['team1Name'] ?? (explode(' v ', $event->event_name)[0] ?? 'Team 1');
+      $t2Name = $sc['team2Name'] ?? (explode(' v ', $event->event_name)[1] ?? 'Team 2');
+      $t1Bat = !empty($sc['team1Flag']);
+      $t2Bat = !empty($sc['team2Flag']);
+      $batsmenParts = [];
+      if (!empty($sc['batsman1Name'])) {
+        $batsmenParts[] = trim($sc['batsman1Name']) . ' ' . ($sc['batsman1Runs'] ?? 0);
+      }
+      if (!empty($sc['batsman2Name'])) {
+        $batsmenParts[] = trim($sc['batsman2Name']) . ' ' . ($sc['batsman2Runs'] ?? 0);
+      }
+      $batsmenStr = !empty($sc['batsmenText']) ? $sc['batsmenText'] : implode(', ', $batsmenParts);
+      $bowlerStr = !empty($sc['bowlerText']) ? $sc['bowlerText'] : (!empty($sc['bowlerName']) ? (trim($sc['bowlerName']) . ' ' . ($sc['bowlerRuns'] ?? 0)) : '');
+      $commStr = trim((string) ($sc['Commentary'] ?? $sc['commentary'] ?? ''));
+      $ballsArr = is_array($sc['balls'] ?? null) ? $sc['balls'] : [];
+      $cbSeries = trim((string) ($sc['seriesName'] ?? ''));
+      $cbDesc = trim((string) ($sc['matchDesc'] ?? ''));
+      $cbFormat = trim((string) ($sc['matchFormat'] ?? ''));
+      $cbState = trim((string) ($sc['state'] ?? ''));
+      $cbVenue = trim((string) ($sc['venue'] ?? ''));
+      $cbLastWkt = trim((string) ($sc['lastWicket'] ?? ''));
+      $cbPartnership = trim((string) ($sc['partnership'] ?? ''));
+    @endphp
+    <div id="wbUniverseScorecard" class="wb-universe-scorecard">
+      @if($cbSeries !== '' || $cbDesc !== '')
+        <div class="wb-sc-row" style="background:#0d1b24;font-size:11px;min-height:24px;justify-content:space-between;">
+          <div class="text-truncate" style="max-width:72%;color:#a3d8ff;">
+            <span style="background:#dc3545;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:800;margin-right:5px;">{{ strtoupper($cbState ?: 'LIVE') }}</span>
+            <strong class="text-white">{{ $cbSeries }}</strong>
+            @if($cbDesc !== '') <span class="ms-1">• {{ $cbDesc }}</span> @endif
+            @if($cbFormat !== '') <span class="badge bg-secondary ms-1" style="font-size:9px;">{{ $cbFormat }}</span> @endif
+          </div>
+          @if($cbVenue !== '')
+            <div class="text-truncate d-none d-md-block" style="max-width:27%;color:#adb5bd;font-size:10.5px;">📍 {{ $cbVenue }}</div>
+          @endif
+        </div>
+      @endif
+      @if($isTest)
+        <!-- Test Match Header -->
+        <div class="wb-sc-row wb-sc-head">
+          <div style="width:50%;">Powered By <span class="wb-sc-brand">Universe Score</span></div>
+          <div style="width:50%;display:flex;" class="wb-sc-col-hdr">
+            <div style="width:33.33%;">1st INNINGS</div>
+            <div style="width:33.33%;">2nd INNINGS</div>
+            <div style="width:33.33%;">RR</div>
+          </div>
+        </div>
+        <!-- Team 1 -->
+        <div class="wb-sc-row">
+          <div style="width:50%;display:flex;justify-content:space-between;align-items:center;padding-right:10px;">
+            <span class="js-sc-t1-name">{{ $t1Name }}</span>
+            <span class="js-sc-t1-icon">
+              @if($t1Bat)
+                <img src="/assets/bat.svg" alt="bat" style="height:17px;">
+              @else
+                <img src="/assets/ball.svg" alt="ball" style="height:15px;">
+              @endif
+            </span>
+          </div>
+          <div style="width:50%;display:flex;text-align:center;align-items:center;">
+            <div style="width:33.33%;" class="js-sc-t1-inn1">
+              {{ ($sc['score1'] ?? '') !== '' ? $sc['score1'] : '-' }}
+              @if(!empty($sc['overs1']) && $sc['overs1'] !== '-' && empty($sc['score3']))
+                <span style="font-size:10px;font-weight:400;">({{ $sc['overs1'] }})</span>
+              @endif
+            </div>
+            <div style="width:33.33%;" class="js-sc-t1-inn2">
+              {{ !empty($sc['score3']) ? $sc['score3'] : '-' }}
+              @if(!empty($sc['overs3']))
+                <span style="font-size:10px;font-weight:400;">({{ $sc['overs3'] }})</span>
+              @endif
+            </div>
+            <div style="width:33.33%;" class="js-sc-t1-rr">{{ ($t1Bat && !empty($sc['runRate'])) ? $sc['runRate'] : ($sc['rr1'] ?? '') }}</div>
+          </div>
+        </div>
+        <!-- Team 2 -->
+        <div class="wb-sc-row">
+          <div style="width:50%;display:flex;justify-content:space-between;align-items:center;padding-right:10px;">
+            <span class="js-sc-t2-name">{{ $t2Name }}</span>
+            <span class="js-sc-t2-icon">
+              @if($t2Bat)
+                <img src="/assets/bat.svg" alt="bat" style="height:17px;">
+              @else
+                <img src="/assets/ball.svg" alt="ball" style="height:15px;">
+              @endif
+            </span>
+          </div>
+          <div style="width:50%;display:flex;text-align:center;align-items:center;">
+            <div style="width:33.33%;" class="js-sc-t2-inn1">
+              {{ ($sc['score2'] ?? '') !== '' ? $sc['score2'] : '-' }}
+              @if(!empty($sc['overs2']) && $sc['overs2'] !== '-' && empty($sc['score4']))
+                <span style="font-size:10px;font-weight:400;">({{ $sc['overs2'] }})</span>
+              @endif
+            </div>
+            <div style="width:33.33%;" class="js-sc-t2-inn2">
+              {{ !empty($sc['score4']) ? $sc['score4'] : '-' }}
+              @if(!empty($sc['overs4']))
+                <span style="font-size:10px;font-weight:400;">({{ $sc['overs4'] }})</span>
+              @endif
+            </div>
+            <div style="width:33.33%;" class="js-sc-t2-rr">{{ ($t2Bat && !empty($sc['runRate'])) ? $sc['runRate'] : ($sc['rr2'] ?? '') }}</div>
+          </div>
+        </div>
+      @else
+        <!-- ODI / T20 Match Header -->
+        <div class="wb-sc-row wb-sc-head">
+          <div style="width:42%;">Powered By <span class="wb-sc-brand">Universe Score</span></div>
+          <div style="width:58%;display:flex;" class="wb-sc-col-hdr">
+            <div style="width:20%;">SCORE</div>
+            <div style="width:16%;">OVS</div>
+            <div style="width:16%;">RR</div>
+            <div style="width:16%;">4S</div>
+            <div style="width:16%;">6S</div>
+            <div style="width:16%;">WIDES</div>
+          </div>
+        </div>
+        <!-- Team 1 -->
+        <div class="wb-sc-row">
+          <div style="width:42%;display:flex;justify-content:space-between;align-items:center;padding-right:10px;">
+            <span class="d-flex align-items-center gap-1">
+              @if(!empty($sc['team1Icon']))
+                <img src="{{ $sc['team1Icon'] }}" alt="" style="height:17px;" onerror="this.style.display='none'">
+              @endif
+              <span class="js-sc-t1-name">{{ $t1Name }}</span>
+            </span>
+            <span class="js-sc-t1-icon">
+              @if($t1Bat)
+                <img src="/assets/bat.svg" alt="bat" style="height:17px;">
+              @else
+                <img src="/assets/ball.svg" alt="ball" style="height:15px;">
+              @endif
+            </span>
+          </div>
+          <div style="width:58%;display:flex;text-align:center;align-items:center;">
+            <div style="width:20%;" class="wb-sc-score-green js-sc-t1-score">{{ ($sc['score1'] ?? '') !== '' ? $sc['score1'] : '-' }}</div>
+            <div style="width:16%;" class="js-sc-t1-ovs">{{ ($sc['overs1'] ?? '') !== '' ? $sc['overs1'] : '-' }}</div>
+            <div style="width:16%;" class="js-sc-t1-rr">{{ !empty($sc['rr1']) && $sc['rr1'] !== '0.00' ? $sc['rr1'] : (($t1Bat && !empty($sc['runRate'])) ? $sc['runRate'] : '0.00') }}</div>
+            <div style="width:16%;" class="js-sc-t1-4s">{{ $sc['totalFours1'] ?? 0 }}</div>
+            <div style="width:16%;" class="js-sc-t1-6s">{{ $sc['totalSixes1'] ?? 0 }}</div>
+            <div style="width:16%;" class="js-sc-t1-wides">{{ $sc['totalWides1'] ?? 0 }}</div>
+          </div>
+        </div>
+        <!-- Team 2 -->
+        <div class="wb-sc-row">
+          <div style="width:42%;display:flex;justify-content:space-between;align-items:center;padding-right:10px;">
+            <span class="d-flex align-items-center gap-1">
+              @if(!empty($sc['team2Icon']))
+                <img src="{{ $sc['team2Icon'] }}" alt="" style="height:17px;" onerror="this.style.display='none'">
+              @endif
+              <span class="js-sc-t2-name">{{ $t2Name }}</span>
+            </span>
+            <span class="js-sc-t2-icon">
+              @if($t2Bat)
+                <img src="/assets/bat.svg" alt="bat" style="height:17px;">
+              @else
+                <img src="/assets/ball.svg" alt="ball" style="height:15px;">
+              @endif
+            </span>
+          </div>
+          <div style="width:58%;display:flex;text-align:center;align-items:center;">
+            <div style="width:20%;" class="wb-sc-score-green js-sc-t2-score">{{ ($sc['score2'] ?? '') !== '' ? $sc['score2'] : '-' }}</div>
+            <div style="width:16%;" class="js-sc-t2-ovs">{{ ($sc['overs2'] ?? '') !== '' ? $sc['overs2'] : '-' }}</div>
+            <div style="width:16%;" class="js-sc-t2-rr">{{ !empty($sc['rr2']) && $sc['rr2'] !== '0.00' ? $sc['rr2'] : (($t2Bat && !empty($sc['runRate'])) ? $sc['runRate'] : '0.00') }}</div>
+            <div style="width:16%;" class="js-sc-t2-4s">{{ $sc['totalFours2'] ?? 0 }}</div>
+            <div style="width:16%;" class="js-sc-t2-6s">{{ $sc['totalSixes2'] ?? 0 }}</div>
+            <div style="width:16%;" class="js-sc-t2-wides">{{ $sc['totalWides2'] ?? 0 }}</div>
+          </div>
+        </div>
+      @endif
+
+      <!-- Batsmen & Bowler Row -->
+      <div class="wb-sc-row" style="justify-content:space-between;gap:8px;">
+        <div style="width:54%;" class="text-truncate js-sc-batsmen" title="{{ $batsmenStr }}">
+          <span style="color:#f8e71c;">BAT:</span> {{ $batsmenStr ?: 'Waiting for batsmen...' }}
+        </div>
+        <div style="width:46%;text-align:right;" class="text-truncate js-sc-bowler" title="{{ $bowlerStr }}">
+          <span style="color:#00d2ff;">BOWL:</span> {{ $bowlerStr ?: '-' }}
+        </div>
+      </div>
+
+      <!-- Commentary, Partnership, Last Wicket & Last 6 Balls Marquee Row -->
+      <div class="wb-sc-row">
+        <div class="wb-sc-marquee">
+          <div class="wb-sc-marquee-inner js-sc-marquee">
+            <span class="me-3" style="color:#7ed321;">{{ $commStr }}</span>
+            @if($cbPartnership !== '')
+              <span class="me-3" style="color:#f8e71c;">Partnership: {{ $cbPartnership }}</span>
+            @endif
+            @if($cbLastWkt !== '')
+              <span class="me-3" style="color:#ff8585;">Last Wkt: {{ $cbLastWkt }}</span>
+            @endif
+            @if(!empty($ballsArr))
+              <span>Recent balls:
+                @foreach($ballsArr as $bVal)
+                  @php
+                    $bClean = strtolower(trim((string) $bVal));
+                    $bCls = $bClean === '4' ? 'ball-4' : ($bClean === '6' ? 'ball-6' : (str_starts_with($bClean, 'w') ? 'ball-w' : ''));
+                    $bDisp = ($bClean === '0' || $bClean === '') ? '•' : $bVal;
+                  @endphp
+                  <span class="wb-sc-ball {{ $bCls }}">{{ $bDisp }}</span>
+                @endforeach
+              </span>
+            @endif
+          </div>
+        </div>
+      </div>
+    </div>
+  @elseif($hasUniverseScore && $sportIdStr === '1')
+    @php
+      $t1Name = $sc['team1Name'] ?? ($sc['team1'] ?? (explode(' v ', $event->event_name)[0] ?? 'Home'));
+      $t2Name = $sc['team2Name'] ?? ($sc['team2'] ?? (explode(' v ', $event->event_name)[1] ?? 'Away'));
+      $sTour = trim((string) ($sc['tournament'] ?? ($event->tournament_name ?? 'UEFA Champions League')));
+      $sRound = trim((string) ($sc['round'] ?? ''));
+      $sStage = trim((string) ($sc['stage'] ?? 'LIVE'));
+      $sVenue = trim((string) ($sc['venue'] ?? ''));
+      $c1 = trim((string) ($sc['team1Country'] ?? ''));
+      $c2 = trim((string) ($sc['team2Country'] ?? ''));
+      $gInfo1 = trim((string) ($sc['goalInfo1'] ?? ''));
+      $gInfo2 = trim((string) ($sc['goalInfo2'] ?? ''));
+    @endphp
+    <div id="wbUniverseScorecard" class="wb-universe-scorecard">
+      @if($sTour !== '')
+        <div class="wb-sc-row" style="background:#0d1b24;font-size:11px;min-height:24px;justify-content:space-between;">
+          <div class="text-truncate" style="max-width:72%;color:#a3d8ff;">
+            <span style="background:#dc3545;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:800;margin-right:5px;" class="js-sc-soc-stage">{{ strtoupper($sStage ?: 'LIVE') }}</span>
+            <strong class="text-white">{{ $sTour }}</strong>
+            @if($sRound !== '') <span class="ms-1">• {{ $sRound }}</span> @endif
+          </div>
+          @if($sVenue !== '')
+            <div class="text-truncate d-none d-md-block" style="max-width:27%;color:#adb5bd;font-size:10.5px;">📍 {{ $sVenue }}</div>
+          @endif
+        </div>
+      @endif
+      <div class="wb-sc-row wb-sc-head">
+        <div style="width:45%;">Powered By <span class="wb-sc-brand">Universe Score</span></div>
+        <div style="width:55%;display:flex;text-align:center;align-items:center;">
+          <div style="width:20%;"><img src="/assets/scoreCard/goal.svg" style="height:15px;" alt="Goal"></div>
+          <div style="width:20%;"><img src="/assets/scoreCard/htscore.svg" style="height:15px;" alt="HT"></div>
+          <div style="width:20%;"><img src="/assets/scoreCard/corner.svg" style="height:15px;" alt="Corner"></div>
+          <div style="width:20%;"><img src="/assets/scoreCard/yellow-card.svg" style="height:15px;" alt="YC"></div>
+          <div style="width:20%;"><img src="/assets/scoreCard/red-card.svg" style="height:15px;" alt="RC"></div>
+        </div>
+      </div>
+      <div class="wb-sc-row">
+        <div style="width:45%;display:flex;align-items:center;gap:6px;padding-right:6px;">
+          @if(!empty($sc['team1Icon']))
+            <img src="{{ $sc['team1Icon'] }}" alt="" style="height:18px;width:18px;object-fit:contain;" onerror="this.style.display='none'">
+          @endif
+          <div class="text-truncate">
+            <span class="js-sc-t1-name">{{ $t1Name }}</span>
+            @if($c1 !== '') <small style="color:#adb5bd;font-size:10px;">({{ $c1 }})</small> @endif
+            @if($gInfo1 !== '') <div style="font-size:9.5px;color:#7ed321;font-weight:400;" class="text-truncate">⚽ {{ $gInfo1 }}</div> @endif
+          </div>
+        </div>
+        <div style="width:55%;display:flex;text-align:center;align-items:center;">
+          <div style="width:20%;" class="wb-sc-score-green js-sc-soc-g1">{{ $sc['score1'] ?? ($sc['goal1'] ?? 0) }}</div>
+          <div style="width:20%;" class="js-sc-soc-ht1">{{ $sc['htScore1'] ?? 0 }}</div>
+          <div style="width:20%;" class="js-sc-soc-cor1">{{ $sc['corner1'] ?? 0 }}</div>
+          <div style="width:20%;" class="js-sc-soc-yc1">{{ $sc['yellowCard1'] ?? 0 }}</div>
+          <div style="width:20%;" class="js-sc-soc-rc1">{{ $sc['redCard1'] ?? 0 }}</div>
+        </div>
+      </div>
+      <div class="wb-sc-row">
+        <div style="width:45%;display:flex;align-items:center;gap:6px;padding-right:6px;">
+          @if(!empty($sc['team2Icon']))
+            <img src="{{ $sc['team2Icon'] }}" alt="" style="height:18px;width:18px;object-fit:contain;" onerror="this.style.display='none'">
+          @endif
+          <div class="text-truncate">
+            <span class="js-sc-t2-name">{{ $t2Name }}</span>
+            @if($c2 !== '') <small style="color:#adb5bd;font-size:10px;">({{ $c2 }})</small> @endif
+            @if($gInfo2 !== '') <div style="font-size:9.5px;color:#7ed321;font-weight:400;" class="text-truncate">⚽ {{ $gInfo2 }}</div> @endif
+          </div>
+        </div>
+        <div style="width:55%;display:flex;text-align:center;align-items:center;">
+          <div style="width:20%;" class="wb-sc-score-green js-sc-soc-g2">{{ $sc['score2'] ?? ($sc['goal2'] ?? 0) }}</div>
+          <div style="width:20%;" class="js-sc-soc-ht2">{{ $sc['htScore2'] ?? 0 }}</div>
+          <div style="width:20%;" class="js-sc-soc-cor2">{{ $sc['corner2'] ?? 0 }}</div>
+          <div style="width:20%;" class="js-sc-soc-yc2">{{ $sc['yellowCard2'] ?? 0 }}</div>
+          <div style="width:20%;" class="js-sc-soc-rc2">{{ $sc['redCard2'] ?? 0 }}</div>
+        </div>
+      </div>
+      <div class="wb-sc-row">
+        <div class="w-100 text-center text-warning js-sc-soc-status">{{ $sc['status'] ?? ($sc['matchTime'] ?? 'IN PLAY') }}</div>
+      </div>
+    </div>
+  @elseif($hasUniverseScore && $sportIdStr === '2')
+    @php
+      $t1Name = $sc['team1Name'] ?? ($sc['player1'] ?? (explode(' v ', $event->event_name)[0] ?? 'Player 1'));
+      $t2Name = $sc['team2Name'] ?? ($sc['player2'] ?? (explode(' v ', $event->event_name)[1] ?? 'Player 2'));
+      $tTour = trim((string) ($sc['tournament'] ?? ($event->tournament_name ?? '')));
+      $tStage = trim((string) ($sc['stage'] ?? 'LIVE'));
+      $serving = (int) ($sc['serving'] ?? 0);
+      $c1 = trim((string) ($sc['team1Country'] ?? ''));
+      $c2 = trim((string) ($sc['team2Country'] ?? ''));
+    @endphp
+    <div id="wbUniverseScorecard" class="wb-universe-scorecard">
+      @if($tTour !== '')
+        <div class="wb-sc-row" style="background:#0d1b24;font-size:11px;min-height:24px;justify-content:space-between;">
+          <div class="text-truncate" style="max-width:78%;color:#a3d8ff;">
+            <span style="background:#dc3545;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:800;margin-right:5px;">{{ strtoupper($tStage ?: 'LIVE') }}</span>
+            <strong class="text-white">{{ $tTour }}</strong>
+          </div>
+          <div class="d-none d-md-block" style="color:#7ed321;font-size:10.5px;">🎾 Livescore.in Live</div>
+        </div>
+      @endif
+      <div class="wb-sc-row wb-sc-head">
+        <div style="width:45%;">Powered By <span class="wb-sc-brand">Universe Score</span></div>
+        <div style="width:55%;display:flex;" class="wb-sc-col-hdr">
+          <div style="width:20%;">SETS</div>
+          <div style="width:20%;">1</div>
+          <div style="width:20%;">2</div>
+          <div style="width:20%;">3</div>
+          <div style="width:20%;">PTS</div>
+        </div>
+      </div>
+      <div class="wb-sc-row">
+        <div style="width:45%;display:flex;justify-content:space-between;align-items:center;padding-right:10px;">
+          <span>
+            <span class="js-sc-t1-name">{{ $t1Name }}</span>
+            @if($c1 !== '') <small style="color:#adb5bd;font-size:10px;">({{ $c1 }})</small> @endif
+          </span>
+          <span class="js-sc-t1-srv" style="color:#7ed321;font-size:11px;">{{ $serving === 1 ? '●' : '' }}</span>
+        </div>
+        <div style="width:55%;display:flex;text-align:center;">
+          <div style="width:20%;" class="wb-sc-score-green js-sc-ten-sets1">{{ $sc['score1'] ?? ($sc['sets1'] ?? 0) }}</div>
+          <div style="width:20%;" class="js-sc-ten-s1-1">{{ $sc['set1Score1'] ?? ($sc['s1_1'] ?? 0) }}</div>
+          <div style="width:20%;" class="js-sc-ten-s2-1">{{ $sc['set2Score1'] ?? ($sc['s2_1'] ?? '-') }}</div>
+          <div style="width:20%;" class="js-sc-ten-s3-1">{{ $sc['set3Score1'] ?? ($sc['s3_1'] ?? '-') }}</div>
+          <div style="width:20%;color:#f8e71c;" class="js-sc-ten-pts1">{{ $sc['points1'] ?? '0' }}</div>
+        </div>
+      </div>
+      <div class="wb-sc-row">
+        <div style="width:45%;display:flex;justify-content:space-between;align-items:center;padding-right:10px;">
+          <span>
+            <span class="js-sc-t2-name">{{ $t2Name }}</span>
+            @if($c2 !== '') <small style="color:#adb5bd;font-size:10px;">({{ $c2 }})</small> @endif
+          </span>
+          <span class="js-sc-t2-srv" style="color:#7ed321;font-size:11px;">{{ $serving === 2 ? '●' : '' }}</span>
+        </div>
+        <div style="width:55%;display:flex;text-align:center;">
+          <div style="width:20%;" class="wb-sc-score-green js-sc-ten-sets2">{{ $sc['score2'] ?? ($sc['sets2'] ?? 0) }}</div>
+          <div style="width:20%;" class="js-sc-ten-s1-2">{{ $sc['set1Score2'] ?? ($sc['s1_2'] ?? 0) }}</div>
+          <div style="width:20%;" class="js-sc-ten-s2-2">{{ $sc['set2Score2'] ?? ($sc['s2_2'] ?? '-') }}</div>
+          <div style="width:20%;" class="js-sc-ten-s3-2">{{ $sc['set3Score2'] ?? ($sc['s3_2'] ?? '-') }}</div>
+          <div style="width:20%;color:#f8e71c;" class="js-sc-ten-pts2">{{ $sc['points2'] ?? '0' }}</div>
+        </div>
+      </div>
+      <div class="wb-sc-row">
+        <div class="w-100 text-center text-warning js-sc-ten-status">{{ $sc['status'] ?? 'IN PLAY' }}</div>
+      </div>
+    </div>
+  @else
+    <div class="fm-banner sport-{{ $sportIdStr }}">
+      <div class="d-flex justify-content-between align-items-start w-100">
+        <div class="fm-game-status">{{ $event->status ?: 'OPEN' }}</div>
+        <div class="fm-game-time">
+          <span class="me-1">Game time</span> {{ $bannerTimeStr }}
+        </div>
+      </div>
+      <div class="d-flex flex-column align-items-center justify-content-center">
+        <span class="fm-bet-started">Bet Started</span>
+      </div>
+    </div>
+  @endif
+</div>
+
+<!-- 2. Market Filter Pills (All | Popular | Match Odds | Bookmaker | Fancy) -->
+<div class="fm-filter-bar {{ !$hasMainMarkets ? 'd-none' : '' }}">
+  <a href="javascript:void(0)" class="fm-filter-pill active" onclick="FullMkt.filterSection('all', this)">All</a>
+  <a href="javascript:void(0)" class="fm-filter-pill" onclick="FullMkt.filterSection('all', this)">Popular</a>
+  @if(!empty($moList))
+    <a href="javascript:void(0)" class="fm-filter-pill" onclick="FullMkt.filterSection('match_odds', this)">{{ $moList[0]['marketName'] ?? 'Match Odds' }}</a>
+  @endif
+  @if(!empty($bmList))
+    <a href="javascript:void(0)" class="fm-filter-pill" onclick="FullMkt.filterSection('bookmaker', this)">Bookmaker</a>
+  @endif
+  @if(!empty($fancyList))
+    <a href="javascript:void(0)" class="fm-filter-pill" onclick="FullMkt.filterSection('fancy', this)">Fancy Bet</a>
+  @endif
+</div>
+
+<!-- ================= 3. MATCH ODDS / TOURNAMENT WINNER SECTION ================= -->
+<div id="fmSection_match_odds" class="js-fm-section">
+  @foreach($moList as $moIdx => $mo)
+    @php
+      $moTitle = $mo['marketName'] ?? 'Match Odds';
+      $moMin = $mo['min'] ?? 10;
+      $moMax = $mo['max'] ?? 10000;
+      $moMatched = (float) ($mo['oddsData']['totalMatched'] ?? $event->total_matched ?? 1200000);
+      $moMatchedStr = $moMatched >= 1000000
+          ? number_format($moMatched / 1000000, 1) . 'M'
+          : ($moMatched >= 1000 ? number_format($moMatched / 1000, 1) . 'K' : number_format($moMatched, 0));
+      $moRunners = $mo['oddsData']['runners'] ?? [];
+      $moRunnersMap = $mo['runnersData'] ?? [];
+      $moStatus = $mo['oddsData']['status'] ?? 'OPEN';
+    @endphp
+    <div class="fm-card">
+      <div class="fm-card-head">
+        <div class="fm-head-tab">
+          <span>{{ $moTitle }}</span>
+          <span style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#footerPolicyModal" onclick="showFooterPolicy('{{ addslashes($moTitle) }} Rules')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+              <path fill="currentColor" fill-rule="evenodd" d="M6.76 5.246V3.732h1.48v1.514H6.76zm.74 8.276a5.86 5.86 0 0 0 3.029-.83 5.839 5.839 0 0 0 2.163-2.163 5.86 5.86 0 0 0 .83-3.029 5.86 5.86 0 0 0-.83-3.029 5.839 5.839 0 0 0-2.163-2.163 5.86 5.86 0 0 0-3.029-.83 5.86 5.86 0 0 0-3.029.83A5.839 5.839 0 0 0 2.308 4.47a5.86 5.86 0 0 0-.83 3.029 5.86 5.86 0 0 0 .83 3.029 5.839 5.839 0 0 0 2.163 2.163 5.86 5.86 0 0 0 3.029.83zM7.5 0c1.37 0 2.638.343 3.804 1.028a7.108 7.108 0 0 1 2.668 2.668A7.376 7.376 0 0 1 15 7.5c0 1.37-.343 2.638-1.028 3.804a7.108 7.108 0 0 1-2.668 2.668A7.376 7.376 0 0 1 7.5 15a7.376 7.376 0 0 1-3.804-1.028 7.243 7.243 0 0 1-2.668-2.686A7.343 7.343 0 0 1 0 7.5c0-1.358.343-2.62 1.028-3.786a7.381 7.381 0 0 1 2.686-2.686A7.343 7.343 0 0 1 7.5 0zm-.74 11.268V6.761h1.48v4.507H6.76z"/>
+            </svg>
+          </span>
+        </div>
+
+        @if(count($moRunners) === 2)
+          <button type="button" class="fm-cashout-btn">
+            <span class="fm-cashout-dot"></span> Cash Out
+          </button>
+        @endif
+
+        <span class="fm-matched-txt">Matched <strong>€ {{ $moMatchedStr }}</strong></span>
+      </div>
+
+      <!-- Subheader: Back | Lay | Min/Max -->
+      <div class="fm-subhead">
+        <div class="flex-grow-1"></div>
+        <div class="d-flex text-center align-items-center" style="width:348px;">
+          <div class="box-hide-mbl" style="width:116px;"></div>
+          <div style="width:56px;background:var(--back-1);padding:4px 0;">Back</div>
+          <div style="width:56px;background:var(--lay-1);padding:4px 0;">Lay</div>
+          <div class="box-hide-mbl ps-1" style="width:120px;">
+            <span class="wb-minmax-pill">Min/Max {{ $moMin }}-{{ $moMax }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Runners -->
+      @foreach($moRunners as $rIdx => $r)
+        @php
+          $selId = (string) ($r['selectionId'] ?? ($rIdx + 1));
+          $rName = $moRunnersMap[$selId] ?? ($r['runnerName'] ?? ('Runner ' . ($rIdx + 1)));
+          $backs = $r['price']['back'] ?? [];
+          $lays = $r['price']['lay'] ?? [];
+          $rSusp = ($moStatus === 'SUSPENDED' || ($r['status'] ?? '') === 'SUSPENDED');
+          $slipRowId = 'moSlip_' . $moIdx . '_' . $selId;
+        @endphp
+        <div class="fm-runner-row">
+          <div class="fm-runner-name">{{ $rName }}</div>
+          <div class="fm-odds-6">
+            @if($rSusp)
+              <div class="fm-suspend-overlay"><span>Suspended</span></div>
+            @endif
+            <!-- Back 3, Back 2, Back 1 -->
+            @for($bi = 2; $bi >= 0; $bi--)
+              @php
+                $bp = $backs[$bi]['price'] ?? 0;
+                $bs = $backs[$bi]['size'] ?? 0;
+                $bCls = $bi === 0 ? 'wb-odd-back' : ($bi === 1 ? 'wb-odd-back-2 box-hide-mbl' : 'wb-odd-back-3 box-hide-mbl');
+              @endphp
+              <a href="javascript:void(0)" class="fm-odd-cell {{ $bCls }}"
+                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($moTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $bp > 0 ? $bp : 1.90 }}, 'exchange')">
+                <strong>{{ $bp ?: '-' }}</strong>
+                <small>{{ $formatVolume($bs) }}</small>
+              </a>
+            @endfor
+
+            <!-- Lay 1, Lay 2, Lay 3 -->
+            @for($li = 0; $li <= 2; $li++)
+              @php
+                $lp = $lays[$li]['price'] ?? 0;
+                $ls = $lays[$li]['size'] ?? 0;
+                $lCls = $li === 0 ? 'wb-odd-lay' : ($li === 1 ? 'wb-odd-lay-2 box-hide-mbl' : 'wb-odd-lay-3 box-hide-mbl');
+              @endphp
+              <a href="javascript:void(0)" class="fm-odd-cell {{ $lCls }}"
+                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($moTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'LAY', {{ $lp > 0 ? $lp : 1.92 }}, 'exchange')">
+                <strong>{{ $lp ?: '-' }}</strong>
+                <small>{{ $formatVolume($ls) }}</small>
+              </a>
+            @endfor
+          </div>
+        </div>
+        <div id="{{ $slipRowId }}" class="fm-inline-slip d-none"></div>
+      @endforeach
+    </div>
+  @endforeach
+</div>
+
+<!-- ================= 4. BOOKMAKER / BOOKMAKER CUP BHAV SECTION ================= -->
+@if(!empty($bmList))
+<div id="fmSection_bookmaker" class="js-fm-section">
+  @foreach($bmList as $bmIdx => $bm)
+    @php
+      $bmTitle = $bm['marketName'] ?? 'Bookmaker';
+      $bmMin = $bm['min'] ?? 10;
+      $bmMax = $bm['max'] ?? 500000;
+      $bmMatched = (float) ($bm['oddsData']['totalMatched'] ?? 13800000);
+      $bmMatchedStr = $bmMatched >= 1000000 ? number_format($bmMatched / 1000000, 1) . 'M' : number_format($bmMatched / 1000, 1) . 'K';
+      $bmRunners = $bm['oddsData']['runners'] ?? [];
+      $bmRunnersMap = $bm['runnersData'] ?? [];
+      $bmStatus = strtoupper((string) ($bm['oddsData']['status'] ?? 'ONLINE'));
+    @endphp
+    <div class="fm-card wb-bookmaker-table">
+      <div class="fm-card-head">
+        <div class="fm-head-tab">
+          <span>{{ $bmTitle }}</span>
+          <span style="cursor:pointer;" onclick="showFooterPolicy('Bookmaker Rules')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+              <path fill="currentColor" fill-rule="evenodd" d="M6.76 5.246V3.732h1.48v1.514H6.76zm.74 8.276a5.86 5.86 0 0 0 3.029-.83 5.839 5.839 0 0 0 2.163-2.163 5.86 5.86 0 0 0 .83-3.029 5.86 5.86 0 0 0-.83-3.029 5.839 5.839 0 0 0-2.163-2.163 5.86 5.86 0 0 0-3.029-.83 5.86 5.86 0 0 0-3.029.83A5.839 5.839 0 0 0 2.308 4.47a5.86 5.86 0 0 0-.83 3.029 5.86 5.86 0 0 0 .83 3.029 5.839 5.839 0 0 0 2.163 2.163 5.86 5.86 0 0 0 3.029.83zM7.5 0c1.37 0 2.638.343 3.804 1.028a7.108 7.108 0 0 1 2.668 2.668A7.376 7.376 0 0 1 15 7.5c0 1.37-.343 2.638-1.028 3.804a7.108 7.108 0 0 1-2.668 2.668A7.376 7.376 0 0 1 7.5 15a7.376 7.376 0 0 1-3.804-1.028 7.243 7.243 0 0 1-2.668-2.686A7.343 7.343 0 0 1 0 7.5c0-1.358.343-2.62 1.028-3.786a7.381 7.381 0 0 1 2.686-2.686A7.343 7.343 0 0 1 7.5 0zm-.74 11.268V6.761h1.48v4.507H6.76z"/>
+            </svg>
+          </span>
+        </div>
+
+        @if(count($bmRunners) === 2)
+          <button type="button" class="fm-cashout-btn">
+            <span class="fm-cashout-dot"></span> Cash Out
+          </button>
+        @endif
+
+        <span class="fm-matched-txt">Matched <strong>€ {{ $bmMatchedStr }}</strong></span>
+      </div>
+
+      <div class="fm-subhead" style="background:transparent;">
+        <div class="flex-grow-1"></div>
+        <div class="d-flex text-center align-items-center" style="width:348px;">
+          <div class="box-hide-mbl" style="width:116px;"></div>
+          <div style="width:56px;padding:4px 0;">Back</div>
+          <div style="width:56px;padding:4px 0;">Lay</div>
+          <div class="box-hide-mbl ps-1" style="width:120px;">
+            <span class="wb-minmax-pill">Min/Max {{ $bmMin }}-{{ $bmMax }}</span>
+          </div>
+        </div>
+      </div>
+
+      @foreach($bmRunners as $rIdx => $r)
+        @php
+          $selId = (string) ($r['selectionId'] ?? ($rIdx + 1));
+          $rName = $bmRunnersMap[$selId] ?? ($r['runnerName'] ?? ('Runner ' . ($rIdx + 1)));
+          $backs = $r['price']['back'] ?? [];
+          $lays = $r['price']['lay'] ?? [];
+          $rStatus = strtoupper((string) ($r['status'] ?? $bmStatus));
+          $isSusp = in_array($rStatus, ['SUSPENDED', 'SUSPEND', 'BALL RUNNING', 'BALLRUN', 'CLOSED']);
+          $suspLabel = str_contains($rStatus, 'BALL') ? 'Ballrun' : 'Suspended';
+          $slipRowId = 'bmSlip_' . $bmIdx . '_' . $selId;
+        @endphp
+        <div class="fm-runner-row">
+          <div class="fm-runner-name">{{ $rName }}</div>
+          <div class="fm-odds-6">
+            @if($isSusp)
+              <div class="fm-suspend-overlay"><span>{{ $suspLabel }}</span></div>
+            @endif
+            @for($bi = 2; $bi >= 0; $bi--)
+              @php
+                $bp = $backs[$bi]['price'] ?? 0;
+                $bs = $backs[$bi]['size'] ?? '5M';
+                $bCls = $bi === 0 ? 'wb-odd-back' : ($bi === 1 ? 'wb-odd-back-2 box-hide-mbl' : 'wb-odd-back-3 box-hide-mbl');
+              @endphp
+              <a href="javascript:void(0)" class="fm-odd-cell {{ $bCls }}"
+                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($bmTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $bp > 0 ? $bp : 90 }}, 'bookmaker')">
+                <strong>{{ $bp ?: '-' }}</strong>
+                <small>{{ is_numeric($bs) ? $formatVolume($bs) : $bs }}</small>
+              </a>
+            @endfor
+
+            @for($li = 0; $li <= 2; $li++)
+              @php
+                $lp = $lays[$li]['price'] ?? 0;
+                $ls = $lays[$li]['size'] ?? '5M';
+                $lCls = $li === 0 ? 'wb-odd-lay' : ($li === 1 ? 'wb-odd-lay-2 box-hide-mbl' : 'wb-odd-lay-3 box-hide-mbl');
+              @endphp
+              <a href="javascript:void(0)" class="fm-odd-cell {{ $lCls }}"
+                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($bmTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'LAY', {{ $lp > 0 ? $lp : 92 }}, 'bookmaker')">
+                <strong>{{ $lp ?: '-' }}</strong>
+                <small>{{ is_numeric($ls) ? $formatVolume($ls) : $ls }}</small>
+              </a>
+            @endfor
+          </div>
+        </div>
+        <div id="{{ $slipRowId }}" class="fm-inline-slip d-none"></div>
+      @endforeach
+    </div>
+  @endforeach
+</div>
+@endif
+
+<!-- ================= 5. TO WIN THE MATCH (SPORTSBOOK GREEN BOX) ================= -->
+@if(!empty($winSbList))
+<div id="fmSection_sportsbook_box" class="js-fm-section">
+  @foreach($winSbList as $sbIdx => $sb)
+    @php
+      $sbTitle = $sb['marketName'] ?? 'To Win The Match';
+      $sbMin = $sb['min'] ?? 10;
+      $sbMax = $sb['max'] ?? 250000;
+      $sbRunners = $sb['oddsData']['runners'] ?? [];
+      $sbRunnersMap = $sb['runnersData'] ?? [];
+      $sbSlipId = 'sbBoxSlip_' . $sbIdx;
+    @endphp
+    <div class="fm-card">
+      <div class="d-flex justify-content-between align-items-center px-3 py-1 text-white fw-bold" style="background:linear-gradient(-180deg, #2E4B5E 0%, #243A48 82%);font-size:13px;">
+        <span>{{ $sbTitle }}</span>
+        <span>Min/Max: {{ $sbMin }} - {{ $sbMax }}</span>
+      </div>
+      <div class="d-flex border-bottom text-center fw-bold py-1 bg-white">
+        <div class="w-50 border-end">Back</div>
+        <div class="w-50">Back</div>
+      </div>
+      <div class="fm-sb-green-body">
+        <div class="row g-2">
+          @foreach($sbRunners as $rIdx => $sbr)
+            @php
+              $selId = (string) ($sbr['selectionId'] ?? ($rIdx + 1));
+              $rName = $sbRunnersMap[$selId] ?? ($sbr['runnerName'] ?? ('Team ' . ($rIdx + 1)));
+              $oddsVal = $sbr['price']['back'][0]['price'] ?? ($sbr['odds'] ?? 1.90);
+              $volVal = $sbr['price']['back'][0]['size'] ?? $sbMax;
+            @endphp
+            <div class="col-6 d-flex justify-content-center">
+              <a href="javascript:void(0)" class="fm-sb-pill"
+                 onclick="FullMkt.openInlineSlip('{{ $sbSlipId }}', '{{ addslashes($sbTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $oddsVal }}, 'sportsbook')">
+                <div class="fm-sb-pill-left">
+                  <strong style="font-size:13px;">{{ $oddsVal }}</strong>
+                  <small style="font-size:10px;">{{ $volVal }}</small>
+                </div>
+                <div class="fm-sb-pill-right">{{ $rName }}</div>
+              </a>
+            </div>
+          @endforeach
+        </div>
+      </div>
+      <div id="{{ $sbSlipId }}" class="fm-inline-slip d-none"></div>
+    </div>
+  @endforeach
+</div>
+@endif
+
+<!-- ================= 6. FANCY BET & SPORTSBOOK TABS (1:1 app-market-tabs) ================= -->
+@if(!empty($fancyList) || !empty($sbList))
+<div id="fmSection_fancy" class="js-fm-section {{ $hasMainMarkets ? 'mt-2' : '' }}">
+  <div class="wb-market-tabs-card">
+    <div class="p-rltv">
+      <!-- Slanted Fancy Bet & Sportsbook Header Tabs -->
+      <div id="fancyBetHeadNew" class="fancy-head">
+        <h4 class="in-play" onclick="switchFancyOrSb('Fancy')">
+          <span id="headerName">Fancy Bet</span>
+          <a href="javascript:void(0)" class="btn-fancybet_rules" onclick="event.stopPropagation(); showFooterPolicy('Fancy Bet Rules')" title="Fancy Bet Rules">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+              <path fill="currentColor" fill-rule="evenodd" d="M6.76 5.246V3.732h1.48v1.514H6.76zm.74 8.276a5.86 5.86 0 0 0 3.029-.83 5.839 5.839 0 0 0 2.163-2.163 5.86 5.86 0 0 0 .83-3.029 5.86 5.86 0 0 0-.83-3.029 5.839 5.839 0 0 0-2.163-2.163 5.86 5.86 0 0 0-3.029-.83 5.86 5.86 0 0 0-3.029.83A5.839 5.839 0 0 0 2.308 4.47a5.86 5.86 0 0 0-.83 3.029 5.86 5.86 0 0 0 .83 3.029 5.839 5.839 0 0 0 2.163 2.163 5.86 5.86 0 0 0 3.029.83zM7.5 0c1.37 0 2.638.343 3.804 1.028a7.108 7.108 0 0 1 2.668 2.668A7.376 7.376 0 0 1 15 7.5c0 1.37-.343 2.638-1.028 3.804a7.108 7.108 0 0 1-2.668 2.668A7.376 7.376 0 0 1 7.5 15a7.376 7.376 0 0 1-3.804-1.028 7.243 7.243 0 0 1-2.668-2.686A7.343 7.343 0 0 1 0 7.5c0-1.358.343-2.62 1.028-3.786a7.381 7.381 0 0 1 2.686-2.686A7.343 7.343 0 0 1 7.5 0zm-.74 11.268V6.761h1.48v4.507H6.76z"></path>
+            </svg>
+          </a>
+        </h4>
+        <h4 class="in-play-sportbook" onclick="switchFancyOrSb('SPORTSBOOK')">
+          <span id="headerName">Sportsbook</span>
+          <a href="javascript:void(0)" class="btn-sportsbook_rules" onclick="event.stopPropagation(); showFooterPolicy('Sportsbook Rules')" title="Sportsbook Rules">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+              <path fill="currentColor" fill-rule="evenodd" d="M6.76 5.246V3.732h1.48v1.514H6.76zm.74 8.276a5.86 5.86 0 0 0 3.029-.83 5.839 5.839 0 0 0 2.163-2.163 5.86 5.86 0 0 0 .83-3.029 5.86 5.86 0 0 0-.83-3.029 5.839 5.839 0 0 0-2.163-2.163 5.86 5.86 0 0 0-3.029-.83 5.86 5.86 0 0 0-3.029.83A5.839 5.839 0 0 0 2.308 4.47a5.86 5.86 0 0 0-.83 3.029 5.86 5.86 0 0 0 .83 3.029 5.839 5.839 0 0 0 2.163 2.163 5.86 5.86 0 0 0 3.029.83zM7.5 0c1.37 0 2.638.343 3.804 1.028a7.108 7.108 0 0 1 2.668 2.668A7.376 7.376 0 0 1 15 7.5c0 1.37-.343 2.638-1.028 3.804a7.108 7.108 0 0 1-2.668 2.668A7.376 7.376 0 0 1 7.5 15a7.376 7.376 0 0 1-3.804-1.028 7.243 7.243 0 0 1-2.668-2.686A7.343 7.343 0 0 1 0 7.5c0-1.358.343-2.62 1.028-3.786a7.381 7.381 0 0 1 2.686-2.686A7.343 7.343 0 0 1 7.5 0zm-.74 11.268V6.761h1.48v4.507H6.76z"></path>
+            </svg>
+          </a>
+        </h4>
+      </div>
+
+      <!-- Fancy Bet Category Bar -->
+      <div id="subNav_Fancy" class="fancy_bet_tab-wrap fancy_bet_back {{ $defaultTab === 'Fancy' ? '' : 'd-none' }}">
+        <ul class="special_bets-tab">
+          @foreach(['ALL', 'Fancy', 'Line Markets', 'Ball by Ball', 'Meter Markets', 'Khado Markets'] as $fCat)
+            <li class="js-fancy-cat-li {{ $fCat === 'ALL' ? 'select' : '' }}">
+              <a href="javascript:void(0)" onclick="filterFancyCat('{{ $fCat }}', this)">{{ $fCat }}</a>
+            </li>
+          @endforeach
+        </ul>
+      </div>
+
+      <!-- Sportsbook Category Bar (All | Match | Odds/Evens | Batsman | Bowler | Extra) -->
+      <div id="subNav_SPORTSBOOK" class="fancy_bet_tab-wrap {{ $defaultTab === 'SPORTSBOOK' ? '' : 'd-none' }}">
+        <ul class="special_bets-tab bookmakersTabs">
+          @foreach([['label' => 'All', 'id' => 'ALL'], ['label' => 'Match', 'id' => 'MATCH'], ['label' => 'Odds/Evens', 'id' => 'ODDS/EVENS'], ['label' => 'Batsman', 'id' => 'BATSMAN'], ['label' => 'Bowler', 'id' => 'BOWLER'], ['label' => 'Extra', 'id' => 'EXTRA']] as $sbCat)
+            <li class="js-sb-cat-li {{ $sbCat['id'] === 'ALL' ? 'select' : '' }}">
+              <a href="javascript:void(0)" onclick="filterSportsbookCat('{{ $sbCat['id'] }}', this)">{{ $sbCat['label'] }}</a>
+            </li>
+          @endforeach
+        </ul>
+      </div>
+    </div>
+
+    <!-- Fancy Bet Container -->
+    <div id="marketPane_fancy" class="bg-white border {{ $defaultTab === 'Fancy' ? '' : 'd-none' }}">
+      <div class="d-flex align-items-center border-bottom py-1 px-2 small fw-bold">
+        <div class="flex-grow-1"></div>
+        <div style="width:56px;background:var(--lay-1);text-align:center;">No</div>
+        <div style="width:56px;background:var(--back-1);text-align:center;">Yes</div>
+        <div style="width:110px;text-align:center;color:#577c94;">Min/Max</div>
+      </div>
+
+      @forelse($fancyList as $fIdx => $fItem)
+        @php
+          $fId = (string) ($fItem['exMarketId'] ?? $fItem['marketId'] ?? ('f_' . $fIdx));
+          $fName = $fItem['marketName'] ?? ($fItem['runnerName'] ?? 'Session Runs');
+          $fCat = $fItem['catName'] ?? ($fItem['category'] ?? 'Fancy');
+          $fMin = $fItem['min'] ?? 10;
+          $fMax = $fItem['max'] ?? 50000;
+          $fRunner = $fItem['oddsData']['runners'][0] ?? [];
+          $noRun = $fRunner['price']['lay'][0]['price'] ?? ($fItem['noRun'] ?? 0);
+          $noRate = $fRunner['price']['lay'][0]['size'] ?? ($fItem['noRate'] ?? 0);
+          $yesRun = $fRunner['price']['back'][0]['price'] ?? ($fItem['yesRun'] ?? 0);
+          $yesRate = $fRunner['price']['back'][0]['size'] ?? ($fItem['yesRate'] ?? 0);
+          $fStatus = strtoupper((string) ($fItem['oddsData']['status'] ?? $fRunner['status'] ?? 'ONLINE'));
+          $isFancySusp = in_array($fStatus, ['SUSPENDED', 'SUSPEND', 'BALL RUNNING', 'CLOSED']) || ($noRun == 0 && $yesRun == 0);
+          $fSlipId = 'fancySlip_' . $fIdx;
+        @endphp
+        <div class="d-flex align-items-center border-bottom py-1 px-2 js-fancy-row" data-fcat="{{ $fCat }}">
+          <div class="flex-grow-1 d-flex justify-content-between align-items-center pe-2">
+            <span class="fw-bold text-dark">{{ $fName }}</span>
+            <button type="button" class="btn btn-sm text-white py-0 px-2 fw-bold"
+                    style="background:var(--exchange-bg);font-size:11px;"
+                    onclick="showFancyBook('{{ addslashes($fName) }}', {{ (int)$noRun }}, {{ (int)$yesRun }})">
+              Book
+            </button>
+          </div>
+
+          <div class="d-flex position-relative">
+            @if($isFancySusp)
+              <div class="fm-suspend-overlay"><span>Suspended</span></div>
+            @endif
+            <!-- No (Pink) -->
+            <a href="javascript:void(0)" class="fm-odd-cell wb-odd-lay"
+               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', 'Fancy Bet', '{{ $fId }}', '{{ addslashes($fName) }} (NO @ {{ $noRun }})', 'NO', {{ $noRate ?: 100 }}, 'fancy', {{ (float)$noRun }})">
+              <strong>{{ $noRun }}</strong>
+              <small>{{ $noRate }}</small>
+            </a>
+            <!-- Yes (Blue) -->
+            <a href="javascript:void(0)" class="fm-odd-cell wb-odd-back ms-1"
+               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', 'Fancy Bet', '{{ $fId }}', '{{ addslashes($fName) }} (YES @ {{ $yesRun }})', 'YES', {{ $yesRate ?: 100 }}, 'fancy', {{ (float)$yesRun }})">
+              <strong>{{ $yesRun }}</strong>
+              <small>{{ $yesRate }}</small>
+            </a>
+          </div>
+
+          <div style="width:110px;text-align:center;" class="fw-bold small text-dark">
+            {{ $fMin }} - {{ $fMax }}
+          </div>
+        </div>
+        <div id="{{ $fSlipId }}" class="fm-inline-slip d-none"></div>
+      @empty
+        <div class="p-3 text-center text-muted small fw-bold">No Fancy Markets Available</div>
+      @endforelse
+    </div>
+
+    <!-- Sportsbook Tab Container (1:1 .fancy-card.sportbookmarket) -->
+    <div id="marketPane_sportsbook" class="{{ $defaultTab === 'SPORTSBOOK' ? '' : 'd-none' }}">
+      @forelse($sbList as $sbMktIdx => $sbMarket)
+        @php
+          $sbMktName = $sbMarket['marketName'] ?? 'Ball By Ball';
+          $sbMktType = strtoupper((string) ($sbMarket['marketType'] ?? 'ALL'));
+          $sbMin = $sbMarket['min'] ?? 100;
+          $sbMax = $sbMarket['max'] ?? 100000;
+          $sbMktStatus = strtoupper((string) ($sbMarket['oddsData']['status'] ?? 'ONLINE'));
+          $sbRunners = $sbMarket['oddsData']['runners'] ?? ($sbMarket['runners'] ?? []);
+          $sbMap = $sbMarket['runnersData'] ?? [];
+        @endphp
+        <div class="fancy-card sportbookmarket js-sb-market-card" data-sb-mtype="{{ $sbMktType }}">
+          <div class="card-header sportbook inner-sportbook card-accrdn card-fancybet"
+               onclick="FullMkt.toggleSbCard('sbBody_{{ $sbMktIdx }}')">
+            <strong>{{ $sbMktName }}</strong>
+            <span class="position-relative" onclick="event.stopPropagation(); FullMkt.toggleSbMinMax('sbMinMax_{{ $sbMktIdx }}')">
+              <i class="fa fa-info-circle tooltip-betlimit" title="Min/Max: {{ $sbMin }} - {{ $sbMax }}"></i>
+              <span id="sbMinMax_{{ $sbMktIdx }}" class="wb-sb-minmax-pop d-none">
+                Min/Max: {{ $sbMin }} - {{ $sbMax }}
+              </span>
+            </span>
+          </div>
+
+          <div id="sbBody_{{ $sbMktIdx }}" class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover tbl-bets p-rltv sportbook-market-tbl position-relative">
+                <colgroup>
+                  <col style="width: 66%;">
+                  <col style="width: 11%;">
+                  <col style="width: 23%;">
+                </colgroup>
+                <tbody>
+                  @foreach($sbRunners as $rIdx => $sbr)
+                    @php
+                      $selId = (string) ($sbr['selectionId'] ?? ($rIdx + 1));
+                      $rName = $sbMap[$selId] ?? ($sbr['runnerName'] ?? ('Runner ' . ($rIdx + 1)));
+                      $oddsVal = $sbr['price']['back'][0]['price'] ?? ($sbr['odds'] ?? 0);
+                      $sizeVal = $sbr['price']['back'][0]['size'] ?? ($sbr['size'] ?? 100000);
+                      $shortSize = is_numeric($sizeVal) ? $formatVolume($sizeVal) : $sizeVal;
+                      $rStatus = strtoupper((string) ($sbr['status'] ?? $sbMktStatus));
+                      $isSbSusp = in_array($rStatus, ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'BALL RUNNING', 'CLOSED']) || in_array($sbMktStatus, ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'CLOSED']);
+                      $sbSuspTxt = str_contains($rStatus, 'BALL') || str_contains($sbMktStatus, 'BALL') ? 'BALLRUN' : 'Suspended';
+                      $sbSlipRowId = 'sbTblSlip_' . $sbMktIdx . '_' . $selId;
+                    @endphp
+                    <tr class="odd-row js-sb-runner-row" data-selection-id="{{ $selId }}">
+                      <td class="team-name sportbook-name">
+                        <span class="title">{{ $rName }}</span>
+                        <span class="js-sb-pl-preview small fw-bold d-none" data-selection-name="{{ $rName }}"></span>
+                      </td>
+                      <td class="back-1 count position-relative sportbook-minwidth"
+                          onclick="FullMkt.openSbTableSlip('{{ $sbSlipRowId }}', '{{ addslashes($sbMktName) }}', '{{ $selId }}', '{{ addslashes($rName) }}', {{ $oddsVal > 0 ? $oddsVal : 2.0 }})">
+                        <div class="suspend-sportbook-cell js-sb-suspend {{ $isSbSusp ? '' : 'd-none' }}">
+                          <span>{{ $sbSuspTxt }}</span>
+                        </div>
+                        <a href="javascript:void(0)" class="back">
+                          <span class="position-relative js-sb-price" style="font-weight: 700; font-size: 14px;">{{ $oddsVal }}</span>
+                          <span class="position-relative js-sb-size" style="font-size: 11px;">{{ $shortSize }}</span>
+                        </a>
+                      </td>
+                      <td class="hidden-xs td-end-hide"></td>
+                    </tr>
+                    <tr id="{{ $sbSlipRowId }}_tr" class="betslipback d-none">
+                      <td colspan="3">
+                        <div id="{{ $sbSlipRowId }}" class="fm-inline-slip d-none" style="background:#d3edd0;border-bottom:1px solid #7e97a7;"></div>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      @empty
+        <div class="p-3 bg-white border text-center text-muted small fw-bold">Sportsbook markets are currently closed.</div>
+      @endforelse
+    </div>
+  </div>
+</div>
+@endif
+
+<!-- Fancy Book Modal -->
+<div class="modal fade" id="fancyBookModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header py-2 text-white" style="background:var(--header-bg);">
+        <h6 class="modal-title fw-bold m-0" id="fancyBookTitle">Fancy Book</h6>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-2">
+        <table class="table table-bordered table-sm text-center small mb-0">
+          <thead class="table-light">
+            <tr><th>Runs</th><th>Projected P/L</th></tr>
+          </thead>
+          <tbody id="fancyBookBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+
+@push('scripts')
+<script>
+  window.FullMkt = {
+    sportId: '{{ $event->sport_id }}',
+    eventId: '{{ $event->event_id }}',
+    eventName: '{{ addslashes($event->event_name) }}',
+    activeSlip: null,
+    stake: 100,
+
+    init: function () {
+      setInterval(() => this.pollLiveMarket(), 2500);
+    },
+
+    formatVol: function (val) {
+      const n = parseFloat(val || 0);
+      if (n >= 1000000) return +(n / 1000000).toFixed(2) + 'M';
+      if (n >= 1000) return +(n / 1000).toFixed(1) + 'K';
+      return n > 0 ? Math.round(n) : '0';
+    },
+
+    pollLiveMarket: async function () {
+      try {
+        const res = await fetch(`/api/exchange/market/live/${this.sportId}/${this.eventId}`);
+        if (!res.ok) return;
+        const json = await res.json();
+        if (json.liveScore && typeof json.liveScore === 'object') {
+          this.updateLiveScoreDom(json.liveScore);
+        }
+        const sbData = json.data?.sportsbookData || json.sportsbookData;
+        if (Array.isArray(sbData) && sbData.length > 0) {
+          this.updateSportsbookDom(sbData);
+        }
+      } catch (e) {}
+    },
+
+    updateSportsbookDom: function (sbData) {
+      sbData.forEach((mkt) => {
+        const mktStatus = String(mkt?.oddsData?.status || 'ONLINE').toUpperCase();
+        const runners = mkt?.oddsData?.runners || mkt?.runners || [];
+        runners.forEach((r) => {
+          const selId = String(r.selectionId || '');
+          const row = document.querySelector(`.js-sb-runner-row[data-selection-id="${selId}"]`);
+          if (!row) return;
+          const priceVal = r?.price?.back?.[0]?.price ?? r?.odds ?? 0;
+          const sizeVal = r?.price?.back?.[0]?.size ?? r?.size ?? 100000;
+          const rStatus = String(r?.status || mktStatus).toUpperCase();
+          const isSusp = ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'BALL RUNNING', 'CLOSED'].includes(rStatus) ||
+                         ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'CLOSED'].includes(mktStatus);
+          const suspTxt = (rStatus.includes('BALL') || mktStatus.includes('BALL')) ? 'BALLRUN' : 'Suspended';
+
+          const priceEl = row.querySelector('.js-sb-price');
+          const sizeEl = row.querySelector('.js-sb-size');
+          const suspEl = row.querySelector('.js-sb-suspend');
+
+          if (priceEl && priceVal !== undefined) priceEl.textContent = priceVal;
+          if (sizeEl && sizeVal !== undefined) sizeEl.textContent = typeof sizeVal === 'number' ? this.formatVol(sizeVal) : sizeVal;
+          if (suspEl) {
+            suspEl.classList.toggle('d-none', !isSusp);
+            const span = suspEl.querySelector('span');
+            if (span) span.textContent = suspTxt;
+          }
+        });
+      });
+    },
+
+    updateLiveScoreDom: function (sc) {
+      const card = document.getElementById('wbUniverseScorecard');
+      if (!card || !sc) return;
+
+      const setTxt = (sel, val) => {
+        const el = card.querySelector(sel);
+        if (el && val !== undefined && val !== null) el.textContent = val;
+      };
+
+      if (String(sc.sportId) === '1') {
+        setTxt('.js-sc-soc-g1', sc.score1 ?? '0');
+        setTxt('.js-sc-soc-ht1', sc.htScore1 ?? '0');
+        setTxt('.js-sc-soc-cor1', sc.corner1 ?? '0');
+        setTxt('.js-sc-soc-yc1', sc.yellowCard1 ?? '0');
+        setTxt('.js-sc-soc-rc1', sc.redCard1 ?? '0');
+        setTxt('.js-sc-soc-g2', sc.score2 ?? '0');
+        setTxt('.js-sc-soc-ht2', sc.htScore2 ?? '0');
+        setTxt('.js-sc-soc-cor2', sc.corner2 ?? '0');
+        setTxt('.js-sc-soc-yc2', sc.yellowCard2 ?? '0');
+        setTxt('.js-sc-soc-rc2', sc.redCard2 ?? '0');
+        setTxt('.js-sc-soc-status', sc.status ?? 'IN PLAY');
+        if (sc.stage) setTxt('.js-sc-soc-stage', String(sc.stage).toUpperCase());
+        return;
+      }
+
+      if (String(sc.sportId) === '2') {
+        setTxt('.js-sc-ten-sets1', sc.score1 ?? '0');
+        setTxt('.js-sc-ten-s1-1', sc.set1Score1 ?? '-');
+        setTxt('.js-sc-ten-s2-1', sc.set2Score1 ?? '-');
+        setTxt('.js-sc-ten-s3-1', sc.set3Score1 ?? '-');
+        setTxt('.js-sc-ten-pts1', sc.points1 ?? '0');
+        setTxt('.js-sc-ten-sets2', sc.score2 ?? '0');
+        setTxt('.js-sc-ten-s1-2', sc.set1Score2 ?? '-');
+        setTxt('.js-sc-ten-s2-2', sc.set2Score2 ?? '-');
+        setTxt('.js-sc-ten-s3-2', sc.set3Score2 ?? '-');
+        setTxt('.js-sc-ten-pts2', sc.points2 ?? '0');
+        setTxt('.js-sc-ten-status', sc.status ?? 'IN PLAY');
+        setTxt('.js-sc-t1-srv', sc.serving === 1 ? '●' : '');
+        setTxt('.js-sc-t2-srv', sc.serving === 2 ? '●' : '');
+        return;
+      }
+
+      if (sc.isTestMatch) {
+        const inn1_1 = (sc.score1 || '-') + (sc.overs1 && !sc.score3 ? ` (${sc.overs1})` : '');
+        const inn1_2 = (sc.score3 || '-') + (sc.overs3 ? ` (${sc.overs3})` : '');
+        const inn2_1 = (sc.score2 || '-') + (sc.overs2 && !sc.score4 ? ` (${sc.overs2})` : '');
+        const inn2_2 = (sc.score4 || '-') + (sc.overs4 ? ` (${sc.overs4})` : '');
+        setTxt('.js-sc-t1-inn1', inn1_1);
+        setTxt('.js-sc-t1-inn2', inn1_2);
+        setTxt('.js-sc-t2-inn1', inn2_1);
+        setTxt('.js-sc-t2-inn2', inn2_2);
+      } else {
+        setTxt('.js-sc-t1-score', sc.score1 || '-');
+        setTxt('.js-sc-t1-ovs', sc.overs1 || '-');
+        setTxt('.js-sc-t1-4s', sc.totalFours1 ?? 0);
+        setTxt('.js-sc-t1-6s', sc.totalSixes1 ?? 0);
+        setTxt('.js-sc-t1-wides', sc.totalWides1 ?? 0);
+        setTxt('.js-sc-t2-score', sc.score2 || '-');
+        setTxt('.js-sc-t2-ovs', sc.overs2 || '-');
+        setTxt('.js-sc-t2-4s', sc.totalFours2 ?? 0);
+        setTxt('.js-sc-t2-6s', sc.totalSixes2 ?? 0);
+        setTxt('.js-sc-t2-wides', sc.totalWides2 ?? 0);
+      }
+
+      setTxt('.js-sc-t1-rr', sc.team1Flag && sc.runRate ? sc.runRate : (sc.isTestMatch ? '' : '0.00'));
+      setTxt('.js-sc-t2-rr', sc.team2Flag && sc.runRate ? sc.runRate : (sc.isTestMatch ? '' : '0.00'));
+
+      const bParts = [];
+      if (sc.batsman1Name) bParts.push(`${sc.batsman1Name} ${sc.batsman1Runs ?? 0}`);
+      if (sc.batsman2Name) bParts.push(`${sc.batsman2Name} ${sc.batsman2Runs ?? 0}`);
+      const batText = sc.batsmenText || bParts.join(', ');
+      const bowlText = sc.bowlerText || (sc.bowlerName ? `${sc.bowlerName} ${sc.bowlerRuns ?? 0}` : '');
+      const batEl = card.querySelector('.js-sc-batsmen');
+      if (batEl && batText) batEl.innerHTML = `<span style="color:#f8e71c;">BAT:</span> ${batText}`;
+      const bowlEl = card.querySelector('.js-sc-bowler');
+      if (bowlEl && bowlText) bowlEl.innerHTML = `<span style="color:#00d2ff;">BOWL:</span> ${bowlText}`;
+    },
+
+    filterSection: function (sec, pill) {
+      document.querySelectorAll('.fm-filter-pill').forEach(p => p.classList.remove('active'));
+      if (pill) pill.classList.add('active');
+      document.querySelectorAll('.js-fm-section').forEach(el => {
+        if (sec === 'all') {
+          el.classList.remove('d-none');
+        } else {
+          el.classList.toggle('d-none', el.id !== 'fmSection_' + sec);
+        }
+      });
+    },
+
+    toggleSbCard: function (bodyId) {
+      const el = document.getElementById(bodyId);
+      if (el) el.classList.toggle('d-none');
+    },
+
+    toggleSbMinMax: function (popId) {
+      const pop = document.getElementById(popId);
+      if (pop) pop.classList.toggle('d-none');
+    },
+
+    openSbTableSlip: function (containerId, marketName, selectionId, selectionName, odds) {
+      document.querySelectorAll('.sportbook-market-tbl td.back-1.select').forEach(td => td.classList.remove('select'));
+      document.querySelectorAll('tr.betslipback').forEach(tr => tr.classList.add('d-none'));
+
+      const row = document.querySelector(`.js-sb-runner-row[data-selection-id="${selectionId}"]`);
+      if (row) {
+        const backTd = row.querySelector('td.back-1');
+        if (backTd) backTd.classList.add('select');
+      }
+
+      const trSlip = document.getElementById(containerId + '_tr');
+      if (trSlip) trSlip.classList.remove('d-none');
+
+      this.openInlineSlip(containerId, marketName, selectionId, selectionName, 'BACK', odds, 'sportsbook', null);
+      const box = document.getElementById(containerId);
+      if (box) {
+        box.style.background = '#d3edd0';
+      }
+    },
+
+    openInlineSlip: function (containerId, marketName, selectionId, selectionName, betType, odds, category, runLine) {
+      document.querySelectorAll('.fm-inline-slip').forEach(el => {
+        el.classList.add('d-none');
+        el.innerHTML = '';
+      });
+
+      const box = document.getElementById(containerId);
+      this.activeSlip = { containerId, marketName, selectionId, selectionName, betType, odds: parseFloat(odds), category, runLine };
+
+      // Also sync with Right Sidebar Bet Slip
+      if (window.WB24 && typeof WB24.openBetSlip === 'function') {
+        WB24.openBetSlip({
+          eventId: this.eventId,
+          eventName: this.eventName,
+          marketName,
+          selectionId,
+          selectionName,
+          betType,
+          odds: parseFloat(odds),
+          category,
+          runLine
+        });
+      }
+
+      if (!box) return;
+      const isLay = (betType === 'LAY' || betType === 'NO');
+      box.className = 'fm-inline-slip ' + (isLay ? 'lay-mode' : '');
+      const stakes = [100, 200, 500, 5000, 10000, 25000, 50000, 100000];
+      box.innerHTML = `
+        <div class="row g-2 align-items-center mb-2">
+          <div class="col-3 d-none d-md-block">
+            <button type="button" class="btn btn-secondary btn-sm w-100 fw-bold" onclick="FullMkt.closeInlineSlip()">Cancel</button>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="input-group input-group-sm">
+              <button class="btn btn-outline-dark fw-bold" type="button" onclick="FullMkt.stepOdds(-0.01)">-</button>
+              <input type="number" step="0.01" id="fmInlineOdds" class="form-control text-center fw-bold" value="${odds}">
+              <button class="btn btn-outline-dark fw-bold" type="button" onclick="FullMkt.stepOdds(0.01)">+</button>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="input-group input-group-sm">
+              <button class="btn btn-outline-dark fw-bold" type="button" onclick="FullMkt.stepStake(-100)">-</button>
+              <input type="number" id="fmInlineStake" class="form-control text-center fw-bold" value="${this.stake}" oninput="FullMkt.stake = parseFloat(this.value)||0">
+              <button class="btn btn-outline-dark fw-bold" type="button" onclick="FullMkt.stepStake(100)">+</button>
+            </div>
+          </div>
+          <div class="col-3 d-none d-md-block">
+            <button type="button" class="btn btn-primary btn-sm w-100 fw-bold" style="background:var(--header-bg);border-color:#000;" onclick="FullMkt.submitInlineBet()">Place Bet</button>
+          </div>
+        </div>
+        <div class="row g-1">
+          ${stakes.map(s => `<div class="col-3 col-md"><a href="javascript:void(0)" class="fm-stake-chip" onclick="FullMkt.setStake(${s})">${s}</a></div>`).join('')}
+        </div>
+        <div class="row g-2 mt-1 d-md-none">
+          <div class="col-6"><button type="button" class="btn btn-secondary btn-sm w-100 fw-bold" onclick="FullMkt.closeInlineSlip()">Cancel</button></div>
+          <div class="col-6"><button type="button" class="btn btn-primary btn-sm w-100 fw-bold" style="background:var(--header-bg);border-color:#000;" onclick="FullMkt.submitInlineBet()">Place Bet</button></div>
+        </div>
+      `;
+    },
+
+    closeInlineSlip: function () {
+      this.activeSlip = null;
+      document.querySelectorAll('.fm-inline-slip').forEach(el => {
+        el.classList.add('d-none');
+        el.innerHTML = '';
+      });
+      document.querySelectorAll('tr.betslipback').forEach(tr => tr.classList.add('d-none'));
+      document.querySelectorAll('.sportbook-market-tbl td.back-1.select').forEach(td => td.classList.remove('select'));
+    },
+
+    setStake: function (v) {
+      this.stake = parseFloat(v) || 100;
+      const inp = document.getElementById('fmInlineStake');
+      if (inp) inp.value = this.stake;
+      if (window.WB24 && typeof WB24.setStake === 'function') WB24.setStake(this.stake);
+    },
+
+    stepStake: function (d) {
+      this.setStake(Math.max(10, (parseFloat(this.stake) || 100) + d));
+    },
+
+    stepOdds: function (d) {
+      const inp = document.getElementById('fmInlineOdds');
+      if (!inp || !this.activeSlip) return;
+      this.activeSlip.odds = Math.max(1.01, Math.round((this.activeSlip.odds + d) * 100) / 100);
+      inp.value = this.activeSlip.odds;
+    },
+
+    submitInlineBet: function () {
+      if (window.WB24 && typeof WB24.submitBet === 'function') {
+        const sInp = document.getElementById('fmInlineStake');
+        const oInp = document.getElementById('fmInlineOdds');
+        const rOdds = document.getElementById('slipOddsInput');
+        const rStake = document.getElementById('slipStakeInput');
+        if (oInp && rOdds) rOdds.value = oInp.value;
+        if (sInp && rStake) rStake.value = sInp.value;
+        WB24.submitBet(false);
+        this.closeInlineSlip();
+      }
+    }
+  };
+
+  function switchFancyOrSb(type) {
+    const isFancy = (type === 'fancy');
+    document.getElementById('subNav_Fancy')?.classList.toggle('d-none', !isFancy);
+    document.getElementById('subNav_SPORTSBOOK')?.classList.toggle('d-none', isFancy);
+    document.getElementById('marketPane_fancy')?.classList.toggle('d-none', !isFancy);
+    document.getElementById('marketPane_sportsbook')?.classList.toggle('d-none', isFancy);
+  }
+
+  function filterFancyCat(cat, anchor) {
+    document.querySelectorAll('.js-fancy-cat-li').forEach(li => li.classList.remove('select'));
+    if (anchor && anchor.parentElement) anchor.parentElement.classList.add('select');
+    document.querySelectorAll('.js-fancy-row').forEach(r => {
+      if (cat === 'ALL' || r.dataset.fcat === cat) {
+        r.classList.remove('d-none');
+      } else {
+        r.classList.add('d-none');
+      }
+    });
+  }
+
+  function filterSportsbookCat(cat, anchor) {
+    document.querySelectorAll('.js-sb-cat-li').forEach(li => li.classList.remove('select'));
+    if (anchor && anchor.parentElement) anchor.parentElement.classList.add('select');
+    document.querySelectorAll('.js-sb-market-card').forEach(c => {
+      const mtype = (c.dataset.sbMtype || 'ALL').toUpperCase();
+      if (cat === 'ALL' || mtype === cat.toUpperCase() || mtype === 'ALL') {
+        c.classList.remove('d-none');
+      } else {
+        c.classList.add('d-none');
+      }
+    });
+  }
+
+  function showFancyBook(title, noRun, yesRun) {
+    document.getElementById('fancyBookTitle').textContent = title;
+    const base = Math.max(1, noRun || yesRun || 45);
+    let html = '';
+    for (let r = Math.max(0, base - 3); r <= base + 3; r++) {
+      const pl = r >= (yesRun || base) ? '+100.00' : '-100.00';
+      const cls = r >= (yesRun || base) ? 'text-success fw-bold' : 'text-danger fw-bold';
+      html += `<tr><td>${r}</td><td class="${cls}">${pl}</td></tr>`;
+    }
+    document.getElementById('fancyBookBody').innerHTML = html;
+    new bootstrap.Modal(document.getElementById('fancyBookModal')).show();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => FullMkt.init());
+</script>
+@endpush

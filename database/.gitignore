@@ -1,0 +1,6 @@
+/database.sqlite
+/database.sqlite-shm
+/database.sqlite-wal
+/database.sqlite-journal
+/testing.sqlite*
+!data/initial_database.sqlite

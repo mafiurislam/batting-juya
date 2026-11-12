@@ -1,0 +1,336 @@
+{
+  "data": {
+    "eventId": "3544687543453",
+    "exEventId": "3544687543453",
+    "eventName": "Ball By Ball",
+    "marketId": "366411202611127133185",
+    "exMarketId": "366411202611127133185",
+    "marketName": "Ball By Ball",
+    "news": "Results are based on stream only. Score board may be different or updated later",
+    "min": 100,
+    "max": 100000,
+    "marketType": "Ballbyball",
+    "domains": [
+      "ALL"
+    ],
+    "sequence": 20,
+    "popular": false,
+    "isScore": false,
+    "isSuperFancy": false,
+    "isVoid": 0,
+    "isSettlement": 0,
+    "oddsData": {
+      "seconds": 20,
+      "isMaintenance": false,
+      "inPlay": true,
+      "preBet": false,
+      "betDelay": 0,
+      "totalMatched": 200,
+      "status": "ONLINE",
+      "roundStatus": "MARKET_CREATED",
+      "crossMatching": true,
+      "runners": [
+        {
+          "selectionId": "304350101",
+          "handicap": 0,
+          "status": "ONLINE",
+          "price": {
+            "back": [
+              {
+                "size": 100000,
+                "price": 2.18
+              },
+              {
+                "size": 100000,
+                "price": 2.18
+              },
+              {
+                "size": 100000,
+                "price": 2.18
+              }
+            ],
+            "lay": [
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              }
+            ]
+          }
+        },
+        {
+          "selectionId": "304350102",
+          "handicap": 0,
+          "status": "ONLINE",
+          "price": {
+            "back": [
+              {
+                "size": 98000,
+                "price": 2.62
+              },
+              {
+                "size": 100000,
+                "price": 2.62
+              },
+              {
+                "size": 100000,
+                "price": 2.62
+              }
+            ],
+            "lay": [
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              }
+            ]
+          }
+        },
+        {
+          "selectionId": "304350103",
+          "handicap": 0,
+          "status": "ONLINE",
+          "price": {
+            "back": [
+              {
+                "size": 100000,
+                "price": 7.92
+              },
+              {
+                "size": 100000,
+                "price": 7.92
+              },
+              {
+                "size": 100000,
+                "price": 7.92
+              }
+            ],
+            "lay": [
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              }
+            ]
+          }
+        },
+        {
+          "selectionId": "304350104",
+          "handicap": 0,
+          "status": "ONLINE",
+          "price": {
+            "back": [
+              {
+                "size": 100000,
+                "price": 11
+              },
+              {
+                "size": 100000,
+                "price": 11
+              },
+              {
+                "size": 100000,
+                "price": 11
+              }
+            ],
+            "lay": [
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              }
+            ]
+          }
+        },
+        {
+          "selectionId": "304350105",
+          "handicap": 0,
+          "status": "ONLINE",
+          "price": {
+            "back": [
+              {
+                "size": 99600,
+                "price": 6.52
+              },
+              {
+                "size": 100000,
+                "price": 6.52
+              },
+              {
+                "size": 100000,
+                "price": 6.52
+              }
+            ],
+            "lay": [
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              }
+            ]
+          }
+        },
+        {
+          "selectionId": "304350106",
+          "handicap": 0,
+          "status": "ONLINE",
+          "price": {
+            "back": [
+              {
+                "size": 99900,
+                "price": 12.2
+              },
+              {
+                "size": 100000,
+                "price": 12.2
+              },
+              {
+                "size": 100000,
+                "price": 12.2
+              }
+            ],
+            "lay": [
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              }
+            ]
+          }
+        },
+        {
+          "selectionId": "304350108",
+          "handicap": 0,
+          "status": "ONLINE",
+          "price": {
+            "back": [
+              {
+                "size": 100000,
+                "price": 6.87
+              },
+              {
+                "size": 100000,
+                "price": 6.87
+              },
+              {
+                "size": 100000,
+                "price": 6.87
+              }
+            ],
+            "lay": [
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              }
+            ]
+          }
+        },
+        {
+          "selectionId": "304350109",
+          "handicap": 0,
+          "status": "ONLINE",
+          "price": {
+            "back": [
+              {
+                "size": 100000,
+                "price": 8.67
+              },
+              {
+                "size": 100000,
+                "price": 8.67
+              },
+              {
+                "size": 100000,
+                "price": 8.67
+              }
+            ],
+            "lay": [
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              },
+              {
+                "size": 0,
+                "price": 0
+              }
+            ]
+          }
+        }
+      ],
+      "volume": 1000000
+    },
+    "runnersData": {
+      "304350101": "0 RUNS",
+      "304350102": "1 RUNS",
+      "304350103": "2 RUNS",
+      "304350104": "3 RUNS",
+      "304350105": "4 RUNS",
+      "304350106": "6 RUNS",
+      "304350108": "WICKET",
+      "304350109": "EXTRA RUNS"
+    },
+    "eventTime": "2024-09-16T15:56:53.851Z",
+    "createdAt": "2026-11-12T07:13:31.085Z",
+    "oddsType": "BALLBYBALL",
+    "tableFlag": "BALLBYBALL"
+  },
+  "meta": {
+    "message": "Market List.",
+    "status_code": 200,
+    "status": true
+  }
+}

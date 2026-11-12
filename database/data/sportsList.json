@@ -1,0 +1,90 @@
+{
+  "data": [
+    {
+      "sportId": "4",
+      "sportName": "Cricket",
+      "highlight": false,
+      "sequence": 2,
+      "popular": true,
+      "status": true,
+      "others": false
+    },
+    {
+      "sportId": "66102",
+      "sportName": "Casino",
+      "highlight": false,
+      "sequence": 4,
+      "popular": false,
+      "status": true,
+      "others": true
+    },
+    {
+      "sportId": "2",
+      "sportName": "Tennis",
+      "highlight": false,
+      "sequence": 5,
+      "popular": true,
+      "status": true,
+      "others": false
+    },
+    {
+      "sportId": "1",
+      "sportName": "Soccer",
+      "highlight": false,
+      "sequence": 6,
+      "popular": true,
+      "status": true,
+      "others": false
+    },
+    {
+      "sportId": "7",
+      "sportName": "Horse Racing",
+      "highlight": false,
+      "sequence": 7,
+      "popular": true,
+      "status": true,
+      "others": false
+    },
+    {
+      "sportId": "2378961",
+      "sportName": "Politics",
+      "highlight": false,
+      "sequence": 7,
+      "popular": true,
+      "status": true,
+      "others": false
+    },
+    {
+      "sportId": "4339",
+      "sportName": "Greyhound Racing",
+      "highlight": false,
+      "sequence": 8,
+      "popular": false,
+      "status": true,
+      "others": false
+    },
+    {
+      "sportId": "7522",
+      "sportName": "Basketball",
+      "highlight": false,
+      "sequence": 9,
+      "popular": true,
+      "status": true,
+      "others": false
+    },
+    {
+      "sportId": "66104",
+      "sportName": "Lottery",
+      "highlight": false,
+      "sequence": 22,
+      "popular": false,
+      "status": true,
+      "others": false
+    }
+  ],
+  "meta": {
+    "message": "sports.",
+    "status_code": 200,
+    "status": true
+  }
+}

@@ -1,0 +1,1780 @@
+:root {
+  --mainBodyBG: #ededed;
+  --header-bg: linear-gradient(-180deg, #315195 0%, #14213D 100%);
+  --header-text-color: #ffffff;
+  --login-btn-bg: linear-gradient(-180deg, #f72424 0%, #bb1c00 100%);
+  --desktop-account-btn-bg: linear-gradient(180deg, #2e2e2e, #282828 42%, #2e2e2e);
+  --desktop-account-icons-color: #fd8f3b;
+  --exchange-bg: linear-gradient(-180deg, #2E4B5E 0%, #243A48 82%);
+  --login-bg: linear-gradient(#535353 0%, #000000 80%);
+  --login-cross-bg: linear-gradient(#A4DC60 0%, #4F9F21 100%);
+  --login-input-border: #fd8f3b;
+  --login-page-btn-bg: linear-gradient(#A4DC60 0%, #4F9F21 100%);
+  --age-modal-bg: linear-gradient(#A4DC60 0%, #4F9F21 100%);
+  --sportsbar-bg: linear-gradient(#A4DC60 0%, #4F9F21 100%);
+  --highlight-tile-bg: linear-gradient(#A4DC60 0%, #4F9F21 100%);
+  --desktop-sports-tile-bg: linear-gradient(-180deg, #2E4B5E 0%, #243A48 82%);
+  --desktop-sports-tile-active-bg: #dddcd6;
+  --markets-text-color: #2789ce;
+  --back-1: #72bbef;
+  --back-2: #b7d5eb;
+  --back-3: #d7e8f4;
+  --lay-1: #faa9ba;
+  --lay-2: #efd3d9;
+  --lay-3: #f6e6ea;
+  --bookmaker-bg: #FAF8D8;
+  --fancy-header-bg: linear-gradient(180deg, #0a92a5 15%, #076875 100%);
+  --sportsbook-header-bg: linear-gradient(180deg, #f26d1c 15%, #d14100 100%);
+  --bottom-nav-bg: linear-gradient(-180deg, #243a48 20%, #172732 91%);
+  --bottom-nav-active-bg: linear-gradient(-180deg, #32617f 20%, #1f4258 91%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--mainBodyBG);
+  font-family: Tahoma, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  color: #23282c;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ================= TOP HEADER ================= */
+.wb-top-header {
+  background: var(--header-bg);
+  color: #fff;
+  height: 62px;
+  min-height: 62px;
+  max-height: 62px;
+  flex-shrink: 0;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.wb-logo {
+  display: inline-flex;
+  align-items: center;
+  height: 62px;
+}
+
+.wb-logo img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  cursor: pointer;
+  display: block;
+}
+
+.wb-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 62px;
+}
+
+.wb-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.wb-search-trigger {
+  color: #fff;
+  font-size: 23px;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.searchIconDiv {
+  display: none;
+  align-items: center;
+  position: absolute;
+  right: 4px;
+  top: -12.5px;
+  width: 280px;
+  height: 25px;
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 0 6px;
+  z-index: 2005;
+}
+
+.searchIconDiv.open {
+  display: flex;
+}
+
+.searchIconDiv.has-results {
+  border-radius: 4px 4px 0 0;
+}
+
+.searchIconDiv .searchIcon {
+  font-size: 14px;
+  color: #000;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.searchIconDiv .searchbar {
+  width: 100%;
+  height: 25px;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 6px 0 2px;
+  font-size: 14px;
+  color: #000;
+}
+
+.searchIconDiv .searchIconCross {
+  font-size: 18px;
+  color: #000;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px 2px;
+  flex-shrink: 0;
+}
+
+.searchIconDiv .searchBox {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  width: 280px;
+  max-height: 242px;
+  overflow-y: auto;
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  z-index: 2010;
+  display: none;
+}
+
+.searchIconDiv .searchBox.show {
+  display: block;
+}
+
+.search-game-ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-game-ul li {
+  padding: 4px 8px;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 12px;
+  color: #000;
+}
+
+.search-game-ul li:hover {
+  background: #f2f7fb;
+}
+
+.search-game-ul li a {
+  color: #000;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
+.search-game-name b {
+  font-weight: 700;
+  font-size: 12px;
+  color: #000;
+}
+
+.game-teams {
+  font-size: 12px;
+  color: #2789ce;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.wb-header-login-form {
+  position: relative;
+}
+
+.wb-header-uname-pass {
+  display: flex;
+  align-items: center;
+}
+
+.wb-header-login-btns {
+  display: flex;
+  align-items: center;
+}
+
+.wb-header-input {
+  width: 193px !important;
+  height: 25px !important;
+  min-height: 25px !important;
+  border-radius: 4px !important;
+  border: 1px solid #dee2e6 !important;
+  padding: 2px 10px !important;
+  font-size: 14px !important;
+  background-color: #ffffff !important;
+  color: #212529 !important;
+  line-height: 1.2 !important;
+  outline: none !important;
+}
+
+.wb-header-input::placeholder {
+  color: #757575 !important;
+}
+
+.wb-header-input:focus {
+  border-color: #000000 !important;
+  box-shadow: 0 0 0 1.5px #000000 !important;
+  outline: none !important;
+}
+
+.wb-header-input:-webkit-autofill,
+.wb-header-input:-webkit-autofill:hover,
+.wb-header-input:-webkit-autofill:focus,
+.wb-auth-field input:-webkit-autofill,
+.wb-auth-screen .phoneNumberInput:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+  -webkit-text-fill-color: #212529 !important;
+  background-color: #ffffff !important;
+}
+
+.error-message {
+  color: #ff3b3b;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  display: block;
+  margin-top: 4px;
+}
+
+.wb-btn-login-head,
+.wb-btn-signup-head {
+  background: var(--login-btn-bg);
+  color: #fff !important;
+  border: none;
+  border-radius: 3.875px;
+  min-width: 95.5px;
+  height: 25px;
+  padding: 0 10px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.wb-btn-login-head:hover,
+.wb-btn-signup-head:hover {
+  filter: brightness(1.08);
+}
+
+.wb-header-err {
+  position: absolute;
+  bottom: -17px;
+  left: 2px;
+  color: #ffdd57;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Logged-in Header Controls */
+.wb-user-balance-box {
+  text-align: right;
+  line-height: 1.25;
+  margin-right: 4px;
+  font-size: 12px;
+}
+
+.wb-user-balance-box .pti-line {
+  color: #fff;
+  font-weight: 700;
+}
+
+.wb-user-balance-box .exp-line {
+  color: #fff;
+  font-weight: 700;
+}
+
+.wb-user-balance-box .exp-val {
+  color: #ff2a2a;
+  cursor: pointer;
+}
+
+.wb-refresh-btn {
+  background: var(--desktop-account-btn-bg);
+  color: #fff;
+  border: 1px solid #1d1d1d;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.wb-myaccount-dropdown .wb-myaccount-btn {
+  background: var(--desktop-account-btn-bg);
+  color: #fff;
+  border: 1px solid #1d1d1d;
+  border-radius: 4px;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.wb-myaccount-dropdown .wb-myaccount-btn i {
+  color: var(--desktop-account-icons-color);
+}
+
+.wb-myaccount-menu {
+  min-width: 215px;
+  padding: 0;
+  border: 1px solid #a4b0b9;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  border-radius: 0;
+  overflow: hidden;
+  font-size: 13px;
+  background: #fff;
+}
+
+.wb-myaccount-menu .acct-head {
+  background: #e4e7ea;
+  color: #000;
+  padding: 7px 12px;
+  font-weight: 700;
+  font-size: 13px;
+  border-bottom: 1px solid #c8ced3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wb-myaccount-menu .dropdown-item {
+  padding: 6px 12px;
+  color: #1e1e1e;
+  border-bottom: 1px solid #c8ced3;
+  font-size: 13px;
+  font-weight: 400;
+  background: #fff;
+}
+
+.wb-myaccount-menu .dropdown-item:hover,
+.wb-myaccount-menu .dropdown-item.active-item {
+  background: #e4e7ea;
+  color: #000;
+}
+
+.wb-myaccount-menu .drp-logout {
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.wb-logout-btn {
+  background: var(--exchange-bg);
+  color: #fff !important;
+  border: none;
+  width: 100%;
+  padding: 6px 10px;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ================= GREEN NAVIGATION BAR ================= */
+.wb-green-navbar {
+  background: var(--sportsbar-bg);
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 0 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.wb-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  height: 32px;
+  max-height: 32px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.wb-nav-list::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.wb-nav-list li {
+  display: flex;
+  align-items: stretch;
+  height: 32px;
+  max-height: 32px;
+  border-right: 1px solid rgba(121, 119, 119, 0.55);
+}
+
+.wb-nav-list li a {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  max-height: 32px;
+  padding: 0 11px;
+  color: #000;
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.wb-nav-list li a:hover,
+.wb-nav-list li a.active {
+  color: #fff;
+}
+
+.wb-nav-list li.vimaan-item {
+  background: #000 !important;
+  overflow: hidden;
+  height: 32px;
+  max-height: 32px;
+}
+
+.wb-nav-list li.vimaan-item a {
+  color: #ff9900 !important;
+  font-weight: 800;
+  gap: 5px;
+  height: 32px;
+  max-height: 32px;
+  overflow: hidden;
+}
+
+.wb-nav-list li.vimaan-item img {
+  width: 38px;
+  height: 20px;
+  object-fit: contain;
+  animation: wbPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes wbPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.wb-nav-setting {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  max-height: 32px;
+  padding: 0 10px;
+  font-weight: 700;
+  color: #000;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.wb-nav-setting:hover {
+  color: #fff;
+}
+
+/* ================= 3-COLUMN APP BODY ================= */
+.wb-app-body {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(100vh - 94px);
+  width: 100%;
+  max-width: 1500px;
+  margin: 0;
+}
+
+/* Left Sports Sidebar */
+.wb-left-sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: #fff;
+  border-right: 1px solid #c8ced3;
+  min-height: calc(100vh - 94px);
+}
+
+.wb-sidebar-head {
+  background: var(--header-bg);
+  color: #fff;
+  height: 28px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.wb-sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wb-sidebar-menu li {
+  border-bottom: 1px solid #d2d6e2;
+}
+
+.wb-sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  color: #223869;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.wb-sidebar-menu li a:hover {
+  background: #E6EFD1;
+  color: #83AE17;
+}
+
+.wb-sidebar-subitems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  border-top: 1px solid #d2d6e2;
+}
+
+.wb-sidebar-subitems li {
+  border-bottom: none !important;
+}
+
+.wb-sidebar-subitems li + li {
+  border-top: 1px solid #d2d6e2;
+}
+
+.wb-sidebar-match-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px;
+  padding: 6px 10px 6px 18px !important;
+  color: #223869 !important;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.wb-sidebar-match-link:hover {
+  background: #E6EFD1 !important;
+  color: #83AE17 !important;
+}
+
+.wb-sidebar-arrow {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #83AE17;
+  border-radius: 3px;
+  color: #83AE17;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+/* Center Content Area */
+.wb-center-content {
+  flex: 1;
+  min-width: 0;
+  padding: 0 6px 30px 6px;
+}
+
+/* Right Open Bets Sidebar */
+.wb-right-sidebar {
+  width: 340px;
+  min-width: 340px;
+  background: #fff;
+  border-left: 1px solid #c8ced3;
+  min-height: calc(100vh - 94px);
+}
+
+.wb-right-title {
+  background: var(--header-bg);
+  color: #fff;
+  height: 28px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+/* ================= NEWS MARQUEE & BANNER ================= */
+.wb-news-bar {
+  background: var(--exchange-bg);
+  color: #fff;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.wb-news-badge {
+  background: linear-gradient(-180deg, #274253 0%, #0f191f 82%);
+  color: #fff;
+  height: 100%;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.wb-banner-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: #111;
+}
+
+.wb-banner-wrap img {
+  width: 100%;
+  max-height: 185px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ================= HIGHLIGHTS & ODDS TABLE ================= */
+.wb-highlights-header {
+  background: var(--highlight-tile-bg);
+  color: #000;
+  padding: 5px 10px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.wb-sport-tabs-bar {
+  background: linear-gradient(#4F9F21 0%, #A4DC60 100%);
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 4px 8px 0 8px;
+}
+
+.wb-sport-tab-btn {
+  background: var(--desktop-sports-tile-bg);
+  color: #fff;
+  border: none;
+  border-radius: 12px 12px 0 0;
+  padding: 4px 18px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.wb-sport-tab-btn.active {
+  background: var(--desktop-sports-tile-active-bg);
+  color: #000;
+}
+
+.wb-1x2-head {
+  background: #dddcd6;
+  color: #000;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  font-weight: 700;
+  font-size: 11px;
+  border-bottom: 1px solid #c8ced3;
+}
+
+.wb-1x2-left {
+  flex: 1;
+  padding-left: 10px;
+}
+
+.wb-1x2-cols {
+  width: 324px;
+  display: flex;
+  text-align: center;
+}
+
+.wb-1x2-cols > div {
+  width: 108px;
+}
+
+.wb-1x2-pin-space {
+  width: 32px;
+}
+
+.wb-match-row {
+  background: #fff;
+  border-bottom: 1px solid #c8ced3;
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  transition: background 0.12s;
+}
+
+.wb-match-row:hover {
+  background: #f8fbff;
+}
+
+.wb-match-info {
+  flex: 1;
+  min-width: 0;
+  padding: 0 8px 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.wb-match-title-wrap {
+  min-width: 0;
+}
+
+.wb-match-link {
+  color: var(--markets-text-color);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.wb-match-link:hover {
+  text-decoration: underline;
+}
+
+.wb-inplay-tag {
+  color: #508d0e;
+  font-weight: 700;
+  font-size: 12px;
+  margin-left: 6px;
+  animation: inplayBlink 1.3s infinite;
+}
+
+.wb-cricbuzz-score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #14222d;
+  color: #7ed321;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 5px;
+  vertical-align: middle;
+  line-height: 1.3;
+}
+
+.wb-cb-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff2a2a;
+  display: inline-block;
+  box-shadow: 0 0 4px #ff2a2a;
+}
+
+@keyframes inplayBlink {
+  0%, 100% { color: #168000; }
+  50% { color: #b85c00; }
+}
+
+.wb-match-time {
+  color: #777777;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.wb-clock-icon {
+  color: #008000;
+  margin-left: 4px;
+}
+
+.wb-badges {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.wb-badge-bm {
+  background: #1d3549;
+  color: #fff;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+.wb-badge-f {
+  background: #0a92a5;
+  color: #fff;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.wb-badge-s {
+  background: linear-gradient(180deg, #f26d1c 15%, #d14100 100%);
+  color: #fff;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.wb-odds-group {
+  width: 324px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.wb-odds-pair {
+  display: flex;
+  gap: 1px;
+  width: 106px;
+}
+
+.wb-odd-box {
+  width: 52px;
+  height: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: #1e1e1e;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.05;
+}
+
+.wb-odd-box small {
+  font-size: 9px;
+  font-weight: 400;
+  color: #333;
+}
+
+.wb-odd-back {
+  background: var(--back-1);
+}
+
+.wb-odd-back-2 {
+  background: var(--back-2);
+}
+
+.wb-odd-back-3 {
+  background: var(--back-3);
+}
+
+.wb-odd-lay {
+  background: var(--lay-1);
+}
+
+.wb-odd-lay-2 {
+  background: var(--lay-2);
+}
+
+.wb-odd-lay-3 {
+  background: var(--lay-3);
+}
+
+.wb-odd-box:hover {
+  filter: brightness(0.94);
+}
+
+.wb-odd-box.flash-change {
+  animation: oddFlash 0.6s ease;
+}
+
+@keyframes oddFlash {
+  0% { background-color: #ffe066; }
+  100% { }
+}
+
+.wb-pin-cell {
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.wb-pin-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #7e97a7;
+  color: #7e97a7;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.wb-pin-btn.active {
+  border-color: #6bbd0f;
+  background: #6bbd0f;
+  color: #fff;
+}
+
+/* ================= HOME & LIVE CASINO TABS + CARDS ================= */
+.wb-casino-tab-bar {
+  background: linear-gradient(#A4DC60 0%, #4F9F21 100%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.wb-casino-tab-link {
+  color: #000;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+}
+
+.wb-casino-tab-link.active {
+  background: linear-gradient(-180deg, #315195 0%, #14213D 100%);
+  color: #fff;
+}
+
+.wb-casino-grid {
+  background: #fff;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.wb-casino-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.22);
+  cursor: pointer;
+  aspect-ratio: 3 / 3.7;
+  display: block;
+}
+
+.wb-casino-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.wb-casino-card:hover img {
+  transform: scale(1.05);
+}
+
+.wb-casino-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 6px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.wb-casino-card:hover .wb-casino-card-overlay {
+  opacity: 1;
+}
+
+.wb-casino-play-pill {
+  background: linear-gradient(#A4DC60 0%, #4F9F21 100%);
+  color: #000;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+/* Our Casino (/newCasino) Card Style with Green Bottom Name Bar */
+.wb-ourcasino-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.28);
+  display: flex;
+  flex-direction: column;
+}
+
+.wb-ourcasino-card img {
+  width: 100%;
+  height: 175px;
+  object-fit: cover;
+}
+
+.wb-ourcasino-title {
+  background: linear-gradient(#A4DC60 0%, #4F9F21 100%);
+  color: #000;
+  font-weight: 800;
+  font-size: 11px;
+  text-align: center;
+  padding: 5px 4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================= BET SLIP & OPEN BETS SIDEBAR ================= */
+.wb-betslip-panel {
+  padding: 8px;
+  border-bottom: 2px solid #7e97a7;
+  display: none;
+}
+
+.wb-betslip-panel.open {
+  display: block;
+}
+
+.wb-betslip-panel.slip-back {
+  background: linear-gradient(180deg, #BEDDF4 0%, #D4E8F8 100%);
+}
+
+.wb-betslip-panel.slip-lay {
+  background: linear-gradient(180deg, #F3DCE2 0%, #FAEFF2 100%);
+}
+
+.wb-stake-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.wb-stake-btn {
+  background: #f9f9f9;
+  border: 1px solid #333;
+  color: #000;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 4px 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.wb-stake-btn:hover {
+  background: #e2ecf5;
+}
+
+.wb-btn-placebet {
+  background: var(--header-bg);
+  color: #fff;
+  border: 1px solid #000;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 3px;
+}
+
+.wb-btn-cancelbet {
+  background: #f9f9f9;
+  color: #000;
+  border: 1px solid #333;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 3px;
+}
+
+/* ================= AGE CONFIRMATION MODAL (Screenshot 03) ================= */
+.wb-age-modal .modal-content {
+  background: var(--age-modal-bg);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  position: relative;
+  text-align: center;
+  padding: 20px 22px;
+}
+
+.wb-age-modal .text1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.wb-age-modal .text2 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.45;
+}
+
+.wb-age-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fd8f3b;
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.wb-age-modal hr,
+.wb-age-modal .confirm-line {
+  border-color: #fff;
+  opacity: 0.9;
+  margin: 10px 0;
+}
+
+.wb-age-btn-confirm {
+  background: #fff;
+  color: #000;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 6px 36px;
+  min-width: 135px;
+  cursor: pointer;
+}
+
+.wb-age-btn-exit {
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 6px 36px;
+  min-width: 135px;
+  cursor: pointer;
+}
+
+/* ================= FULLSCREEN AUTH PAGES (1:1 with winbook24.com/login) ================= */
+.wb-auth-screen,
+.main-Box-login {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--login-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+}
+
+.wb-auth-close,
+.crossIcon {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  width: 30.4px;
+  height: 31.5px;
+  border-radius: 9px;
+  background: var(--login-cross-bg);
+  color: #000 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.wb-auth-card,
+.centered-container {
+  width: 263px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.wb-auth-logo,
+.loginlogo {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wb-auth-logo img,
+.loginlogo img {
+  max-width: 210px;
+  max-height: 68px;
+  object-fit: contain;
+}
+
+.wb-auth-heading {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.wb-auth-field,
+.wb-auth-screen .phoneNumberDiv {
+  background: #fff;
+  border: 1.5px solid var(--login-input-border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  height: 38px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  padding: 0 10px;
+  position: relative;
+}
+
+.wb-auth-field input,
+.wb-auth-screen .phoneNumberInput {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  width: 100%;
+  font-size: 15px;
+  color: #000;
+  padding: 0;
+}
+
+.wb-auth-field input::placeholder,
+.wb-auth-screen .phoneNumberInput::placeholder {
+  color: #757575;
+}
+
+.wb-auth-screen .showPasswordbtn {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 2px;
+  color: #000 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+}
+
+.wb-auth-field .flag-prefix {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-right: 8px;
+  border-right: 1px solid #ddd;
+  margin-right: 8px;
+  font-weight: 600;
+  color: #000;
+  white-space: nowrap;
+}
+
+.wb-auth-field .flag-prefix img {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+}
+
+.wb-auth-btn,
+.loginBtn {
+  background: var(--login-page-btn-bg);
+  color: #fff !important;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  height: 43.6px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wb-auth-btn:hover,
+.loginBtn:hover {
+  filter: brightness(1.05);
+}
+
+.forget-pass {
+  color: #fff !important;
+  font-size: 14px;
+  text-decoration: underline !important;
+  cursor: pointer;
+}
+
+.wb-otp-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin: 10px 0 14px 0;
+}
+
+.wb-otp-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 5px;
+  border: 1.5px solid #fd8f3b;
+  background: #14213D;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ================= FOOTER & FLOATING CONTACT WIDGET ================= */
+.wb-footer {
+  border-top: 1px solid rgba(0,0,0,0.2);
+  margin-top: 24px;
+  padding: 16px 10px 24px 10px;
+  text-align: center;
+  color: #000;
+  font-size: 12px;
+}
+
+.wb-footer-links a {
+  color: #000;
+  margin: 0 6px;
+  cursor: pointer;
+}
+
+.wb-footer-links a:hover {
+  text-decoration: underline;
+}
+
+.wb-contact-float {
+  position: fixed;
+  bottom: 24px;
+  right: 22px;
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.wb-contact-float .contact-label {
+  background: #fff;
+  color: #333;
+  padding: 4px 12px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  font-size: 12px;
+}
+
+.wb-contact-float .contact-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #9a82d0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* ================= FULL MARKET PAGE (Screenshot 18) ================= */
+.wb-market-section-head {
+  background: var(--exchange-bg);
+  color: #fff;
+  height: 30px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.wb-minmax-pill {
+  background: #bed5d8;
+  color: #315195;
+  padding: 2px 10px;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.wb-bookmaker-table {
+  background: var(--bookmaker-bg);
+}
+
+.wb-fancy-tab-head {
+  background: var(--fancy-header-bg);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 6px 16px 0 0;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.wb-sportsbook-tab-head {
+  background: var(--sportsbook-header-bg);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 6px 16px 0 0;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* ================= REPORT & ACCOUNT PAGES ================= */
+.wb-report-title,
+.wb-acct-head {
+  background: linear-gradient(-180deg, #2E4B5E 0%, #243A48 82%);
+  color: #fff;
+  padding: 7px 12px;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wb-acct-card {
+  background: #fff;
+  border: 1px solid #c8ced3;
+  border-radius: 4px;
+  margin-top: 6px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.wb-report-filter-box,
+.wb-filter-card {
+  background: #e2e6ea;
+  border: 1px solid #4a5c68;
+  border-radius: 4px;
+  padding: 12px 14px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.wb-filter-card .form-control,
+.wb-filter-card .form-select {
+  height: 33px;
+  font-size: 13px;
+  border: 1px solid #c8ced3;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #23282c;
+}
+
+.wb-filter-card .input-group-text {
+  background: #e4e7ea;
+  border: 1px solid #c8ced3;
+  color: #23282c;
+  height: 33px;
+  padding: 0 10px;
+}
+
+.wb-btn-submit-report,
+.wb-btn-get {
+  background: #5c707d;
+  color: #fff !important;
+  border: 1px solid #4e606b;
+  height: 33px;
+  padding: 0 18px;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 4px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.wb-btn-get:hover {
+  background: #4b5d69;
+}
+
+.wb-dt-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #23282c;
+  margin-bottom: 10px;
+}
+
+.wb-dt-controls select {
+  border: 1px solid #c8ced3;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-size: 12px;
+  background: #fff;
+}
+
+.wb-dt-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #c8ced3;
+  margin-bottom: 10px;
+}
+
+.wb-dt-table thead th {
+  background: #e4e7ea;
+  color: #111;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px 10px;
+  border: 1px solid #c8ced3;
+  border-bottom: 2px solid #23282c;
+  text-align: center;
+  white-space: nowrap;
+  position: relative;
+}
+
+.wb-dt-table thead th .dt-sort {
+  color: #888;
+  font-size: 10px;
+  margin-left: 6px;
+}
+
+.wb-dt-table tbody td {
+  padding: 8px 10px;
+  border: 1px solid #c8ced3;
+  font-size: 12px;
+  text-align: center;
+  color: #23282c;
+}
+
+.wb-dt-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.wb-dt-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #23282c;
+  padding-top: 4px;
+}
+
+.wb-dt-pagination {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 600;
+  color: #73818f;
+}
+
+.wb-dt-pagination a,
+.wb-dt-pagination span {
+  color: #73818f;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.wb-dt-pagination a.active-page {
+  background: #243A48;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+/* ================= CASINO STUDIO ROOM ================= */
+.wb-studio-stage {
+  background: radial-gradient(circle at center, #1b2d48 0%, #090f1a 100%);
+  border: 2px solid #2e4b5e;
+  border-radius: 8px;
+  color: #fff;
+  padding: 14px;
+  position: relative;
+  min-height: 290px;
+}
+
+.playing-card {
+  width: 58px;
+  height: 82px;
+  background: #fff;
+  border-radius: 6px;
+  border: 2px solid #d4af37;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  color: #111;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.45);
+  margin: 0 4px;
+  transition: transform 0.3s ease;
+}
+
+.playing-card.red-card {
+  color: #d0021b;
+}
+
+.wb-chip-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.wb-casino-chip {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 3px dashed #fff;
+  font-weight: 800;
+  font-size: 11px;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+  transition: transform 0.15s;
+}
+
+.wb-casino-chip.active {
+  transform: scale(1.16);
+  border-style: solid;
+  border-color: #ffd700;
+  box-shadow: 0 0 12px #ffd700;
+}
+
+/* ================= MOBILE RESPONSIVE (Screenshot 02) ================= */
+.wb-mobile-sports-bar {
+  display: none;
+  background: var(--sportsbar-bg);
+  align-items: center;
+  overflow-x: auto;
+}
+
+.wb-mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: var(--bottom-nav-bg);
+  z-index: 1050;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.wb-mobile-bottom-nav a {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex: 1;
+  height: 100%;
+}
+
+.wb-mobile-bottom-nav a.active {
+  background: var(--bottom-nav-active-bg);
+}
+
+@media (max-width: 991px) {
+  .wb-left-sidebar,
+  .wb-right-sidebar,
+  .wb-green-navbar,
+  .wb-header-desktop-login {
+    display: none !important;
+  }
+  .wb-mobile-sports-bar {
+    display: flex;
+  }
+  .wb-mobile-bottom-nav {
+    display: flex;
+  }
+  .wb-odds-group,
+  .wb-1x2-cols {
+    display: none !important;
+  }
+  .wb-casino-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  body {
+    padding-bottom: 64px;
+  }
+  .wb-contact-float {
+    bottom: 68px;
+  }
+}
+

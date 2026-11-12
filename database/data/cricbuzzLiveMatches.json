@@ -1,0 +1,3252 @@
+{
+    "updatedAt": "2026-11-12T10:30:04+00:00",
+    "matches": {
+        "170703": {
+            "matchId": 170703,
+            "seriesId": 13037,
+            "seriesName": "Sri Lanka tour of Pakistan, 2026",
+            "matchDesc": "1st Test",
+            "matchFormat": "TEST",
+            "state": "Stumps",
+            "stateTitle": "Stumps",
+            "status": "Day 4: Stumps - Pakistan lead by 45 runs",
+            "isLive": true,
+            "startDate": "2026-11-09T04:30:00+00:00",
+            "team1": {
+                "id": 3,
+                "name": "Pakistan",
+                "shortName": "PAK"
+            },
+            "team2": {
+                "id": 5,
+                "name": "Sri Lanka",
+                "shortName": "SL"
+            },
+            "venue": "Rawalpindi Cricket Stadium, Rawalpindi",
+            "currBatTeamId": 3,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 434,
+                        "wickets": 9,
+                        "overs": 106.3,
+                        "isDeclared": true
+                    },
+                    "inngs2": {
+                        "inningsId": 3,
+                        "runs": 57,
+                        "wickets": 1,
+                        "overs": 21.2
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 446,
+                        "wickets": 10,
+                        "overs": 117.2
+                    }
+                }
+            },
+            "shortScoreSummary": "PAK 434/9 & 57/1 (21.2) vs SL 446/10 (117.2)"
+        },
+        "175710": {
+            "matchId": 175710,
+            "seriesId": 13333,
+            "seriesName": "ACC Men's U19 Asia Cup 2026",
+            "matchDesc": "Semi Final 2 (B1 v A2)",
+            "matchFormat": "ODI",
+            "state": "In Progress",
+            "stateTitle": "In Progress",
+            "status": "India U19 need 60 runs",
+            "isLive": true,
+            "startDate": "2026-11-12T05:00:00+00:00",
+            "team1": {
+                "id": 223,
+                "name": "Afghanistan U19",
+                "shortName": "AFGU19"
+            },
+            "team2": {
+                "id": 54,
+                "name": "India U19",
+                "shortName": "INDU19"
+            },
+            "venue": "Al Amerat Cricket Ground (Ministry Turf 2), Al Amerat",
+            "currBatTeamId": 54,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 227,
+                        "wickets": 8,
+                        "overs": 49.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 168,
+                        "wickets": 1,
+                        "overs": 25.6
+                    }
+                }
+            },
+            "shortScoreSummary": "AFGU19 227/8 (49.6) vs INDU19 168/1 (25.6)"
+        },
+        "175703": {
+            "matchId": 175703,
+            "seriesId": 13333,
+            "seriesName": "ACC Men's U19 Asia Cup 2026",
+            "matchDesc": "Semi Final 1 (A1 v B2)",
+            "matchFormat": "ODI",
+            "state": "Complete",
+            "stateTitle": "PAKU19 won",
+            "status": "Pakistan U19 won by 9 wkts",
+            "isLive": false,
+            "startDate": "2026-11-12T05:00:00+00:00",
+            "team1": {
+                "id": 224,
+                "name": "Bangladesh U19",
+                "shortName": "BANU19"
+            },
+            "team2": {
+                "id": 56,
+                "name": "Pakistan U19",
+                "shortName": "PAKU19"
+            },
+            "venue": "Al Amerat Cricket Ground (Ministry Turf 1), Al Amerat",
+            "currBatTeamId": 56,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 138,
+                        "wickets": 10,
+                        "overs": 31.4
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 141,
+                        "wickets": 1,
+                        "overs": 21.5
+                    }
+                }
+            },
+            "shortScoreSummary": "BANU19 138/10 (31.4) vs PAKU19 141/1 (21.5)"
+        },
+        "162843": {
+            "matchId": 162843,
+            "seriesId": 12677,
+            "seriesName": "Womens Big Bash League 2026",
+            "matchDesc": "20th Match",
+            "matchFormat": "T20",
+            "state": "In Progress",
+            "stateTitle": "In Progress",
+            "status": "Melbourne Renegades Women need 106 runs in 82 balls",
+            "isLive": true,
+            "startDate": "2026-11-12T08:10:00+00:00",
+            "team1": {
+                "id": 361,
+                "name": "Sydney Sixers Women",
+                "shortName": "SYSW"
+            },
+            "team2": {
+                "id": 358,
+                "name": "Melbourne Renegades Women",
+                "shortName": "MLRW"
+            },
+            "venue": "Junction Oval, Melbourne",
+            "currBatTeamId": 358,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 140,
+                        "wickets": 6,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 35,
+                        "wickets": 3,
+                        "overs": 6.2
+                    }
+                }
+            },
+            "shortScoreSummary": "SYSW 140/6 (19.6) vs MLRW 35/3 (6.2)"
+        },
+        "161271": {
+            "matchId": 161271,
+            "seriesId": 12543,
+            "seriesName": "India tour of New Zealand 2026",
+            "matchDesc": "4th ODI",
+            "matchFormat": "ODI",
+            "state": "Preview",
+            "stateTitle": "Preview",
+            "status": "Match starts at Nov 13, 02:00 GMT",
+            "isLive": false,
+            "startDate": "2026-11-13T02:00:00+00:00",
+            "team1": {
+                "id": 13,
+                "name": "New Zealand",
+                "shortName": "NZ"
+            },
+            "team2": {
+                "id": 2,
+                "name": "India",
+                "shortName": "IND"
+            },
+            "venue": "Bay Oval, Mount Maunganui",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "151312": {
+            "matchId": 151312,
+            "seriesId": 11876,
+            "seriesName": "England tour of Australia, 2026",
+            "matchDesc": "1st ODI",
+            "matchFormat": "ODI",
+            "state": "Preview",
+            "stateTitle": "Preview",
+            "status": "Match starts at Nov 13, 03:30 GMT",
+            "isLive": false,
+            "startDate": "2026-11-13T03:30:00+00:00",
+            "team1": {
+                "id": 4,
+                "name": "Australia",
+                "shortName": "AUS"
+            },
+            "team2": {
+                "id": 9,
+                "name": "England",
+                "shortName": "ENG"
+            },
+            "venue": "Perth Stadium, Perth",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "172731": {
+            "matchId": 172731,
+            "seriesId": 13201,
+            "seriesName": "Afghanistan vs Zimbabwe in UAE, 2026",
+            "matchDesc": "2nd Test",
+            "matchFormat": "TEST",
+            "state": "Preview",
+            "stateTitle": "Preview",
+            "status": "Match starts at Nov 13, 06:00 GMT",
+            "isLive": false,
+            "startDate": "2026-11-13T06:00:00+00:00",
+            "team1": {
+                "id": 96,
+                "name": "Afghanistan",
+                "shortName": "AFG"
+            },
+            "team2": {
+                "id": 12,
+                "name": "Zimbabwe",
+                "shortName": "ZIM"
+            },
+            "venue": "Sharjah Cricket Stadium, Sharjah",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "176166": {
+            "matchId": 176166,
+            "seriesId": 13307,
+            "seriesName": "Abu Dhabi T10 League 2026",
+            "matchDesc": "11th Match",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "RDC Won",
+            "status": "Royal Desert Champions won by 6 wkts",
+            "isLive": false,
+            "startDate": "2026-11-11T13:45:00+00:00",
+            "team1": {
+                "id": 598,
+                "name": "UAE Bulls",
+                "shortName": "UBL"
+            },
+            "team2": {
+                "id": 2885,
+                "name": "Royal Desert Champions",
+                "shortName": "RDC"
+            },
+            "venue": "Sheikh Zayed Stadium, Abu Dhabi",
+            "currBatTeamId": 2885,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 123,
+                        "wickets": 7,
+                        "overs": 9.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 124,
+                        "wickets": 4,
+                        "overs": 9.1
+                    }
+                }
+            },
+            "shortScoreSummary": "UBL 123/7 (9.6) vs RDC 124/4 (9.1)"
+        },
+        "176177": {
+            "matchId": 176177,
+            "seriesId": 13307,
+            "seriesName": "Abu Dhabi T10 League 2026",
+            "matchDesc": "12th Match",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "YL Won",
+            "status": "Yas Lions won by 29 runs",
+            "isLive": false,
+            "startDate": "2026-11-11T16:00:00+00:00",
+            "team1": {
+                "id": 3640,
+                "name": "Yas Lions",
+                "shortName": "YL"
+            },
+            "team2": {
+                "id": 3623,
+                "name": "Arabian Aces",
+                "shortName": "ARA"
+            },
+            "venue": "Sheikh Zayed Stadium, Abu Dhabi",
+            "currBatTeamId": 3640,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 132,
+                        "wickets": 5,
+                        "overs": 9.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 103,
+                        "wickets": 7,
+                        "overs": 9.6
+                    }
+                }
+            },
+            "shortScoreSummary": "YL 132/5 (9.6) vs ARA 103/7 (9.6)"
+        },
+        "177760": {
+            "matchId": 177760,
+            "seriesId": 13430,
+            "seriesName": "Nepal Premier League 2026",
+            "matchDesc": "22nd Match",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "Complete",
+            "status": "Biratnagar Kings won by 4 wkts",
+            "isLive": false,
+            "startDate": "2026-11-12T06:45:00+00:00",
+            "team1": {
+                "id": 2949,
+                "name": "Pokhara Avengers",
+                "shortName": "POA"
+            },
+            "team2": {
+                "id": 2904,
+                "name": "Biratnagar Kings",
+                "shortName": "BIK"
+            },
+            "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
+            "currBatTeamId": 2904,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 132,
+                        "wickets": 10,
+                        "overs": 17.5
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 136,
+                        "wickets": 6,
+                        "overs": 19.2
+                    }
+                }
+            },
+            "shortScoreSummary": "POA 132/10 (17.5) vs BIK 136/6 (19.2)"
+        },
+        "177770": {
+            "matchId": 177770,
+            "seriesId": 13430,
+            "seriesName": "Nepal Premier League 2026",
+            "matchDesc": "23rd Match",
+            "matchFormat": "T20",
+            "state": "Upcoming",
+            "stateTitle": "Upcoming Match",
+            "status": "Match starts at Nov 12, 10:45 GMT",
+            "isLive": false,
+            "startDate": "2026-11-12T11:15:00+00:00",
+            "team1": {
+                "id": 2929,
+                "name": "Karnali Yaks",
+                "shortName": "KAY"
+            },
+            "team2": {
+                "id": 2940,
+                "name": "Lumbini Lions",
+                "shortName": "LUL"
+            },
+            "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "177771": {
+            "matchId": 177771,
+            "seriesId": 13430,
+            "seriesName": "Nepal Premier League 2026",
+            "matchDesc": "24th Match",
+            "matchFormat": "T20",
+            "state": "Upcoming",
+            "stateTitle": "Upcoming Match",
+            "status": "Match starts at Nov 13, 06:45 GMT",
+            "isLive": false,
+            "startDate": "2026-11-13T06:45:00+00:00",
+            "team1": {
+                "id": 2937,
+                "name": "Kathmandu Gorkhas",
+                "shortName": "KAG"
+            },
+            "team2": {
+                "id": 2960,
+                "name": "Sudur Paschim Royals",
+                "shortName": "SPR"
+            },
+            "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "177244": {
+            "matchId": 177244,
+            "seriesId": 13180,
+            "seriesName": "CSA T20 Challenge 2026",
+            "matchDesc": "Super Eights",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "LIONS Won",
+            "status": "Lions won by 5 wkts",
+            "isLive": false,
+            "startDate": "2026-11-11T11:00:00+00:00",
+            "team1": {
+                "id": 1759,
+                "name": "Boland",
+                "shortName": "BOL"
+            },
+            "team2": {
+                "id": 157,
+                "name": "Lions",
+                "shortName": "LIONS"
+            },
+            "venue": "Boland Park, Paarl",
+            "currBatTeamId": 157,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 134,
+                        "wickets": 8,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 135,
+                        "wickets": 5,
+                        "overs": 19.4
+                    }
+                }
+            },
+            "shortScoreSummary": "BOL 134/8 (19.6) vs LIONS 135/5 (19.4)"
+        },
+        "177255": {
+            "matchId": 177255,
+            "seriesId": 13180,
+            "seriesName": "CSA T20 Challenge 2026",
+            "matchDesc": "Super Eights",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "Complete",
+            "status": "Warriors won by 7 wkts",
+            "isLive": false,
+            "startDate": "2026-11-11T16:00:00+00:00",
+            "team1": {
+                "id": 89,
+                "name": "Titans",
+                "shortName": "TIT"
+            },
+            "team2": {
+                "id": 155,
+                "name": "Warriors",
+                "shortName": "WAR"
+            },
+            "venue": "SuperSport Park, Centurion",
+            "currBatTeamId": 155,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 180,
+                        "wickets": 9,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 183,
+                        "wickets": 3,
+                        "overs": 18.4
+                    }
+                }
+            },
+            "shortScoreSummary": "TIT 180/9 (19.6) vs WAR 183/3 (18.4)"
+        },
+        "176521": {
+            "matchId": 176521,
+            "seriesId": 13377,
+            "seriesName": "England Lions tour of West Indies, 2026",
+            "matchDesc": "3rd Unofficial ODI",
+            "matchFormat": "ODI",
+            "state": "Complete",
+            "stateTitle": "Complete",
+            "status": "England Lions won by 6 wkts",
+            "isLive": false,
+            "startDate": "2026-11-11T13:30:00+00:00",
+            "team1": {
+                "id": 207,
+                "name": "West Indies A",
+                "shortName": "WIA"
+            },
+            "team2": {
+                "id": 42,
+                "name": "England Lions",
+                "shortName": "ENGA"
+            },
+            "venue": "Conaree Sports Club, Basseterre, St Kitts",
+            "currBatTeamId": 42,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 273,
+                        "wickets": 9,
+                        "overs": 49.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 274,
+                        "wickets": 4,
+                        "overs": 44.3
+                    }
+                }
+            },
+            "shortScoreSummary": "WIA 273/9 (49.6) vs ENGA 274/4 (44.3)"
+        },
+        "166653": {
+            "matchId": 166653,
+            "seriesId": 12717,
+            "seriesName": "Sheffield Shield 2026-27",
+            "matchDesc": "10th Match",
+            "matchFormat": "TEST",
+            "state": "Stumps",
+            "stateTitle": "Stumps",
+            "status": "Day 2: Stumps - New South Wales lead by 70 runs",
+            "isLive": true,
+            "startDate": "2026-11-10T23:30:00+00:00",
+            "team1": {
+                "id": 104,
+                "name": "New South Wales",
+                "shortName": "NSW"
+            },
+            "team2": {
+                "id": 158,
+                "name": "South Australia",
+                "shortName": "SAUS"
+            },
+            "venue": "Cricket Central, Sydney",
+            "currBatTeamId": 104,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 204,
+                        "wickets": 10,
+                        "overs": 47.2
+                    },
+                    "inngs2": {
+                        "inningsId": 3,
+                        "runs": 191,
+                        "wickets": 2,
+                        "overs": 50.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 325,
+                        "wickets": 10,
+                        "overs": 82.5
+                    }
+                }
+            },
+            "shortScoreSummary": "NSW 204/10 & 191/2 (50.6) vs SAUS 325/10 (82.5)"
+        },
+        "166657": {
+            "matchId": 166657,
+            "seriesId": 12717,
+            "seriesName": "Sheffield Shield 2026-27",
+            "matchDesc": "11th Match",
+            "matchFormat": "TEST",
+            "state": "Stumps",
+            "stateTitle": "Stumps",
+            "status": "Day 2: Stumps - Western Australia trail by 217 runs",
+            "isLive": true,
+            "startDate": "2026-11-10T23:30:00+00:00",
+            "team1": {
+                "id": 52,
+                "name": "Victoria",
+                "shortName": "VIC"
+            },
+            "team2": {
+                "id": 87,
+                "name": "Western Australia",
+                "shortName": "WA"
+            },
+            "venue": "Melbourne Cricket Ground, Melbourne",
+            "currBatTeamId": 87,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 402,
+                        "wickets": 5,
+                        "overs": 119.3,
+                        "isDeclared": true
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 185,
+                        "wickets": 3,
+                        "overs": 66.6
+                    }
+                }
+            },
+            "shortScoreSummary": "VIC 402/5 (119.3) vs WA 185/3 (66.6)"
+        },
+        "166667": {
+            "matchId": 166667,
+            "seriesId": 12717,
+            "seriesName": "Sheffield Shield 2026-27",
+            "matchDesc": "12th Match",
+            "matchFormat": "TEST",
+            "state": "Stumps",
+            "stateTitle": "Stumps",
+            "status": "Day 2: Stumps - Tasmania trail by 215 runs",
+            "isLive": true,
+            "startDate": "2026-11-11T00:00:00+00:00",
+            "team1": {
+                "id": 164,
+                "name": "Queensland",
+                "shortName": "QL"
+            },
+            "team2": {
+                "id": 166,
+                "name": "Tasmania",
+                "shortName": "TAS"
+            },
+            "venue": "The Gabba, Brisbane",
+            "currBatTeamId": 166,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 348,
+                        "wickets": 10,
+                        "overs": 111.3
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 133,
+                        "wickets": 10,
+                        "overs": 54.3
+                    }
+                }
+            },
+            "shortScoreSummary": "QL 348/10 (111.3) vs TAS 133/10 (54.3)"
+        },
+        "175821": {
+            "matchId": 175821,
+            "seriesId": 13337,
+            "seriesName": "Ireland A tour of Zimbabwe, 2026",
+            "matchDesc": "2nd unofficial Test",
+            "matchFormat": "TEST",
+            "state": "In Progress",
+            "stateTitle": "In Progress",
+            "status": "Day 1: 1st Session",
+            "isLive": true,
+            "startDate": "2026-11-12T08:00:00+00:00",
+            "team1": {
+                "id": 435,
+                "name": "Ireland A",
+                "shortName": "IREA"
+            },
+            "team2": {
+                "id": 342,
+                "name": "Zimbabwe A",
+                "shortName": "ZIMA"
+            },
+            "venue": "Harare Sports Club, Harare",
+            "currBatTeamId": 435,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 6,
+                        "wickets": 1,
+                        "overs": 4.6
+                    }
+                }
+            },
+            "shortScoreSummary": "IREA 6/1 (4.6)"
+        },
+        "170503": {
+            "matchId": 170503,
+            "seriesId": 13020,
+            "seriesName": "The Ford Trophy 2026-27",
+            "matchDesc": "13th Match",
+            "matchFormat": "ODI",
+            "state": "Complete",
+            "stateTitle": "OTG Won",
+            "status": "Otago won by 5 wkts",
+            "isLive": false,
+            "startDate": "2026-11-11T21:30:00+00:00",
+            "team1": {
+                "id": 186,
+                "name": "Auckland",
+                "shortName": "AKL"
+            },
+            "team2": {
+                "id": 105,
+                "name": "Otago",
+                "shortName": "OTG"
+            },
+            "venue": "Eden Park Outer Oval, Auckland",
+            "currBatTeamId": 105,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 334,
+                        "wickets": 8,
+                        "overs": 49.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 338,
+                        "wickets": 5,
+                        "overs": 49.1
+                    }
+                }
+            },
+            "shortScoreSummary": "AKL 334/8 (49.6) vs OTG 338/5 (49.1)"
+        },
+        "170511": {
+            "matchId": 170511,
+            "seriesId": 13020,
+            "seriesName": "The Ford Trophy 2026-27",
+            "matchDesc": "14th Match",
+            "matchFormat": "ODI",
+            "state": "Complete",
+            "stateTitle": "Complete",
+            "status": "Wellington won by 147 runs",
+            "isLive": false,
+            "startDate": "2026-11-11T21:30:00+00:00",
+            "team1": {
+                "id": 314,
+                "name": "Wellington",
+                "shortName": "WEL"
+            },
+            "team2": {
+                "id": 156,
+                "name": "Central Stags",
+                "shortName": "CEN"
+            },
+            "venue": "McLean Park, Napier",
+            "currBatTeamId": 314,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 281,
+                        "wickets": 9,
+                        "overs": 49.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 134,
+                        "wickets": 10,
+                        "overs": 34.5
+                    }
+                }
+            },
+            "shortScoreSummary": "WEL 281/9 (49.6) vs CEN 134/10 (34.5)"
+        },
+        "170517": {
+            "matchId": 170517,
+            "seriesId": 13020,
+            "seriesName": "The Ford Trophy 2026-27",
+            "matchDesc": "15th Match",
+            "matchFormat": "ODI",
+            "state": "Complete",
+            "stateTitle": "CNTBRY Won",
+            "status": "Canterbury won by 4 wkts",
+            "isLive": false,
+            "startDate": "2026-11-11T21:30:00+00:00",
+            "team1": {
+                "id": 294,
+                "name": "Northern Districts",
+                "shortName": "ND"
+            },
+            "team2": {
+                "id": 312,
+                "name": "Canterbury",
+                "shortName": "CNTBRY"
+            },
+            "venue": "Hagley Oval, Christchurch",
+            "currBatTeamId": 312,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 261,
+                        "wickets": 7,
+                        "overs": 49.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 264,
+                        "wickets": 6,
+                        "overs": 49.5
+                    }
+                }
+            },
+            "shortScoreSummary": "ND 261/7 (49.6) vs CNTBRY 264/6 (49.5)"
+        },
+        "162827": {
+            "matchId": 162827,
+            "seriesId": 12677,
+            "seriesName": "WBBL 2026",
+            "matchDesc": "18th Match",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "PRSW Won",
+            "status": "Perth Scorchers Women won by 4 wkts",
+            "isLive": false,
+            "startDate": "2026-11-11T08:10:00+00:00",
+            "team1": {
+                "id": 362,
+                "name": "Sydney Thunder Women",
+                "shortName": "SYTW"
+            },
+            "team2": {
+                "id": 360,
+                "name": "Perth Scorchers Women",
+                "shortName": "PRSW"
+            },
+            "venue": "W.A.C.A. Ground, Perth",
+            "currBatTeamId": 360,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 159,
+                        "wickets": 5,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 160,
+                        "wickets": 6,
+                        "overs": 18.3
+                    }
+                }
+            },
+            "shortScoreSummary": "SYTW 159/5 (19.6) vs PRSW 160/6 (18.3)"
+        },
+        "162837": {
+            "matchId": 162837,
+            "seriesId": 12677,
+            "seriesName": "WBBL 2026",
+            "matchDesc": "19th Match",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "Complete",
+            "status": "Brisbane Heat Women won by 8 wkts",
+            "isLive": false,
+            "startDate": "2026-11-12T04:40:00+00:00",
+            "team1": {
+                "id": 359,
+                "name": "Melbourne Stars Women",
+                "shortName": "MLSW"
+            },
+            "team2": {
+                "id": 356,
+                "name": "Brisbane Heat Women",
+                "shortName": "BRHW"
+            },
+            "venue": "Junction Oval, Melbourne",
+            "currBatTeamId": 356,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 165,
+                        "wickets": 5,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 166,
+                        "wickets": 2,
+                        "overs": 18.5
+                    }
+                }
+            },
+            "shortScoreSummary": "MLSW 165/5 (19.6) vs BRHW 166/2 (18.5)"
+        },
+        "177339": {
+            "matchId": 177339,
+            "seriesId": 13413,
+            "seriesName": "Women's Victoria T20I Series, 2026",
+            "matchDesc": "10th Match",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "USAW Won",
+            "status": "United States of America Women won by 1 wkt",
+            "isLive": false,
+            "startDate": "2026-11-11T11:00:00+00:00",
+            "team1": {
+                "id": 503,
+                "name": "Namibia Women",
+                "shortName": "NAMW"
+            },
+            "team2": {
+                "id": 592,
+                "name": "United States of America Women",
+                "shortName": "USAW"
+            },
+            "venue": "Entebbe Cricket Oval, Entebbe",
+            "currBatTeamId": 592,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 96,
+                        "wickets": 9,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 97,
+                        "wickets": 9,
+                        "overs": 19.5
+                    }
+                }
+            },
+            "shortScoreSummary": "NAMW 96/9 (19.6) vs USAW 97/9 (19.5)"
+        },
+        "177343": {
+            "matchId": 177343,
+            "seriesId": 13413,
+            "seriesName": "Women's Victoria T20I Series, 2026",
+            "matchDesc": "11th Match",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "Complete",
+            "status": "Uganda Women won by 14 runs",
+            "isLive": false,
+            "startDate": "2026-11-12T06:30:00+00:00",
+            "team1": {
+                "id": 448,
+                "name": "Uganda Women",
+                "shortName": "UGAW"
+            },
+            "team2": {
+                "id": 592,
+                "name": "United States of America Women",
+                "shortName": "USAW"
+            },
+            "venue": "Entebbe Cricket Oval, Entebbe",
+            "currBatTeamId": 448,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 105,
+                        "wickets": 6,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 91,
+                        "wickets": 9,
+                        "overs": 19.6
+                    }
+                }
+            },
+            "shortScoreSummary": "UGAW 105/6 (19.6) vs USAW 91/9 (19.6)"
+        },
+        "177354": {
+            "matchId": 177354,
+            "seriesId": 13413,
+            "seriesName": "Women's Victoria T20I Series, 2026",
+            "matchDesc": "12th Match",
+            "matchFormat": "T20",
+            "state": "Preview",
+            "stateTitle": "Preview",
+            "status": "Match starts at Nov 12, 11:00 GMT",
+            "isLive": false,
+            "startDate": "2026-11-12T11:00:00+00:00",
+            "team1": {
+                "id": 503,
+                "name": "Namibia Women",
+                "shortName": "NAMW"
+            },
+            "team2": {
+                "id": 720,
+                "name": "Rwanda Women",
+                "shortName": "RWAW"
+            },
+            "venue": "Entebbe Cricket Oval, Entebbe",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "177380": {
+            "matchId": 177380,
+            "seriesId": 13420,
+            "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+            "matchDesc": "1st Match, Group A",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "Complete",
+            "status": "Sri Lanka Women won by 10 wkts",
+            "isLive": false,
+            "startDate": "2026-11-12T05:00:00+00:00",
+            "team1": {
+                "id": 189,
+                "name": "Ireland Women",
+                "shortName": "IREW"
+            },
+            "team2": {
+                "id": 258,
+                "name": "Sri Lanka Women",
+                "shortName": "SLW"
+            },
+            "venue": "Karwan Cricket Ground, Ajman",
+            "currBatTeamId": 258,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 105,
+                        "wickets": 9,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 110,
+                        "overs": 12.6
+                    }
+                }
+            },
+            "shortScoreSummary": "IREW 105/9 (19.6) vs SLW 110/0 (12.6)"
+        },
+        "177390": {
+            "matchId": 177390,
+            "seriesId": 13420,
+            "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+            "matchDesc": "2nd Match, Group A",
+            "matchFormat": "T20",
+            "state": "Complete",
+            "stateTitle": "Complete",
+            "status": "Scotland Women won by 7 wkts",
+            "isLive": false,
+            "startDate": "2026-11-12T05:00:00+00:00",
+            "team1": {
+                "id": 390,
+                "name": "Papua New Guinea Women",
+                "shortName": "PNGW"
+            },
+            "team2": {
+                "id": 389,
+                "name": "Scotland Women",
+                "shortName": "SCOW"
+            },
+            "venue": "Seven Districts Ground, Ajman",
+            "currBatTeamId": 389,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 93,
+                        "wickets": 10,
+                        "overs": 19.6
+                    }
+                },
+                "team2Score": {
+                    "inngs1": {
+                        "inningsId": 2,
+                        "runs": 95,
+                        "wickets": 3,
+                        "overs": 13.1
+                    }
+                }
+            },
+            "shortScoreSummary": "PNGW 93/10 (19.6) vs SCOW 95/3 (13.1)"
+        },
+        "177400": {
+            "matchId": 177400,
+            "seriesId": 13420,
+            "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+            "matchDesc": "3rd Match, Group B",
+            "matchFormat": "T20",
+            "state": "In Progress",
+            "stateTitle": "In Progress",
+            "status": "Bangladesh Women opt to bat",
+            "isLive": true,
+            "startDate": "2026-11-12T09:15:00+00:00",
+            "team1": {
+                "id": 329,
+                "name": "Bangladesh Women",
+                "shortName": "BANW"
+            },
+            "team2": {
+                "id": 259,
+                "name": "Pakistan Women",
+                "shortName": "PAKW"
+            },
+            "venue": "Karwan Cricket Ground, Ajman",
+            "currBatTeamId": 329,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 78,
+                        "wickets": 7,
+                        "overs": 15.6
+                    }
+                }
+            },
+            "shortScoreSummary": "BANW 78/7 (15.6)"
+        },
+        "177401": {
+            "matchId": 177401,
+            "seriesId": 13420,
+            "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+            "matchDesc": "4th Match, Group B",
+            "matchFormat": "T20",
+            "state": "In Progress",
+            "stateTitle": "In Progress",
+            "status": "Thailand Women opt to bat",
+            "isLive": true,
+            "startDate": "2026-11-12T09:15:00+00:00",
+            "team1": {
+                "id": 382,
+                "name": "Thailand Women",
+                "shortName": "THAIW"
+            },
+            "team2": {
+                "id": 188,
+                "name": "Netherlands Women",
+                "shortName": "NEDW"
+            },
+            "venue": "Seven Districts Ground, Ajman",
+            "currBatTeamId": 382,
+            "matchScore": {
+                "team1Score": {
+                    "inngs1": {
+                        "inningsId": 1,
+                        "runs": 136,
+                        "wickets": 2,
+                        "overs": 19.6
+                    }
+                }
+            },
+            "shortScoreSummary": "THAIW 136/2 (19.6)"
+        },
+        "177411": {
+            "matchId": 177411,
+            "seriesId": 13420,
+            "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+            "matchDesc": "5th Match, Group A",
+            "matchFormat": "T20",
+            "state": "Upcoming",
+            "stateTitle": "Upcoming Match",
+            "status": "Match starts at Nov 13, 05:00 GMT",
+            "isLive": false,
+            "startDate": "2026-11-13T05:00:00+00:00",
+            "team1": {
+                "id": 389,
+                "name": "Scotland Women",
+                "shortName": "SCOW"
+            },
+            "team2": {
+                "id": 258,
+                "name": "Sri Lanka Women",
+                "shortName": "SLW"
+            },
+            "venue": "Karwan Cricket Ground, Ajman",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "177421": {
+            "matchId": 177421,
+            "seriesId": 13420,
+            "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+            "matchDesc": "6th Match, Group A",
+            "matchFormat": "T20",
+            "state": "Upcoming",
+            "stateTitle": "Upcoming Match",
+            "status": "Match starts at Nov 13, 05:00 GMT",
+            "isLive": false,
+            "startDate": "2026-11-13T05:00:00+00:00",
+            "team1": {
+                "id": 449,
+                "name": "United Arab Emirates Women",
+                "shortName": "UAEW"
+            },
+            "team2": {
+                "id": 189,
+                "name": "Ireland Women",
+                "shortName": "IREW"
+            },
+            "venue": "Seven Districts Ground, Ajman",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "177431": {
+            "matchId": 177431,
+            "seriesId": 13420,
+            "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+            "matchDesc": "7th Match, Group B",
+            "matchFormat": "T20",
+            "state": "Upcoming",
+            "stateTitle": "Upcoming Match",
+            "status": "Match starts at Nov 13, 09:15 GMT",
+            "isLive": false,
+            "startDate": "2026-11-13T09:15:00+00:00",
+            "team1": {
+                "id": 382,
+                "name": "Thailand Women",
+                "shortName": "THAIW"
+            },
+            "team2": {
+                "id": 259,
+                "name": "Pakistan Women",
+                "shortName": "PAKW"
+            },
+            "venue": "Karwan Cricket Ground, Ajman",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        },
+        "177441": {
+            "matchId": 177441,
+            "seriesId": 13420,
+            "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+            "matchDesc": "8th Match, Group B",
+            "matchFormat": "T20",
+            "state": "Upcoming",
+            "stateTitle": "Upcoming Match",
+            "status": "Match starts at Nov 13, 09:15 GMT",
+            "isLive": false,
+            "startDate": "2026-11-13T09:15:00+00:00",
+            "team1": {
+                "id": 388,
+                "name": "Zimbabwe Women",
+                "shortName": "ZIMW"
+            },
+            "team2": {
+                "id": 329,
+                "name": "Bangladesh Women",
+                "shortName": "BANW"
+            },
+            "venue": "Seven Districts Ground, Ajman",
+            "currBatTeamId": null,
+            "matchScore": [],
+            "shortScoreSummary": ""
+        }
+    },
+    "miniscores": {
+        "170703": {
+            "miniscore": {
+                "inningsId": 3,
+                "batTeam": {
+                    "teamId": 3,
+                    "teamScore": 57,
+                    "teamWkts": 1
+                },
+                "status": "Day 4: Stumps - Pakistan lead by 45 runs",
+                "batsmanStriker": {
+                    "id": 52677,
+                    "name": "Azan Awais",
+                    "runs": 22,
+                    "balls": 65,
+                    "fours": 3,
+                    "sixes": 0,
+                    "strikeRate": "33.85",
+                    "playerUrl": "/profiles/52677/azan-awais",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/170703/3/52677/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 13193,
+                    "name": "Mohammad Taha",
+                    "runs": 24,
+                    "balls": 55,
+                    "fours": 3,
+                    "sixes": 0,
+                    "strikeRate": "43.64",
+                    "playerUrl": "/profiles/13193/mohammad-taha",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/170703/3/13193/batting"
+                },
+                "bowlerStriker": {
+                    "id": 10928,
+                    "name": "Lahiru Kumara",
+                    "overs": 7.2,
+                    "maidens": 2,
+                    "economy": 2.59,
+                    "runs": 19,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/10928/lahiru-kumara",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/170703/3/10928/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 39678,
+                    "name": "Milan Priyanath Rathnayake",
+                    "overs": 6,
+                    "maidens": 2,
+                    "economy": 2.17,
+                    "runs": 13,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/39678/milan-priyanath-rathnayake",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/170703/3/39678/bowling"
+                },
+                "overs": 21.2,
+                "target": null,
+                "partnerShip": {
+                    "balls": 114,
+                    "runs": 42
+                },
+                "currentRunRate": 2.67,
+                "requiredRunRate": 0,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 170703,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 3,
+                            "batTeamName": "PAK",
+                            "score": 434,
+                            "wickets": 9,
+                            "overs": 106.3,
+                            "isDeclared": true,
+                            "isFollowOn": false,
+                            "ballNbr": 639
+                        },
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 5,
+                            "batTeamName": "SL",
+                            "score": 446,
+                            "wickets": 10,
+                            "overs": 117.2,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 704
+                        },
+                        {
+                            "inningsId": 3,
+                            "batTeamId": 3,
+                            "batTeamName": "PAK",
+                            "score": 57,
+                            "wickets": 1,
+                            "overs": 21.2,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 128
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "TEST",
+                    "customStatus": "Day 4: Stumps - Pakistan lead by 45 runs",
+                    "state": "Stumps"
+                },
+                "lastWicket": "Tayyab Arif  lbw b Asitha Fernando 11(8)  - 15/1 in 2.2 ov.",
+                "remRunsToWin": 0,
+                "oversRem": null,
+                "responseLastUpdated": 1794479269,
+                "latestPerformance": [
+                    {
+                        "runs": 23,
+                        "wkts": 0,
+                        "label": "Last 10 overs"
+                    }
+                ],
+                "recentOvsStats": "... 1 0 0 2  | 0 0 0 0 0 0  | 4 1",
+                "event": "none",
+                "batTeamScoreObj": {
+                    "teamName": "PAK",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 3,
+                            "batTeamName": "PAK",
+                            "score": 434,
+                            "wickets": 9,
+                            "overs": 106.3,
+                            "isDeclared": true,
+                            "isFollowOn": false,
+                            "ballNbr": 639
+                        },
+                        {
+                            "inningsId": 3,
+                            "batTeamId": 3,
+                            "batTeamName": "PAK",
+                            "score": 57,
+                            "wickets": 1,
+                            "overs": 21.2,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 128
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "SL",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 5,
+                            "batTeamName": "SL",
+                            "score": 446,
+                            "wickets": 10,
+                            "overs": 117.2,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 704
+                        }
+                    ]
+                },
+                "matchUdrs": {
+                    "matchId": 170703,
+                    "inningsId": 3,
+                    "timestamp": "2026-11-12T06:20:29.477Z",
+                    "team1Id": 3,
+                    "team1Remaining": 2,
+                    "team1Successful": 0,
+                    "team1Unsuccessful": 1,
+                    "team2Id": 5,
+                    "team2Remaining": 3,
+                    "team2Successful": 0,
+                    "team2Unsuccessful": 0
+                },
+                "timestamp": 1794471914466
+            },
+            "matchHeader": {
+                "matchId": 170703,
+                "matchDescription": "1st Test",
+                "matchFormat": "TEST",
+                "matchType": "International",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794198600000,
+                "matchCompleteTimestamp": 1794569400000,
+                "matchStartTimeIST": "10:00 AM",
+                "matchStartTimeGMT": "4:30 AM",
+                "matchStartTimeLocal": "9:30 AM",
+                "matchCompleteTimeIST": "5:00 PM",
+                "matchCompleteTimeGMT": "Fri, Nov 13, 11:30:00 AM",
+                "matchCompleteTimeLocal": "4:30 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "Stumps",
+                "status": "Day 4: Stumps - Pakistan lead by 45 runs",
+                "tossResults": {
+                    "tossWinnerId": 5,
+                    "tossWinnerName": "Sri Lanka",
+                    "decision": "Bowling"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 3,
+                        "battingTeamShortName": "PAK",
+                        "bowlingTeamId": 5,
+                        "bowlingTeamShortName": "SL"
+                    },
+                    {
+                        "battingTeamId": 5,
+                        "battingTeamShortName": "SL",
+                        "bowlingTeamId": 3,
+                        "bowlingTeamShortName": "PAK"
+                    },
+                    {
+                        "battingTeamId": 3,
+                        "battingTeamShortName": "PAK",
+                        "bowlingTeamId": 5,
+                        "bowlingTeamShortName": "SL"
+                    }
+                ],
+                "team1": {
+                    "id": 3,
+                    "name": "Pakistan",
+                    "playerDetails": [],
+                    "shortName": "PAK"
+                },
+                "team2": {
+                    "id": 5,
+                    "name": "Sri Lanka",
+                    "playerDetails": [],
+                    "shortName": "SL"
+                },
+                "seriesDesc": "Sri Lanka tour of Pakistan, 2026",
+                "seriesId": 13037,
+                "seriesName": "Sri Lanka tour of Pakistan, 2026",
+                "alertType": "auto",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 25,
+                    "name": "Rawalpindi Cricket Stadium",
+                    "city": "Rawalpindi",
+                    "country": "Pakistan",
+                    "timezone": "+05:00",
+                    "latitude": "33.651525",
+                    "longitude": "73.075824"
+                },
+                "venueInfo": null
+            }
+        },
+        "175710": {
+            "miniscore": {
+                "inningsId": 2,
+                "batTeam": {
+                    "teamId": 54,
+                    "teamScore": 168,
+                    "teamWkts": 1
+                },
+                "status": "India U19 need 60 runs",
+                "batsmanStriker": {
+                    "id": 1464970,
+                    "name": "Lakshya Rajesh Raichandani",
+                    "runs": 83,
+                    "balls": 76,
+                    "fours": 12,
+                    "sixes": 1,
+                    "strikeRate": "109.21",
+                    "playerUrl": "/profiles/1464970/lakshya-rajesh-raichandani",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/175710/2/1464970/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 1465099,
+                    "name": "VK Vineeth",
+                    "runs": 22,
+                    "balls": 25,
+                    "fours": 2,
+                    "sixes": 0,
+                    "strikeRate": "88.00",
+                    "playerUrl": "/profiles/1465099/vk-vineeth",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/175710/2/1465099/batting"
+                },
+                "bowlerStriker": {
+                    "id": 1482417,
+                    "name": "Bilal Salimankhil",
+                    "overs": 6.1,
+                    "maidens": 0,
+                    "economy": 5.7,
+                    "runs": 35,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/1482417/bilal-salimankhil",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/175710/2/1482417/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 1481612,
+                    "name": "Mohammad Ali",
+                    "overs": 7,
+                    "maidens": 0,
+                    "economy": 6.3,
+                    "runs": 44,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/1481612/mohammad-ali",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/175710/2/1481612/bowling"
+                },
+                "overs": 26.1,
+                "target": 228,
+                "partnerShip": {
+                    "balls": 55,
+                    "runs": 51
+                },
+                "currentRunRate": 6.42,
+                "requiredRunRate": 2.52,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 175710,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 223,
+                            "batTeamName": "AFGU19",
+                            "score": 227,
+                            "wickets": 8,
+                            "overs": 50,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 300
+                        },
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 54,
+                            "batTeamName": "INDU19",
+                            "score": 168,
+                            "wickets": 1,
+                            "overs": 26.1,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 157
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "ODI",
+                    "customStatus": "India U19 need 60 runs",
+                    "state": "In Progress"
+                },
+                "lastWicket": "Aaryavir Sehwag  c Faridullah Ihsas b Noor Ali Niazi 51(57)  - 117/1 in 16.6 ov.",
+                "remRunsToWin": 60,
+                "oversRem": null,
+                "responseLastUpdated": 1794479271,
+                "latestPerformance": [
+                    {
+                        "runs": 57,
+                        "wkts": 1,
+                        "label": "Last 10 overs"
+                    },
+                    {
+                        "runs": 30,
+                        "wkts": 0,
+                        "label": "Last 5 overs"
+                    }
+                ],
+                "recentOvsStats": "0",
+                "event": "none",
+                "batTeamScoreObj": {
+                    "teamName": "INDU19",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 54,
+                            "batTeamName": "INDU19",
+                            "score": 168,
+                            "wickets": 1,
+                            "overs": 26.1,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 157
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "AFGU19",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 223,
+                            "batTeamName": "AFGU19",
+                            "score": 227,
+                            "wickets": 8,
+                            "overs": 49.6,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 300
+                        }
+                    ]
+                },
+                "matchUdrs": null,
+                "timestamp": 1794479263559
+            },
+            "matchHeader": {
+                "matchId": 175710,
+                "matchDescription": "Semi Final 2 (B1 v A2)",
+                "matchFormat": "ODI",
+                "matchType": "domestic",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794459600000,
+                "matchCompleteTimestamp": 1794484800000,
+                "matchStartTimeIST": "10:30 AM",
+                "matchStartTimeGMT": "5:00 AM",
+                "matchStartTimeLocal": "9:00 AM",
+                "matchCompleteTimeIST": "5:30 PM",
+                "matchCompleteTimeGMT": "Thu, Nov 12, 12:00:00 PM",
+                "matchCompleteTimeLocal": "4:00 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "In Progress",
+                "status": "India U19 need 60 runs",
+                "tossResults": {
+                    "tossWinnerId": 223,
+                    "tossWinnerName": "Afghanistan U19",
+                    "decision": "Batting"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 223,
+                        "battingTeamShortName": "AFGU19",
+                        "bowlingTeamId": 54,
+                        "bowlingTeamShortName": "INDU19"
+                    },
+                    {
+                        "battingTeamId": 54,
+                        "battingTeamShortName": "INDU19",
+                        "bowlingTeamId": 223,
+                        "bowlingTeamShortName": "AFGU19"
+                    }
+                ],
+                "team1": {
+                    "id": 223,
+                    "name": "Afghanistan U19",
+                    "playerDetails": [],
+                    "shortName": "AFGU19"
+                },
+                "team2": {
+                    "id": 54,
+                    "name": "India U19",
+                    "playerDetails": [],
+                    "shortName": "INDU19"
+                },
+                "seriesDesc": "ACC Men's U19 Asia Cup 2026",
+                "seriesId": 13333,
+                "seriesName": "ACC Men's U19 Asia Cup 2026",
+                "alertType": "auto",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 709,
+                    "name": "Al Amerat Cricket Ground (Ministry Turf 2)",
+                    "city": "Al Amerat",
+                    "country": "Oman",
+                    "timezone": "+04:00",
+                    "latitude": "23.4748",
+                    "longitude": "58.49649"
+                },
+                "venueInfo": null
+            }
+        },
+        "162843": {
+            "miniscore": {
+                "inningsId": 2,
+                "batTeam": {
+                    "teamId": 358,
+                    "teamScore": 36,
+                    "teamWkts": 3
+                },
+                "status": "Melbourne Renegades Women need 105 runs in 81 balls",
+                "batsmanStriker": {
+                    "id": 12011,
+                    "name": "Sophie Molineux",
+                    "runs": 6,
+                    "balls": 7,
+                    "fours": 0,
+                    "sixes": 0,
+                    "strikeRate": "85.71",
+                    "playerUrl": "/profiles/12011/sophie-molineux",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/162843/2/12011/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 13285,
+                    "name": "Nicole Faltum",
+                    "runs": 10,
+                    "balls": 7,
+                    "fours": 2,
+                    "sixes": 0,
+                    "strikeRate": "142.86",
+                    "playerUrl": "/profiles/13285/nicole-faltum",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/162843/2/13285/batting"
+                },
+                "bowlerStriker": {
+                    "id": 11855,
+                    "name": "Melie Kerr",
+                    "overs": 1.3,
+                    "maidens": 0,
+                    "economy": 8.7,
+                    "runs": 13,
+                    "wickets": 1,
+                    "playerUrl": "/profiles/11855/melie-kerr",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/162843/2/11855/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 11989,
+                    "name": "Ashleigh Gardner",
+                    "overs": 1,
+                    "maidens": 0,
+                    "economy": 3,
+                    "runs": 3,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/11989/ashleigh-gardner",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/162843/2/11989/bowling"
+                },
+                "overs": 6.3,
+                "target": 141,
+                "partnerShip": {
+                    "balls": 12,
+                    "runs": 14
+                },
+                "currentRunRate": 5.54,
+                "requiredRunRate": 7.78,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 162843,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 361,
+                            "batTeamName": "SYSW",
+                            "score": 140,
+                            "wickets": 6,
+                            "overs": 20,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 120
+                        },
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 358,
+                            "batTeamName": "MLRW",
+                            "score": 36,
+                            "wickets": 3,
+                            "overs": 6.3,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 39
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "T20",
+                    "customStatus": "Melbourne Renegades Women need 105 runs in 81 balls",
+                    "state": "In Progress"
+                },
+                "lastWicket": "Olivia Porter  run out (Melie Kerr)  11(12)  - 22/3 in 4.3 ov.",
+                "remRunsToWin": 105,
+                "oversRem": null,
+                "responseLastUpdated": 1794479270,
+                "latestPerformance": [
+                    {
+                        "runs": 32,
+                        "wkts": 2,
+                        "label": "Last 5 overs"
+                    },
+                    {
+                        "runs": 17,
+                        "wkts": 2,
+                        "label": "Last 3 overs"
+                    }
+                ],
+                "recentOvsStats": "1 4 1",
+                "event": "none",
+                "batTeamScoreObj": {
+                    "teamName": "MLRW",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 358,
+                            "batTeamName": "MLRW",
+                            "score": 36,
+                            "wickets": 3,
+                            "overs": 6.3,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 39
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "SYSW",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 361,
+                            "batTeamName": "SYSW",
+                            "score": 140,
+                            "wickets": 6,
+                            "overs": 19.6,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 120
+                        }
+                    ]
+                },
+                "matchUdrs": null,
+                "timestamp": 1794479262813
+            },
+            "matchHeader": {
+                "matchId": 162843,
+                "matchDescription": "20th Match",
+                "matchFormat": "T20",
+                "matchType": "league",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794471000000,
+                "matchCompleteTimestamp": 1794481800000,
+                "matchStartTimeIST": "1:40 PM",
+                "matchStartTimeGMT": "8:10 AM",
+                "matchStartTimeLocal": "7:10 PM",
+                "matchCompleteTimeIST": "4:40 PM",
+                "matchCompleteTimeGMT": "Thu, Nov 12, 11:10:00 AM",
+                "matchCompleteTimeLocal": "10:10 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "In Progress",
+                "status": "Melbourne Renegades Women need 105 runs in 81 balls",
+                "tossResults": {
+                    "tossWinnerId": 361,
+                    "tossWinnerName": "Sydney Sixers Women",
+                    "decision": "Batting"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 361,
+                        "battingTeamShortName": "SYSW",
+                        "bowlingTeamId": 358,
+                        "bowlingTeamShortName": "MLRW"
+                    },
+                    {
+                        "battingTeamId": 358,
+                        "battingTeamShortName": "MLRW",
+                        "bowlingTeamId": 361,
+                        "bowlingTeamShortName": "SYSW"
+                    }
+                ],
+                "team1": {
+                    "id": 358,
+                    "name": "Melbourne Renegades Women",
+                    "playerDetails": [],
+                    "shortName": "MLRW"
+                },
+                "team2": {
+                    "id": 361,
+                    "name": "Sydney Sixers Women",
+                    "playerDetails": [],
+                    "shortName": "SYSW"
+                },
+                "seriesDesc": "Womens Big Bash League 2026",
+                "seriesId": 12677,
+                "seriesName": "Womens Big Bash League 2026",
+                "alertType": "auto",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 122,
+                    "name": "Junction Oval",
+                    "city": "Melbourne",
+                    "country": "Australia",
+                    "timezone": "+11:00",
+                    "latitude": "-37.856007",
+                    "longitude": "144.980155"
+                },
+                "venueInfo": null
+            }
+        },
+        "166653": {
+            "miniscore": {
+                "inningsId": 3,
+                "batTeam": {
+                    "teamId": 104,
+                    "teamScore": 191,
+                    "teamWkts": 2
+                },
+                "status": "Day 2: Stumps - New South Wales lead by 70 runs",
+                "batsmanStriker": {
+                    "id": 53744,
+                    "name": "Ryan Hicks",
+                    "runs": 10,
+                    "balls": 54,
+                    "fours": 1,
+                    "sixes": 0,
+                    "strikeRate": "18.52",
+                    "playerUrl": "/profiles/53744/ryan-hicks",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166653/3/53744/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 52495,
+                    "name": "Sam Konstas",
+                    "runs": 109,
+                    "balls": 141,
+                    "fours": 13,
+                    "sixes": 0,
+                    "strikeRate": "77.30",
+                    "playerUrl": "/profiles/52495/sam-konstas",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166653/3/52495/batting"
+                },
+                "bowlerStriker": {
+                    "id": 24603,
+                    "name": "Jordan Buckingham",
+                    "overs": 10,
+                    "maidens": 0,
+                    "economy": 3.3,
+                    "runs": 33,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/24603/jordan-buckingham",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166653/3/24603/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 14500,
+                    "name": "Ben Manenti",
+                    "overs": 10,
+                    "maidens": 1,
+                    "economy": 3.2,
+                    "runs": 32,
+                    "wickets": 1,
+                    "playerUrl": "/profiles/14500/ben-manenti",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166653/3/14500/bowling"
+                },
+                "overs": 51,
+                "target": null,
+                "partnerShip": {
+                    "balls": 95,
+                    "runs": 38
+                },
+                "currentRunRate": 3.75,
+                "requiredRunRate": 0,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 166653,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 104,
+                            "batTeamName": "NSW",
+                            "score": 204,
+                            "wickets": 10,
+                            "overs": 47.2,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 284
+                        },
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 158,
+                            "batTeamName": "SAUS",
+                            "score": 325,
+                            "wickets": 10,
+                            "overs": 82.5,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 497
+                        },
+                        {
+                            "inningsId": 3,
+                            "batTeamId": 104,
+                            "batTeamName": "NSW",
+                            "score": 191,
+                            "wickets": 2,
+                            "overs": 51,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 306
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "TEST",
+                    "customStatus": "Day 2: Stumps - New South Wales lead by 70 runs",
+                    "state": "Stumps"
+                },
+                "lastWicket": "Kurtis Patterson   c and b Ben Manenti 43(88)  - 153/2 in 35.1 ov.",
+                "remRunsToWin": 0,
+                "oversRem": null,
+                "responseLastUpdated": 1794479254,
+                "latestPerformance": [
+                    {
+                        "runs": 27,
+                        "wkts": 0,
+                        "label": "Last 10 overs"
+                    }
+                ],
+                "recentOvsStats": "...  | 0 0 0 0 0 1  | 0 0 0 0 1 0",
+                "event": "over-break",
+                "batTeamScoreObj": {
+                    "teamName": "NSW",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 104,
+                            "batTeamName": "NSW",
+                            "score": 204,
+                            "wickets": 10,
+                            "overs": 47.2,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 284
+                        },
+                        {
+                            "inningsId": 3,
+                            "batTeamId": 104,
+                            "batTeamName": "NSW",
+                            "score": 191,
+                            "wickets": 2,
+                            "overs": 50.6,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 306
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "SAUS",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 158,
+                            "batTeamName": "SAUS",
+                            "score": 325,
+                            "wickets": 10,
+                            "overs": 82.5,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 497
+                        }
+                    ]
+                },
+                "matchUdrs": null,
+                "timestamp": 1794467179509
+            },
+            "matchHeader": {
+                "matchId": 166653,
+                "matchDescription": "10th Match",
+                "matchFormat": "TEST",
+                "matchType": "domestic",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794353400000,
+                "matchCompleteTimestamp": 1794724200000,
+                "matchStartTimeIST": "5:00 AM",
+                "matchStartTimeGMT": "11:30 PM",
+                "matchStartTimeLocal": "10:30 AM",
+                "matchCompleteTimeIST": "12:00 PM",
+                "matchCompleteTimeGMT": "Sun, Nov 15, 6:30:00 AM",
+                "matchCompleteTimeLocal": "5:30 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "Stumps",
+                "status": "Day 2: Stumps - New South Wales lead by 70 runs",
+                "tossResults": {
+                    "tossWinnerId": 104,
+                    "tossWinnerName": "New South Wales",
+                    "decision": "Batting"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 104,
+                        "battingTeamShortName": "NSW",
+                        "bowlingTeamId": 158,
+                        "bowlingTeamShortName": "SAUS"
+                    },
+                    {
+                        "battingTeamId": 158,
+                        "battingTeamShortName": "SAUS",
+                        "bowlingTeamId": 104,
+                        "bowlingTeamShortName": "NSW"
+                    },
+                    {
+                        "battingTeamId": 104,
+                        "battingTeamShortName": "NSW",
+                        "bowlingTeamId": 158,
+                        "bowlingTeamShortName": "SAUS"
+                    }
+                ],
+                "team1": {
+                    "id": 104,
+                    "name": "New South Wales",
+                    "playerDetails": [],
+                    "shortName": "NSW"
+                },
+                "team2": {
+                    "id": 158,
+                    "name": "South Australia",
+                    "playerDetails": [],
+                    "shortName": "SAUS"
+                },
+                "seriesDesc": "Sheffield Shield 2026-27",
+                "seriesId": 12717,
+                "seriesName": "Sheffield Shield 2026-27",
+                "alertType": "",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 1727,
+                    "name": "Cricket Central",
+                    "city": "Sydney",
+                    "country": "Australia",
+                    "timezone": "+11:00",
+                    "latitude": "-33.82595",
+                    "longitude": "151.05187"
+                },
+                "venueInfo": null
+            }
+        },
+        "166657": {
+            "miniscore": {
+                "inningsId": 2,
+                "batTeam": {
+                    "teamId": 87,
+                    "teamScore": 185,
+                    "teamWkts": 3
+                },
+                "status": "Day 2: Stumps - Western Australia trail by 217 runs",
+                "batsmanStriker": {
+                    "id": 13170,
+                    "name": "Aaron Hardie",
+                    "runs": 60,
+                    "balls": 116,
+                    "fours": 6,
+                    "sixes": 0,
+                    "strikeRate": "51.72",
+                    "playerUrl": "/profiles/13170/aaron-hardie",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166657/2/13170/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 53779,
+                    "name": "Corey Wasley",
+                    "runs": 41,
+                    "balls": 108,
+                    "fours": 3,
+                    "sixes": 0,
+                    "strikeRate": "37.96",
+                    "playerUrl": "/profiles/53779/corey-wasley",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166657/2/53779/batting"
+                },
+                "bowlerStriker": {
+                    "id": 33360,
+                    "name": "Ashley Chandrasinghe",
+                    "overs": 1,
+                    "maidens": 1,
+                    "economy": 0,
+                    "runs": 0,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/33360/ashley-chandrasinghe",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166657/2/33360/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 15146,
+                    "name": "Todd Murphy",
+                    "overs": 19,
+                    "maidens": 2,
+                    "economy": 2.74,
+                    "runs": 52,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/15146/todd-murphy",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166657/2/15146/bowling"
+                },
+                "overs": 67,
+                "target": null,
+                "partnerShip": {
+                    "balls": 204,
+                    "runs": 101
+                },
+                "currentRunRate": 2.76,
+                "requiredRunRate": 0,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 166657,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 52,
+                            "batTeamName": "VIC",
+                            "score": 402,
+                            "wickets": 5,
+                            "overs": 119.3,
+                            "isDeclared": true,
+                            "isFollowOn": false,
+                            "ballNbr": 717
+                        },
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 87,
+                            "batTeamName": "WA",
+                            "score": 185,
+                            "wickets": 3,
+                            "overs": 67,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 402
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "TEST",
+                    "customStatus": "Day 2: Stumps - Western Australia trail by 217 runs",
+                    "state": "Stumps"
+                },
+                "lastWicket": "Jayden Goodwin  c Sam Harper b David Moody 22(74)  - 84/3 in 32.6 ov.",
+                "remRunsToWin": 0,
+                "oversRem": null,
+                "responseLastUpdated": 1794479260,
+                "latestPerformance": [
+                    {
+                        "runs": 28,
+                        "wkts": 0,
+                        "label": "Last 10 overs"
+                    }
+                ],
+                "recentOvsStats": "...  | 0 0 0 0 0 0  | 0 0 0 0 1 0",
+                "event": "over-break",
+                "batTeamScoreObj": {
+                    "teamName": "WA",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 87,
+                            "batTeamName": "WA",
+                            "score": 185,
+                            "wickets": 3,
+                            "overs": 66.6,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 402
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "VIC",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 52,
+                            "batTeamName": "VIC",
+                            "score": 402,
+                            "wickets": 5,
+                            "overs": 119.3,
+                            "isDeclared": true,
+                            "isFollowOn": false,
+                            "ballNbr": 717
+                        }
+                    ]
+                },
+                "matchUdrs": null,
+                "timestamp": 1794466980762
+            },
+            "matchHeader": {
+                "matchId": 166657,
+                "matchDescription": "11th Match",
+                "matchFormat": "TEST",
+                "matchType": "domestic",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794353400000,
+                "matchCompleteTimestamp": 1794724200000,
+                "matchStartTimeIST": "5:00 AM",
+                "matchStartTimeGMT": "11:30 PM",
+                "matchStartTimeLocal": "10:30 AM",
+                "matchCompleteTimeIST": "12:00 PM",
+                "matchCompleteTimeGMT": "Sun, Nov 15, 6:30:00 AM",
+                "matchCompleteTimeLocal": "5:30 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "Stumps",
+                "status": "Day 2: Stumps - Western Australia trail by 217 runs",
+                "tossResults": {
+                    "tossWinnerId": 52,
+                    "tossWinnerName": "Victoria",
+                    "decision": "Batting"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 52,
+                        "battingTeamShortName": "VIC",
+                        "bowlingTeamId": 87,
+                        "bowlingTeamShortName": "WA"
+                    },
+                    {
+                        "battingTeamId": 87,
+                        "battingTeamShortName": "WA",
+                        "bowlingTeamId": 52,
+                        "bowlingTeamShortName": "VIC"
+                    }
+                ],
+                "team1": {
+                    "id": 52,
+                    "name": "Victoria",
+                    "playerDetails": [],
+                    "shortName": "VIC"
+                },
+                "team2": {
+                    "id": 87,
+                    "name": "Western Australia",
+                    "playerDetails": [],
+                    "shortName": "WA"
+                },
+                "seriesDesc": "Sheffield Shield 2026-27",
+                "seriesId": 12717,
+                "seriesName": "Sheffield Shield 2026-27",
+                "alertType": "",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 87,
+                    "name": "Melbourne Cricket Ground",
+                    "city": "Melbourne",
+                    "country": "Australia",
+                    "timezone": "+11:00",
+                    "latitude": "-37.819967",
+                    "longitude": "144.983449"
+                },
+                "venueInfo": null
+            }
+        },
+        "166667": {
+            "miniscore": {
+                "inningsId": 2,
+                "batTeam": {
+                    "teamId": 166,
+                    "teamScore": 133,
+                    "teamWkts": 10
+                },
+                "status": "Day 2: Stumps - Tasmania trail by 215 runs",
+                "batsmanStriker": {
+                    "id": 12226,
+                    "name": "Riley Meredith",
+                    "runs": 1,
+                    "balls": 15,
+                    "fours": 0,
+                    "sixes": 0,
+                    "strikeRate": "6.67",
+                    "playerUrl": "/profiles/12226/riley-meredith",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166667/2/12226/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 0,
+                    "name": "",
+                    "runs": 0,
+                    "balls": 0,
+                    "fours": 0,
+                    "sixes": 0,
+                    "strikeRate": "0.00",
+                    "playerUrl": "",
+                    "playerMatchHighlightsUrl": ""
+                },
+                "bowlerStriker": {
+                    "id": 10626,
+                    "name": "Mitchell Swepson",
+                    "overs": 14.3,
+                    "maidens": 3,
+                    "economy": 1.52,
+                    "runs": 22,
+                    "wickets": 2,
+                    "playerUrl": "/profiles/10626/mitchell-swepson",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166667/2/10626/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 10182,
+                    "name": "Marnus Labuschagne",
+                    "overs": 4,
+                    "maidens": 1,
+                    "economy": 1.5,
+                    "runs": 6,
+                    "wickets": 3,
+                    "playerUrl": "/profiles/10182/marnus-labuschagne",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/166667/2/10182/bowling"
+                },
+                "overs": 54.3,
+                "target": null,
+                "partnerShip": {
+                    "balls": 16,
+                    "runs": 5
+                },
+                "currentRunRate": 2.44,
+                "requiredRunRate": 0,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 166667,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 164,
+                            "batTeamName": "QL",
+                            "score": 348,
+                            "wickets": 10,
+                            "overs": 111.3,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 669
+                        },
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 166,
+                            "batTeamName": "TAS",
+                            "score": 133,
+                            "wickets": 10,
+                            "overs": 54.3,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 327
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "TEST",
+                    "customStatus": "Day 2: Stumps - Tasmania trail by 215 runs",
+                    "state": "Stumps"
+                },
+                "lastWicket": "Jackson Bird  c Michael Neser b Mitchell Swepson 2(7)  - 133/10 in 54.3 ov.",
+                "remRunsToWin": 0,
+                "oversRem": null,
+                "responseLastUpdated": 1794479277,
+                "latestPerformance": [
+                    {
+                        "runs": 20,
+                        "wkts": 4,
+                        "label": "Last 10 overs"
+                    }
+                ],
+                "recentOvsStats": "... B2 0 0  | 1 1 0 1 0 0  | 0 0 W",
+                "event": "wicket",
+                "batTeamScoreObj": {
+                    "teamName": "TAS",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 2,
+                            "batTeamId": 166,
+                            "batTeamName": "TAS",
+                            "score": 133,
+                            "wickets": 10,
+                            "overs": 54.3,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 327
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "QL",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 164,
+                            "batTeamName": "QL",
+                            "score": 348,
+                            "wickets": 10,
+                            "overs": 111.3,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 669
+                        }
+                    ]
+                },
+                "matchUdrs": null,
+                "timestamp": 1794468626239
+            },
+            "matchHeader": {
+                "matchId": 166667,
+                "matchDescription": "12th Match",
+                "matchFormat": "TEST",
+                "matchType": "domestic",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794355200000,
+                "matchCompleteTimestamp": 1794726000000,
+                "matchStartTimeIST": "5:30 AM",
+                "matchStartTimeGMT": "12:00 AM",
+                "matchStartTimeLocal": "10:00 AM",
+                "matchCompleteTimeIST": "12:30 PM",
+                "matchCompleteTimeGMT": "Sun, Nov 15, 7:00:00 AM",
+                "matchCompleteTimeLocal": "5:00 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "Stumps",
+                "status": "Day 2: Stumps - Tasmania trail by 215 runs",
+                "tossResults": {
+                    "tossWinnerId": 164,
+                    "tossWinnerName": "Queensland",
+                    "decision": "Batting"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 164,
+                        "battingTeamShortName": "QL",
+                        "bowlingTeamId": 166,
+                        "bowlingTeamShortName": "TAS"
+                    },
+                    {
+                        "battingTeamId": 166,
+                        "battingTeamShortName": "TAS",
+                        "bowlingTeamId": 164,
+                        "bowlingTeamShortName": "QL"
+                    }
+                ],
+                "team1": {
+                    "id": 164,
+                    "name": "Queensland",
+                    "playerDetails": [],
+                    "shortName": "QL"
+                },
+                "team2": {
+                    "id": 166,
+                    "name": "Tasmania",
+                    "playerDetails": [],
+                    "shortName": "TAS"
+                },
+                "seriesDesc": "Sheffield Shield 2026-27",
+                "seriesId": 12717,
+                "seriesName": "Sheffield Shield 2026-27",
+                "alertType": "",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 35,
+                    "name": "The Gabba",
+                    "city": "Brisbane",
+                    "country": "Australia",
+                    "timezone": "+10:00",
+                    "latitude": "-27.485829",
+                    "longitude": "153.038055"
+                },
+                "venueInfo": null
+            }
+        },
+        "175821": {
+            "miniscore": {
+                "inningsId": 1,
+                "batTeam": {
+                    "teamId": 435,
+                    "teamScore": 6,
+                    "teamWkts": 1
+                },
+                "status": "Day 1: 1st Session",
+                "batsmanStriker": {
+                    "id": 1451963,
+                    "name": "Cade Carmichael",
+                    "runs": 2,
+                    "balls": 3,
+                    "fours": 0,
+                    "sixes": 0,
+                    "strikeRate": "66.67",
+                    "playerUrl": "/profiles/1451963/cade-carmichael",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/175821/1/1451963/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 1472214,
+                    "name": "Jake Egan",
+                    "runs": 4,
+                    "balls": 18,
+                    "fours": 1,
+                    "sixes": 0,
+                    "strikeRate": "22.22",
+                    "playerUrl": "/profiles/1472214/jake-egan",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/175821/1/1472214/batting"
+                },
+                "bowlerStriker": {
+                    "id": 1466906,
+                    "name": "Shelton Mazvitorera",
+                    "overs": 2,
+                    "maidens": 1,
+                    "economy": 1,
+                    "runs": 2,
+                    "wickets": 1,
+                    "playerUrl": "/profiles/1466906/shelton-mazvitorera",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/175821/1/1466906/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 23636,
+                    "name": "Alex Falao",
+                    "overs": 3,
+                    "maidens": 2,
+                    "economy": 1.33,
+                    "runs": 4,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/23636/alex-falao",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/175821/1/23636/bowling"
+                },
+                "overs": 5,
+                "target": null,
+                "partnerShip": {
+                    "balls": 9,
+                    "runs": 2
+                },
+                "currentRunRate": 1.2,
+                "requiredRunRate": 0,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 175821,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 435,
+                            "batTeamName": "IREA",
+                            "score": 6,
+                            "wickets": 1,
+                            "overs": 5,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 30
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "TEST",
+                    "customStatus": "Day 1: 1st Session",
+                    "state": "In Progress"
+                },
+                "lastWicket": "Stephen Doheny   b Shelton Mazvitorera 0(9)  - 4/1 in 3.3 ov.",
+                "remRunsToWin": 0,
+                "oversRem": 85,
+                "responseLastUpdated": 1794479268,
+                "latestPerformance": [],
+                "recentOvsStats": "0 0 0 0 0 0",
+                "event": "maiden_over,over-break",
+                "batTeamScoreObj": {
+                    "teamName": "IREA",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 435,
+                            "batTeamName": "IREA",
+                            "score": 6,
+                            "wickets": 1,
+                            "overs": 4.6,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 30
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "",
+                    "teamInningsArray": []
+                },
+                "matchUdrs": null,
+                "timestamp": 1794475734651
+            },
+            "matchHeader": {
+                "matchId": 175821,
+                "matchDescription": "2nd unofficial Test",
+                "matchFormat": "TEST",
+                "matchType": "domestic",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794470400000,
+                "matchCompleteTimestamp": 1794841200000,
+                "matchStartTimeIST": "1:30 PM",
+                "matchStartTimeGMT": "8:00 AM",
+                "matchStartTimeLocal": "10:00 AM",
+                "matchCompleteTimeIST": "8:30 PM",
+                "matchCompleteTimeGMT": "Mon, Nov 16, 3:00:00 PM",
+                "matchCompleteTimeLocal": "5:00 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "In Progress",
+                "status": "Day 1: 1st Session",
+                "tossResults": {
+                    "tossWinnerId": 435,
+                    "tossWinnerName": "Ireland A",
+                    "decision": "Batting"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 435,
+                        "battingTeamShortName": "IREA",
+                        "bowlingTeamId": 342,
+                        "bowlingTeamShortName": "ZIMA"
+                    }
+                ],
+                "team1": {
+                    "id": 342,
+                    "name": "Zimbabwe A",
+                    "playerDetails": [],
+                    "shortName": "ZIMA"
+                },
+                "team2": {
+                    "id": 435,
+                    "name": "Ireland A",
+                    "playerDetails": [],
+                    "shortName": "IREA"
+                },
+                "seriesDesc": "Ireland A tour of Zimbabwe, 2026",
+                "seriesId": 13337,
+                "seriesName": "Ireland A tour of Zimbabwe, 2026",
+                "alertType": "auto",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 69,
+                    "name": "Harare Sports Club",
+                    "city": "Harare",
+                    "country": "Zimbabwe",
+                    "timezone": "+02:00",
+                    "latitude": "-17.814114",
+                    "longitude": "31.050962"
+                },
+                "venueInfo": null
+            }
+        },
+        "177400": {
+            "miniscore": {
+                "inningsId": 1,
+                "batTeam": {
+                    "teamId": 329,
+                    "teamScore": 78,
+                    "teamWkts": 7
+                },
+                "status": "Bangladesh Women opt to bat",
+                "batsmanStriker": {
+                    "id": 38818,
+                    "name": "Shorna Akter",
+                    "runs": 4,
+                    "balls": 6,
+                    "fours": 0,
+                    "sixes": 0,
+                    "strikeRate": "66.67",
+                    "playerUrl": "/profiles/38818/shorna-akter",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/177400/1/38818/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 35607,
+                    "name": "Rabeya Khan",
+                    "runs": 7,
+                    "balls": 11,
+                    "fours": 0,
+                    "sixes": 0,
+                    "strikeRate": "63.64",
+                    "playerUrl": "/profiles/35607/rabeya-khan",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/177400/1/35607/batting"
+                },
+                "bowlerStriker": {
+                    "id": 24521,
+                    "name": "Tuba Hassan",
+                    "overs": 4,
+                    "maidens": 0,
+                    "economy": 6.5,
+                    "runs": 26,
+                    "wickets": 3,
+                    "playerUrl": "/profiles/24521/tuba-hassan",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/177400/1/24521/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 12275,
+                    "name": "Nashra Sandhu",
+                    "overs": 3,
+                    "maidens": 1,
+                    "economy": 2.33,
+                    "runs": 7,
+                    "wickets": 1,
+                    "playerUrl": "/profiles/12275/nashra-sandhu",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/177400/1/12275/bowling"
+                },
+                "overs": 16,
+                "target": null,
+                "partnerShip": {
+                    "balls": 15,
+                    "runs": 10
+                },
+                "currentRunRate": 4.88,
+                "requiredRunRate": 0,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 177400,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 329,
+                            "batTeamName": "BANW",
+                            "score": 78,
+                            "wickets": 7,
+                            "overs": 16,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 96
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "T20",
+                    "customStatus": "Bangladesh Women opt to bat",
+                    "state": "In Progress"
+                },
+                "lastWicket": "Fahima Khatun  run out (Tasmia Rubab/Muneeba Ali)  1(3)  - 68/7 in 13.3 ov.",
+                "remRunsToWin": 0,
+                "oversRem": null,
+                "responseLastUpdated": 1794479274,
+                "latestPerformance": [
+                    {
+                        "runs": 19,
+                        "wkts": 4,
+                        "label": "Last 5 overs"
+                    },
+                    {
+                        "runs": 12,
+                        "wkts": 1,
+                        "label": "Last 3 overs"
+                    }
+                ],
+                "recentOvsStats": "0 3 1 0 0 0",
+                "event": "over-break",
+                "batTeamScoreObj": {
+                    "teamName": "BANW",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 329,
+                            "batTeamName": "BANW",
+                            "score": 78,
+                            "wickets": 7,
+                            "overs": 15.6,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 96
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "",
+                    "teamInningsArray": []
+                },
+                "matchUdrs": null,
+                "timestamp": 1794479078071
+            },
+            "matchHeader": {
+                "matchId": 177400,
+                "matchDescription": "3rd Match, Group B",
+                "matchFormat": "T20",
+                "matchType": "International",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794474900000,
+                "matchCompleteTimestamp": 1794485700000,
+                "matchStartTimeIST": "2:45 PM",
+                "matchStartTimeGMT": "9:15 AM",
+                "matchStartTimeLocal": "1:15 PM",
+                "matchCompleteTimeIST": "5:45 PM",
+                "matchCompleteTimeGMT": "Thu, Nov 12, 12:15:00 PM",
+                "matchCompleteTimeLocal": "4:15 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "In Progress",
+                "status": "Bangladesh Women opt to bat",
+                "tossResults": {
+                    "tossWinnerId": 329,
+                    "tossWinnerName": "Bangladesh Women",
+                    "decision": "Batting"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 329,
+                        "battingTeamShortName": "BANW",
+                        "bowlingTeamId": 259,
+                        "bowlingTeamShortName": "PAKW"
+                    }
+                ],
+                "team1": {
+                    "id": 259,
+                    "name": "Pakistan Women",
+                    "playerDetails": [],
+                    "shortName": "PAKW"
+                },
+                "team2": {
+                    "id": 329,
+                    "name": "Bangladesh Women",
+                    "playerDetails": [],
+                    "shortName": "BANW"
+                },
+                "seriesDesc": "ICC Women's Emerging Nations Trophy, 2026",
+                "seriesId": 13420,
+                "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+                "alertType": "auto",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 1438490,
+                    "name": "Karwan Cricket Ground",
+                    "city": "Ajman",
+                    "country": "United Arab Emirates",
+                    "timezone": "+04:00",
+                    "latitude": "25.4013529",
+                    "longitude": "55.5553004"
+                },
+                "venueInfo": null
+            }
+        },
+        "177401": {
+            "miniscore": {
+                "inningsId": 1,
+                "batTeam": {
+                    "teamId": 382,
+                    "teamScore": 136,
+                    "teamWkts": 2
+                },
+                "status": "Thailand Women opt to bat",
+                "batsmanStriker": {
+                    "id": 11942,
+                    "name": "Nannapat Koncharoenkai",
+                    "runs": 54,
+                    "balls": 49,
+                    "fours": 4,
+                    "sixes": 0,
+                    "strikeRate": "110.20",
+                    "playerUrl": "/profiles/11942/nannapat-koncharoenkai",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/177401/1/11942/batting"
+                },
+                "batsmanNonStriker": {
+                    "id": 11934,
+                    "name": "Naruemol Chaiwai",
+                    "runs": 22,
+                    "balls": 20,
+                    "fours": 1,
+                    "sixes": 0,
+                    "strikeRate": "110.00",
+                    "playerUrl": "/profiles/11934/naruemol-chaiwai",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/177401/1/11934/batting"
+                },
+                "bowlerStriker": {
+                    "id": 13765,
+                    "name": "Heather Siegers",
+                    "overs": 4,
+                    "maidens": 0,
+                    "economy": 3.75,
+                    "runs": 15,
+                    "wickets": 2,
+                    "playerUrl": "/profiles/13765/heather-siegers",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/177401/1/13765/bowling"
+                },
+                "bowlerNonStriker": {
+                    "id": 15387,
+                    "name": "Iris Zwilling",
+                    "overs": 4,
+                    "maidens": 0,
+                    "economy": 7,
+                    "runs": 28,
+                    "wickets": 0,
+                    "playerUrl": "/profiles/15387/iris-zwilling",
+                    "playerMatchHighlightsUrl": "/player-match-highlights/177401/1/15387/bowling"
+                },
+                "overs": 20,
+                "target": null,
+                "partnerShip": {
+                    "balls": 36,
+                    "runs": 42
+                },
+                "currentRunRate": 6.8,
+                "requiredRunRate": 0,
+                "runsPerBall": 0,
+                "requiredRunsPerBall": 0,
+                "matchScoreDetails": {
+                    "matchId": 177401,
+                    "inningsScoreList": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 382,
+                            "batTeamName": "THAIW",
+                            "score": 136,
+                            "wickets": 2,
+                            "overs": 20,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 120
+                        }
+                    ],
+                    "isMatchNotCovered": false,
+                    "matchFormat": "T20",
+                    "customStatus": "Thailand Women opt to bat",
+                    "state": "In Progress"
+                },
+                "lastWicket": "Natthakan Chantham   b Heather Siegers 55(47)  - 94/2 in 13.6 ov.",
+                "remRunsToWin": 0,
+                "oversRem": null,
+                "responseLastUpdated": 1794479269,
+                "latestPerformance": [
+                    {
+                        "runs": 36,
+                        "wkts": 0,
+                        "label": "Last 5 overs"
+                    },
+                    {
+                        "runs": 20,
+                        "wkts": 0,
+                        "label": "Last 3 overs"
+                    }
+                ],
+                "recentOvsStats": "1 2 1 2 1 2",
+                "event": "over-break",
+                "batTeamScoreObj": {
+                    "teamName": "THAIW",
+                    "teamInningsArray": [
+                        {
+                            "inningsId": 1,
+                            "batTeamId": 382,
+                            "batTeamName": "THAIW",
+                            "score": 136,
+                            "wickets": 2,
+                            "overs": 19.6,
+                            "isDeclared": false,
+                            "isFollowOn": false,
+                            "ballNbr": 120
+                        }
+                    ]
+                },
+                "bowlTeamScoreObj": {
+                    "teamName": "",
+                    "teamInningsArray": []
+                },
+                "matchUdrs": null,
+                "timestamp": 1794479231283
+            },
+            "matchHeader": {
+                "matchId": 177401,
+                "matchDescription": "4th Match, Group B",
+                "matchFormat": "T20",
+                "matchType": "International",
+                "complete": false,
+                "domestic": false,
+                "matchStartTimestamp": 1794474900000,
+                "matchCompleteTimestamp": 1794485700000,
+                "matchStartTimeIST": "2:45 PM",
+                "matchStartTimeGMT": "9:15 AM",
+                "matchStartTimeLocal": "1:15 PM",
+                "matchCompleteTimeIST": "5:45 PM",
+                "matchCompleteTimeGMT": "Thu, Nov 12, 12:15:00 PM",
+                "matchCompleteTimeLocal": "4:15 PM",
+                "dayNight": false,
+                "year": 2026,
+                "state": "In Progress",
+                "status": "Thailand Women opt to bat",
+                "tossResults": {
+                    "tossWinnerId": 382,
+                    "tossWinnerName": "Thailand Women",
+                    "decision": "Batting"
+                },
+                "result": [],
+                "revisedTarget": [],
+                "playersOfTheMatch": [],
+                "playersOfTheSeries": [],
+                "matchTeamInfo": [
+                    {
+                        "battingTeamId": 382,
+                        "battingTeamShortName": "THAIW",
+                        "bowlingTeamId": 188,
+                        "bowlingTeamShortName": "NEDW"
+                    }
+                ],
+                "team1": {
+                    "id": 188,
+                    "name": "Netherlands Women",
+                    "playerDetails": [],
+                    "shortName": "NEDW"
+                },
+                "team2": {
+                    "id": 382,
+                    "name": "Thailand Women",
+                    "playerDetails": [],
+                    "shortName": "THAIW"
+                },
+                "seriesDesc": "ICC Women's Emerging Nations Trophy, 2026",
+                "seriesId": 13420,
+                "seriesName": "ICC Women's Emerging Nations Trophy, 2026",
+                "alertType": "auto",
+                "isMatchNotCovered": false,
+                "livestreamEnabled": false,
+                "venue": {
+                    "id": 1438500,
+                    "name": "Seven Districts Ground",
+                    "city": "Ajman",
+                    "country": "United Arab Emirates",
+                    "timezone": "+04:00",
+                    "latitude": "25.4016974",
+                    "longitude": "55.557212"
+                },
+                "venueInfo": null
+            }
+        }
+    }
+}

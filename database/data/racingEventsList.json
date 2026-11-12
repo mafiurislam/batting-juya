@@ -1,0 +1,433 @@
+{
+  "data": {
+    "tournaments": [
+      {
+        "tournamentId": "1549628216",
+        "sportId": "7",
+        "tournamentName": "GB",
+        "inPlay": false
+      },
+      {
+        "tournamentId": "1549616968",
+        "sportId": "7",
+        "tournamentName": "AUS",
+        "inPlay": false
+      },
+      {
+        "tournamentId": "1549628193",
+        "sportId": "7",
+        "tournamentName": "FRA",
+        "inPlay": false
+      },
+      {
+        "tournamentId": "1549417158",
+        "sportId": "7",
+        "tournamentName": "RSA",
+        "inPlay": false
+      },
+      {
+        "tournamentId": "1549628223",
+        "sportId": "7",
+        "tournamentName": "IRE",
+        "inPlay": false
+      }
+    ],
+    "events": [
+      {
+        "eventId": "7002026116184637121",
+        "eventName": "Aintree",
+        "tournamentId": "1549628216",
+        "tournamentName": "GB",
+        "sportId": "7",
+        "inPlay": false,
+        "eventsData": [
+          {
+            "eventId": "7002026116184637121",
+            "inPlay": false,
+            "eventName": "Aintree",
+            "eventTime": "2026-11-07T12:40:00.000Z"
+          }
+        ]
+      },
+      {
+        "eventId": "700202611916382213",
+        "eventName": "Queanbeyan ",
+        "tournamentId": "1549616968",
+        "tournamentName": "AUS",
+        "sportId": "7",
+        "inPlay": false,
+        "eventsData": [
+          {
+            "eventId": "700202611916382213",
+            "inPlay": false,
+            "eventName": "Queanbeyan ",
+            "eventTime": "2026-11-10T05:50:00.000Z"
+          },
+          {
+            "eventId": "700202611916384322",
+            "inPlay": false,
+            "eventName": "Queanbeyan ",
+            "eventTime": "2026-11-10T06:30:00.000Z"
+          }
+        ]
+      },
+      {
+        "eventId": "7002026119163824903",
+        "eventName": "Mornington",
+        "tournamentId": "1549616968",
+        "tournamentName": "AUS",
+        "sportId": "7",
+        "inPlay": true,
+        "eventsData": [
+          {
+            "eventId": "7002026119163824903",
+            "inPlay": true,
+            "eventName": "Mornington",
+            "eventTime": "2026-11-10T05:30:00.000Z"
+          },
+          {
+            "eventId": "7002026119163826948",
+            "inPlay": false,
+            "eventName": "Mornington",
+            "eventTime": "2026-11-10T06:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "eventId": "700202611916385948",
+        "eventName": "Fontainebleau",
+        "tournamentId": "1549628193",
+        "tournamentName": "FRA",
+        "sportId": "7",
+        "inPlay": false,
+        "eventsData": [
+          {
+            "eventId": "700202611916385948",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T11:00:00.000Z"
+          },
+          {
+            "eventId": "700202611916390794",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T11:35:00.000Z"
+          },
+          {
+            "eventId": "700202611916392973",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T12:10:00.000Z"
+          },
+          {
+            "eventId": "700202611916394815",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T12:55:00.000Z"
+          },
+          {
+            "eventId": "70020261191639731",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T13:30:00.000Z"
+          },
+          {
+            "eventId": "700202611916398954",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T14:05:00.000Z"
+          },
+          {
+            "eventId": "7002026119163910660",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T14:40:00.000Z"
+          },
+          {
+            "eventId": "7002026119163912715",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T15:15:00.000Z"
+          },
+          {
+            "eventId": "7002026119163916377",
+            "inPlay": false,
+            "eventName": "Fontainebleau",
+            "eventTime": "2026-11-10T15:50:00.000Z"
+          }
+        ]
+      },
+      {
+        "eventId": "7002026119163932485",
+        "eventName": "Amiens",
+        "tournamentId": "1549628193",
+        "tournamentName": "FRA",
+        "sportId": "7",
+        "inPlay": false,
+        "eventsData": [
+          {
+            "eventId": "7002026119163932485",
+            "inPlay": false,
+            "eventName": "Amiens",
+            "eventTime": "2026-11-10T16:25:00.000Z"
+          },
+          {
+            "eventId": "700202611916393548",
+            "inPlay": false,
+            "eventName": "Amiens",
+            "eventTime": "2026-11-10T17:00:00.000Z"
+          },
+          {
+            "eventId": "7002026119163937404",
+            "inPlay": false,
+            "eventName": "Amiens",
+            "eventTime": "2026-11-10T17:35:00.000Z"
+          },
+          {
+            "eventId": "7002026119163939666",
+            "inPlay": false,
+            "eventName": "Amiens",
+            "eventTime": "2026-11-10T18:08:00.000Z"
+          },
+          {
+            "eventId": "7002026119163943892",
+            "inPlay": false,
+            "eventName": "Amiens",
+            "eventTime": "2026-11-10T19:12:00.000Z"
+          },
+          {
+            "eventId": "7002026119163941597",
+            "inPlay": false,
+            "eventName": "Amiens",
+            "eventTime": "2026-11-10T18:40:00.000Z"
+          },
+          {
+            "eventId": "7002026119163948280",
+            "inPlay": false,
+            "eventName": "Amiens",
+            "eventTime": "2026-11-10T19:44:00.000Z"
+          }
+        ]
+      },
+      {
+        "eventId": "70020261191642072",
+        "eventName": "Kenilworth ",
+        "tournamentId": "1549417158",
+        "tournamentName": "RSA",
+        "sportId": "7",
+        "inPlay": false,
+        "eventsData": [
+          {
+            "eventId": "70020261191642072",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T10:37:00.000Z"
+          },
+          {
+            "eventId": "700202611916422279",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T11:07:00.000Z"
+          },
+          {
+            "eventId": "700202611916424332",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T11:45:00.000Z"
+          },
+          {
+            "eventId": "700202611916426633",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T12:20:00.000Z"
+          },
+          {
+            "eventId": "700202611916428872",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T12:55:00.000Z"
+          },
+          {
+            "eventId": "7002026119164211584",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T13:30:00.000Z"
+          },
+          {
+            "eventId": "7002026119164213707",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T14:05:00.000Z"
+          },
+          {
+            "eventId": "7002026119164215622",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T14:40:00.000Z"
+          },
+          {
+            "eventId": "7002026119164217848",
+            "inPlay": false,
+            "eventName": "Kenilworth ",
+            "eventTime": "2026-11-10T15:15:00.000Z"
+          }
+        ]
+      },
+      {
+        "eventId": "70020261191642444",
+        "eventName": "Huntingdon",
+        "tournamentId": "1549628216",
+        "tournamentName": "GB",
+        "sportId": "7",
+        "inPlay": false,
+        "eventsData": [
+          {
+            "eventId": "70020261191642444",
+            "inPlay": false,
+            "eventName": "Huntingdon",
+            "eventTime": "2026-11-10T13:10:00.000Z"
+          },
+          {
+            "eventId": "7002026119164245961",
+            "inPlay": false,
+            "eventName": "Huntingdon",
+            "eventTime": "2026-11-10T13:40:00.000Z"
+          },
+          {
+            "eventId": "7002026119164248180",
+            "inPlay": false,
+            "eventName": "Huntingdon",
+            "eventTime": "2026-11-10T14:10:00.000Z"
+          },
+          {
+            "eventId": "7002026119164250505",
+            "inPlay": false,
+            "eventName": "Huntingdon",
+            "eventTime": "2026-11-10T14:40:00.000Z"
+          },
+          {
+            "eventId": "7002026119164252951",
+            "inPlay": false,
+            "eventName": "Huntingdon",
+            "eventTime": "2026-11-10T15:10:00.000Z"
+          },
+          {
+            "eventId": "7002026119164254389",
+            "inPlay": false,
+            "eventName": "Huntingdon",
+            "eventTime": "2026-11-10T15:40:00.000Z"
+          }
+        ]
+      },
+      {
+        "eventId": "7002026119164310160",
+        "eventName": "Lingfield",
+        "tournamentId": "1549628216",
+        "tournamentName": "GB",
+        "sportId": "7",
+        "inPlay": false,
+        "eventsData": [
+          {
+            "eventId": "7002026119164310160",
+            "inPlay": false,
+            "eventName": "Lingfield",
+            "eventTime": "2026-11-10T13:20:00.000Z"
+          },
+          {
+            "eventId": "7002026119164312785",
+            "inPlay": false,
+            "eventName": "Lingfield",
+            "eventTime": "2026-11-10T13:50:00.000Z"
+          },
+          {
+            "eventId": "700202611916431536",
+            "inPlay": false,
+            "eventName": "Lingfield",
+            "eventTime": "2026-11-10T14:20:00.000Z"
+          },
+          {
+            "eventId": "7002026119164316908",
+            "inPlay": false,
+            "eventName": "Lingfield",
+            "eventTime": "2026-11-10T14:50:00.000Z"
+          },
+          {
+            "eventId": "7002026119164320416",
+            "inPlay": false,
+            "eventName": "Lingfield",
+            "eventTime": "2026-11-10T15:20:00.000Z"
+          },
+          {
+            "eventId": "7002026119164322364",
+            "inPlay": false,
+            "eventName": "Lingfield",
+            "eventTime": "2026-11-10T15:50:00.000Z"
+          }
+        ]
+      },
+      {
+        "eventId": "7002026119164435814",
+        "eventName": "Fairyhouse ",
+        "tournamentId": "1549628223",
+        "tournamentName": "IRE",
+        "sportId": "7",
+        "inPlay": false,
+        "eventsData": [
+          {
+            "eventId": "7002026119164435814",
+            "inPlay": false,
+            "eventName": "Fairyhouse ",
+            "eventTime": "2026-11-10T12:30:00.000Z"
+          },
+          {
+            "eventId": "7002026119164438234",
+            "inPlay": false,
+            "eventName": "Fairyhouse ",
+            "eventTime": "2026-11-10T13:00:00.000Z"
+          },
+          {
+            "eventId": "7002026119164439808",
+            "inPlay": false,
+            "eventName": "Fairyhouse ",
+            "eventTime": "2026-11-10T13:30:00.000Z"
+          },
+          {
+            "eventId": "7002026119164442358",
+            "inPlay": false,
+            "eventName": "Fairyhouse ",
+            "eventTime": "2026-11-10T14:00:00.000Z"
+          },
+          {
+            "eventId": "7002026119164443621",
+            "inPlay": false,
+            "eventName": "Fairyhouse ",
+            "eventTime": "2026-11-10T14:30:00.000Z"
+          },
+          {
+            "eventId": "7002026119164445581",
+            "inPlay": false,
+            "eventName": "Fairyhouse ",
+            "eventTime": "2026-11-10T15:00:00.000Z"
+          },
+          {
+            "eventId": "7002026119164447431",
+            "inPlay": false,
+            "eventName": "Fairyhouse ",
+            "eventTime": "2026-11-10T15:30:00.000Z"
+          },
+          {
+            "eventId": "7002026119164449950",
+            "inPlay": false,
+            "eventName": "Fairyhouse ",
+            "eventTime": "2026-11-10T16:00:00.000Z"
+          }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "message": "Racing Market List.",
+    "status_code": 200,
+    "status": true
+  }
+}
