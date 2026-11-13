@@ -22,7 +22,7 @@
   $formattedTime = '';
   try {
       $dt = \Carbon\Carbon::parse($ev->event_time)->setTimezone('Asia/Kolkata');
-      $formattedTime = $dt->format('d-m-Y G:i');
+      $formattedTime = $dt->format('d-m-Y H:i');
       $evDateStr = $dt->format('Y-m-d');
   } catch (\Throwable $e) {
       $formattedTime = $ev->event_time;
@@ -133,7 +133,7 @@
   <!-- Pin to Multi-Market -->
   <div class="wb-pin-cell">
     <button type="button" class="wb-pin-btn {{ $isPinned ? 'active' : '' }}"
-            onclick="WB24.togglePin(this, '{{ $ev->event_id }}', '{{ $ev->sport_id }}')"
+            onclick="event.stopPropagation(); WB24.togglePin(this, '{{ $ev->event_id }}', '{{ $ev->sport_id }}')"
             title="Pin to Multi Markets">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
         <path d="M16 9V4h1c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h1v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z"/>

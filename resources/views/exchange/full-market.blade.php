@@ -459,12 +459,176 @@
     font-size: 13px;
   }
 
+  .fm-subhead-right {
+    width: 348px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+  }
+  .fm-mbl-minmax {
+    display: none;
+  }
+
   @media (max-width: 767px) {
-    .fm-odds-6 .box-hide-mbl {
+    .fm-banner {
+      height: 82px;
+      padding: 6px 8px 8px 8px;
+    }
+    .wb-universe-scorecard {
+      min-height: 132px;
+    }
+    .wb-sc-row {
+      padding: 3px 6px;
+      font-size: 11px;
+      min-height: 25px;
+    }
+    .wb-sc-ball {
+      width: 18px;
+      height: 18px;
+      font-size: 9.5px;
+      margin: 0 1px;
+    }
+    .fm-card-head {
+      padding-right: 6px;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .fm-head-tab {
+      font-size: 12px;
+      padding: 4px 10px;
+      min-width: 120px;
+    }
+    .fm-matched-txt {
+      font-size: 11px;
+    }
+    /* Match Odds & Bookmaker Subheader on Mobile: Min/Max on left, Back (3 cols) & Lay (3 cols) on right */
+    .fm-subhead {
+      padding: 3px 4px;
+      justify-content: space-between;
+    }
+    .fm-mbl-minmax {
+      display: inline-block;
+      padding-left: 4px;
+    }
+    .fm-subhead-right {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+    .fm-subhead-right .box-hide-mbl {
       display: none !important;
     }
+    .fm-subhead-right .fm-subhead-back,
+    .fm-subhead-right .fm-subhead-lay {
+      width: 100% !important;
+      border-radius: 4px !important;
+      font-size: 11.5px;
+      padding: 3px 0 !important;
+    }
+
+    /* Runner Row on Mobile: Full-width Team Name + P/L on top, all 6 Back/Lay odds in a 6-column grid below */
+    .fm-runner-row {
+      flex-wrap: wrap;
+      padding-bottom: 3px;
+    }
+    .fm-runner-name {
+      width: 100%;
+      flex: 0 0 100%;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 8px 3px 8px;
+      background: rgba(248, 250, 252, 0.7);
+    }
+    .fm-runner-title {
+      font-size: 12.5px;
+    }
+    .fm-runner-pl {
+      margin-top: 0;
+      font-size: 12px;
+    }
     .fm-odds-6 {
-      width: 116px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px;
+      padding: 2px 4px;
+    }
+    .fm-odds-6 .box-hide-mbl {
+      display: flex !important;
+    }
+    .fm-odd-cell {
+      width: 100%;
+      height: 39px;
+      border-radius: 3px;
+    }
+    .fm-odd-cell strong {
+      font-size: 11.5px;
+    }
+    .fm-odd-cell small {
+      font-size: 9px;
+    }
+
+    /* To Win The Match Pills on Mobile */
+    .fm-sb-green-body {
+      padding: 6px;
+    }
+    .fm-sb-pill {
+      min-height: 48px;
+    }
+    .fm-sb-pill-right {
+      min-height: 48px;
+      padding-left: 8px;
+      font-size: 11.5px;
+    }
+
+    /* Fancy Bet & Sportsbook Tabs on Mobile */
+    .wb-market-tabs-card .fancy_bet_tab-wrap {
+      justify-content: flex-start;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0 6px;
+    }
+    .wb-market-tabs-card .fancy_bet_tab-wrap::-webkit-scrollbar {
+      display: none;
+    }
+    .wb-market-tabs-card .special_bets-tab {
+      margin: 3px 0;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+    }
+    .wb-market-tabs-card .special_bets-tab a {
+      white-space: nowrap;
+      min-width: auto;
+      padding: 0 8px;
+      font-size: 11.5px;
+    }
+    .js-fancy-row {
+      flex-wrap: nowrap;
+      padding: 6px !important;
+    }
+    .js-fancy-row .fm-odd-cell {
+      width: 52px;
+      flex-shrink: 0;
+    }
+    .fm-fancy-minmax-col {
+      width: 68px !important;
+      font-size: 10px !important;
+      line-height: 1.2;
+    }
+    /* Sportsbook Table on Mobile */
+    .wb-market-tabs-card .sportbook-market-tbl col:nth-child(1) {
+      width: 72% !important;
+    }
+    .wb-market-tabs-card .sportbook-market-tbl col:nth-child(2) {
+      width: 28% !important;
+    }
+    .wb-market-tabs-card .sportbook-market-tbl col:nth-child(3),
+    .wb-market-tabs-card .sportbook-market-tbl td.td-end-hide {
+      display: none !important;
+      width: 0 !important;
     }
   }
 
@@ -1173,11 +1337,13 @@
 
       <!-- Subheader: Back | Lay | Min/Max -->
       <div class="fm-subhead">
-        <div class="flex-grow-1"></div>
-        <div class="d-flex text-center align-items-center" style="width:348px;">
+        <div class="flex-grow-1">
+          <span class="wb-minmax-pill fm-mbl-minmax">Min/Max <strong class="text-dark">{{ $moMin }}-{{ $moMax }}</strong></span>
+        </div>
+        <div class="fm-subhead-right">
           <div class="box-hide-mbl" style="width:116px;"></div>
-          <div style="width:57px;background:var(--back-1);padding:4px 0;border-top-left-radius:6px;">Back</div>
-          <div style="width:57px;background:var(--lay-1);padding:4px 0;border-top-right-radius:6px;">Lay</div>
+          <div class="fm-subhead-back" style="width:57px;background:var(--back-1);padding:4px 0;border-top-left-radius:6px;">Back</div>
+          <div class="fm-subhead-lay" style="width:57px;background:var(--lay-1);padding:4px 0;border-top-right-radius:6px;">Lay</div>
           <div class="box-hide-mbl ps-1" style="width:118px;">
             <span class="wb-minmax-pill">Min/Max <strong class="text-dark">{{ $moMin }}-{{ $moMax }}</strong></span>
           </div>
@@ -1280,11 +1446,13 @@
       </div>
 
       <div class="fm-subhead" style="background:transparent;">
-        <div class="flex-grow-1"></div>
-        <div class="d-flex text-center align-items-center" style="width:348px;">
+        <div class="flex-grow-1">
+          <span class="wb-minmax-pill fm-mbl-minmax">Min/Max {{ $bmMin }}-{{ $bmMax }}</span>
+        </div>
+        <div class="fm-subhead-right">
           <div class="box-hide-mbl" style="width:116px;"></div>
-          <div style="width:57px;padding:4px 0;">Back</div>
-          <div style="width:57px;padding:4px 0;">Lay</div>
+          <div class="fm-subhead-back" style="width:57px;padding:4px 0;">Back</div>
+          <div class="fm-subhead-lay" style="width:57px;padding:4px 0;">Lay</div>
           <div class="box-hide-mbl ps-1" style="width:118px;">
             <span class="wb-minmax-pill">Min/Max {{ $bmMin }}-{{ $bmMax }}</span>
           </div>
@@ -1460,7 +1628,7 @@
         <div class="flex-grow-1"></div>
         <div style="width:56px;background:var(--lay-1);text-align:center;">No</div>
         <div style="width:56px;background:var(--back-1);text-align:center;">Yes</div>
-        <div style="width:110px;text-align:center;color:#577c94;">Min/Max</div>
+        <div style="width:110px;text-align:center;color:#577c94;" class="fm-fancy-minmax-col">Min/Max</div>
       </div>
 
       @forelse($fancyList as $fIdx => $fItem)
@@ -1515,7 +1683,7 @@
             </a>
           </div>
 
-          <div style="width:110px;text-align:center;" class="fw-bold small text-dark">
+          <div style="width:110px;text-align:center;" class="fw-bold small text-dark fm-fancy-minmax-col">
             {{ $fMin }} - {{ $fMax }}
           </div>
         </div>
@@ -2018,7 +2186,8 @@
           betType,
           odds: parseFloat(odds) || 1.90,
           category: category || 'exchange',
-          runLine
+          runLine,
+          skipMobileModal: true
         });
         if (window.WB24.currentSlip) {
           window.WB24.currentSlip.stake = this.stake;

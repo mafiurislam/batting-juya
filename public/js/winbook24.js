@@ -284,8 +284,8 @@ window.WB24 = {
     document.getElementById('slipStakeInput').value = this.currentSlip.stake;
     this.updateSlipCalculations();
 
-    // If on mobile, open mobile betslip modal or scroll into view
-    if (window.innerWidth < 992) {
+    // If on mobile, open mobile betslip modal unless an inline betslip is active on the page
+    if (window.innerWidth < 992 && !params.skipMobileModal) {
       const mblModal = document.getElementById('mobileBetSlipModal');
       if (mblModal && window.bootstrap) {
         document.getElementById('mblSlipSelection').textContent = this.currentSlip.selection_name;

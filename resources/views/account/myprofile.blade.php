@@ -20,6 +20,16 @@
     font-weight: 700;
     color: #111;
   }
+  @media (max-width: 767px) {
+    .wb-profile-row {
+      padding: 8px 10px;
+      font-size: 12.5px;
+    }
+    .wb-profile-label {
+      width: 135px;
+      flex-shrink: 0;
+    }
+  }
   .wb-profile-val {
     flex: 1;
     color: #23282c;

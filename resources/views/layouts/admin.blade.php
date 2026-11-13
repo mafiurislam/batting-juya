@@ -196,17 +196,54 @@
       letter-spacing: 0.3px;
       border-bottom-width: 1px;
     }
+
+    .adm-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      z-index: 1045;
+    }
+    .adm-backdrop.show {
+      display: block;
+    }
+
+    @media (max-width: 991px) {
+      .adm-topbar {
+        height: 56px;
+        padding: 0 10px;
+      }
+      .adm-sidebar {
+        position: fixed;
+        top: 56px;
+        left: -275px;
+        width: 265px;
+        height: calc(100vh - 56px);
+        overflow-y: auto;
+        z-index: 1050;
+        transition: left 0.25s ease;
+      }
+      .adm-sidebar.mobile-open {
+        left: 0;
+      }
+      .adm-card-body {
+        padding: 12px;
+      }
+    }
   </style>
   @stack('styles')
 </head>
 <body>
   <!-- ================= TOP ADMIN HEADER ================= -->
   <header class="adm-topbar">
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-2 gap-md-3">
+      <button type="button" class="btn btn-sm btn-outline-light d-lg-none" onclick="toggleAdminMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
       <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center text-decoration-none">
-        <img src="/assets/brand/logo.png?v=2" alt="cricexperts.com" style="height:46px;">
+        <img src="/assets/brand/logo.png?v=2" alt="cricexperts.com" style="height:38px;">
       </a>
-      <span class="badge rounded-pill px-3 py-2 fw-bold" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;font-size:11px;">
+      <span class="badge rounded-pill px-2 px-md-3 py-1 py-md-2 fw-bold d-none d-sm-inline-flex align-items-center" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;font-size:11px;">
         <i class="fas fa-crown me-1"></i> SUPER ADMIN CONTROL CENTER
       </span>
     </div>
@@ -237,9 +274,10 @@
     </div>
   </header>
 
+  <div id="admMobileBackdrop" class="adm-backdrop" onclick="toggleAdminMobileMenu()"></div>
   <div class="d-flex">
     <!-- ================= LEFT SIDEBAR MENU ================= -->
-    <aside class="adm-sidebar">
+    <aside id="admSidebar" class="adm-sidebar">
       <div class="adm-nav-section">Main Control</div>
       <a href="{{ route('admin.dashboard') }}" class="adm-nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
         <span class="nav-left">
@@ -358,6 +396,12 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function toggleAdminMobileMenu() {
+      document.getElementById('admSidebar')?.classList.toggle('mobile-open');
+      document.getElementById('admMobileBackdrop')?.classList.toggle('show');
+    }
+  </script>
   @stack('scripts')
 </body>
 </html>

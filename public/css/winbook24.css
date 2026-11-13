@@ -160,7 +160,7 @@ a {
   color: #000;
   border: 1px solid #ccc;
   border-radius: 0 0 4px 4px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
   z-index: 2010;
   display: none;
 }
@@ -357,7 +357,7 @@ a {
   min-width: 215px;
   padding: 0;
   border: 1px solid #a4b0b9;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   border-radius: 0;
   overflow: hidden;
   font-size: 13px;
@@ -423,7 +423,7 @@ a {
   align-items: stretch;
   justify-content: space-between;
   padding: 0 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .wb-nav-list {
@@ -496,8 +496,15 @@ a {
 }
 
 @keyframes wbPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.06);
+  }
 }
 
 .wb-nav-setting {
@@ -585,7 +592,7 @@ a {
   border-bottom: none !important;
 }
 
-.wb-sidebar-subitems li + li {
+.wb-sidebar-subitems li+li {
   border-top: 1px solid #d2d6e2;
 }
 
@@ -740,7 +747,7 @@ a {
   text-align: center;
 }
 
-.wb-1x2-cols > div {
+.wb-1x2-cols>div {
   width: 108px;
 }
 
@@ -855,8 +862,15 @@ a {
 }
 
 @keyframes inplayBlink {
-  0%, 100% { color: #168000; }
-  50% { color: #b85c00; }
+
+  0%,
+  100% {
+    color: #168000;
+  }
+
+  50% {
+    color: #b85c00;
+  }
 }
 
 .wb-match-time {
@@ -975,8 +989,11 @@ a {
 }
 
 @keyframes oddFlash {
-  0% { background-color: #ffe066; }
-  100% { }
+  0% {
+    background-color: #ffe066;
+  }
+
+  100% {}
 }
 
 .wb-pin-cell {
@@ -1048,7 +1065,7 @@ a {
   border-radius: 10px;
   overflow: hidden;
   background: #000;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.22);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   aspect-ratio: 3 / 3.7;
   display: block;
@@ -1068,7 +1085,7 @@ a {
 .wb-casino-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.1) 55%, rgba(0, 0, 0, 0) 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1089,7 +1106,7 @@ a {
   font-size: 11px;
   padding: 4px 14px;
   border-radius: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 /* Our Casino (/newCasino) Card Style with Green Bottom Name Bar */
@@ -1098,7 +1115,7 @@ a {
   border-radius: 10px;
   overflow: hidden;
   background: #000;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.28);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
   display: flex;
   flex-direction: column;
 }
@@ -1426,7 +1443,7 @@ a {
 
 /* ================= FOOTER & FLOATING CONTACT WIDGET ================= */
 .wb-footer {
-  border-top: 1px solid rgba(0,0,0,0.2);
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
   margin-top: 24px;
   padding: 16px 10px 24px 10px;
   text-align: center;
@@ -1460,7 +1477,7 @@ a {
   color: #333;
   padding: 4px 12px;
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   font-size: 12px;
 }
 
@@ -1474,7 +1491,7 @@ a {
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* ================= FULL MARKET PAGE (Screenshot 18) ================= */
@@ -1710,7 +1727,7 @@ a {
   font-weight: 800;
   font-size: 18px;
   color: #111;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.45);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
   margin: 0 4px;
   transition: transform 0.3s ease;
 }
@@ -1739,7 +1756,7 @@ a {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
   transition: transform 0.15s;
 }
 
@@ -1750,12 +1767,18 @@ a {
   box-shadow: 0 0 12px #ffd700;
 }
 
-/* ================= MOBILE RESPONSIVE (Screenshot 02) ================= */
+/* ================= MOBILE RESPONSIVE (All Mobile Devices <= 991px & <= 767px) ================= */
 .wb-mobile-sports-bar {
   display: none;
   background: var(--sportsbar-bg);
   align-items: center;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.wb-mobile-sports-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .wb-mobile-bottom-nav {
@@ -1769,6 +1792,7 @@ a {
   z-index: 1050;
   justify-content: space-around;
   align-items: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.35);
 }
 
 .wb-mobile-bottom-nav a {
@@ -1778,6 +1802,7 @@ a {
   align-items: center;
   justify-content: center;
   font-size: 11px;
+  font-weight: 600;
   flex: 1;
   height: 100%;
 }
@@ -1786,32 +1811,451 @@ a {
   background: var(--bottom-nav-active-bg);
 }
 
+/* Mobile Slide-Out Sports Drawer Backdrop */
+.wb-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1055;
+}
+
+.wb-sidebar-backdrop.show {
+  display: block;
+}
+
 @media (max-width: 991px) {
-  .wb-left-sidebar,
+  .wb-left-sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 270px;
+    min-width: 270px;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1060;
+    transition: left 0.25s ease;
+    box-shadow: 4px 0 18px rgba(0, 0, 0, 0.4);
+  }
+
+  .wb-left-sidebar.mobile-open {
+    left: 0;
+  }
+
   .wb-right-sidebar,
   .wb-green-navbar,
   .wb-header-desktop-login {
     display: none !important;
   }
+
   .wb-mobile-sports-bar {
     display: flex;
   }
+
   .wb-mobile-bottom-nav {
     display: flex;
   }
-  .wb-odds-group,
-  .wb-1x2-cols {
-    display: none !important;
+
+  .wb-center-content {
+    width: 100%;
+    padding: 0 4px 36px 4px;
   }
+
   .wb-casino-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
+    padding: 8px;
   }
+
+  .wb-casino-card .wb-casino-card-overlay {
+    opacity: 1;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.05) 48%, rgba(0, 0, 0, 0) 100%);
+    padding: 6px 4px;
+  }
+
   body {
     padding-bottom: 64px;
   }
+
   .wb-contact-float {
-    bottom: 68px;
+    bottom: 66px;
+    right: 12px;
+  }
+
+  .wb-contact-float .contact-label {
+    display: none;
+  }
+
+  .wb-contact-float .contact-circle {
+    width: 40px;
+    height: 40px;
+    font-size: 17px;
   }
 }
 
+@media (max-width: 767px) {
+
+  /* Compact Mobile Top Header */
+  .wb-top-header {
+    height: 54px;
+    min-height: 54px;
+    max-height: 54px;
+    padding: 0 8px;
+  }
+
+  .wb-logo {
+    height: 54px;
+  }
+
+  .wb-logo img {
+    height: 36px;
+    max-width: 112px;
+  }
+
+  .wb-header-right {
+    gap: 5px;
+    height: 54px;
+  }
+
+  .wb-search-trigger {
+    font-size: 19px;
+    padding: 2px;
+  }
+
+  /* Full-width Search Bar on Mobile when opened */
+  .searchIconDiv {
+    position: fixed;
+    top: 56px;
+    left: 8px;
+    right: 8px;
+    width: auto !important;
+    height: 36px;
+    border: 1.5px solid #315195;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    z-index: 2050;
+  }
+
+  .searchIconDiv .searchbar {
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .searchIconDiv .searchBox {
+    top: 35px;
+    left: 0;
+    width: 100% !important;
+    max-height: 60vh;
+  }
+
+  /* Mobile Guest Login / Signup Buttons */
+  .wb-btn-login-head,
+  .wb-btn-signup-head {
+    min-width: auto;
+    height: 28px;
+    padding: 0 9px;
+    font-size: 12px;
+  }
+
+  /* Mobile Logged-in Balance & Account Controls */
+  .wb-user-balance-box {
+    font-size: 10.5px;
+    line-height: 1.2;
+    margin-right: 2px;
+  }
+
+  .wb-refresh-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+
+  .wb-myaccount-dropdown .wb-myaccount-btn {
+    height: 26px;
+    padding: 0 7px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  /* Filter Bars on Mobile */
+  .wb-day-filter-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px;
+    gap: 5px;
+  }
+
+  .wb-day-filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wb-day-filter-btn {
+    padding: 4px 10px;
+    font-size: 11.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .wb-sport-tabs-bar {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    padding: 4px 6px 0 6px;
+  }
+
+  .wb-sport-tabs-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wb-sport-tab-btn {
+    padding: 4px 14px;
+    font-size: 11.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Match List 1 | X | 2 Header & Match Rows on Mobile - Exact 1:1 Design from Provided Screenshot */
+  .wb-1x2-head {
+    display: none !important;
+  }
+
+  .wb-1x2-left {
+    display: none !important;
+  }
+
+  .wb-1x2-cols {
+    display: none !important;
+  }
+
+  .wb-1x2-pin-space {
+    display: none !important;
+  }
+
+  .wb-odds-group {
+    display: none !important;
+  }
+
+  /* Match Row on Mobile: Title + In-Play on Left, Badges + Pin Circle on Right */
+  .wb-match-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #dce4ee !important;
+    padding: 9px 10px !important;
+    min-height: 48px !important;
+    gap: 8px !important;
+    position: relative !important;
+    transition: background-color 0.1s ease !important;
+  }
+
+  .wb-match-row:hover {
+    background: #ffffff !important;
+  }
+
+  .wb-match-row:active {
+    background: #f7f9fb !important;
+  }
+
+  .wb-match-info {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    gap: 6px !important;
+    width: auto !important;
+  }
+
+  .wb-match-title-wrap {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    display: inline-block !important;
+    line-height: 1.35 !important;
+    vertical-align: middle !important;
+  }
+
+  .wb-match-link {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1372b7 !important;
+    text-decoration: none !important;
+    word-break: break-word !important;
+    display: inline !important;
+    vertical-align: baseline !important;
+    line-height: 1.35 !important;
+  }
+
+  .wb-match-link:hover {
+    color: #0d5ea0 !important;
+    text-decoration: none !important;
+  }
+
+  .wb-inplay-tag {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #e51c23 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-left: 6px !important;
+    animation: none !important;
+    display: inline !important;
+    vertical-align: baseline !important;
+    white-space: nowrap !important;
+    line-height: 1.35 !important;
+  }
+
+  .wb-match-time {
+    display: block !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    color: #777777 !important;
+    margin-top: 3px !important;
+    margin-left: 0 !important;
+    line-height: 1.25 !important;
+  }
+
+  .wb-prebet-clock {
+    display: none !important;
+  }
+
+  .wb-cricbuzz-score-pill {
+    display: none !important;
+  }
+
+  .wb-badges {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 3.5px !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+  }
+
+  .wb-badge-bm {
+    background: #1c2a47 !important;
+    color: #ffffff !important;
+    font-size: 10.5px !important;
+    font-weight: 900 !important;
+    font-style: italic !important;
+    border-radius: 3px !important;
+    padding: 2px 4px !important;
+    height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    letter-spacing: -0.2px !important;
+  }
+
+  .wb-badge-f {
+    background: #047d8d !important;
+    color: #ffffff !important;
+    font-size: 10.5px !important;
+    font-weight: 900 !important;
+    font-style: italic !important;
+    border-radius: 3px !important;
+    padding: 2px 5px !important;
+    height: 20px !important;
+    min-width: 19px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+  }
+
+  .wb-badge-s {
+    background: #e65100 !important;
+    color: #ffffff !important;
+    font-size: 10.5px !important;
+    font-weight: 900 !important;
+    font-style: italic !important;
+    border-radius: 3px !important;
+    padding: 2px 5px !important;
+    height: 20px !important;
+    min-width: 19px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+  }
+
+  .wb-pin-cell {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    margin-left: 3px !important;
+  }
+
+  .wb-pin-btn {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 50% !important;
+    border: 1.5px solid #8fa2b3 !important;
+    background: #ffffff !important;
+    color: #7d94a6 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .wb-pin-btn svg {
+    width: 13px !important;
+    height: 13px !important;
+    fill: currentColor !important;
+  }
+
+  .wb-pin-btn.active {
+    border-color: #6bbd0f !important;
+    background: #6bbd0f !important;
+    color: #ffffff !important;
+  }
+
+  /* Casino Grid on Mobile Phones (2 columns for clear visibility) */
+  .wb-casino-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .wb-ourcasino-card img {
+    height: 135px;
+  }
+
+  /* Report & Account Tables on Mobile */
+  .wb-dt-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wb-dt-footer {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 420px) {
+  .wb-myaccount-dropdown .wb-myaccount-btn span {
+    display: none;
+  }
+
+  .wb-logo img {
+    height: 32px;
+    max-width: 96px;
+  }
+}

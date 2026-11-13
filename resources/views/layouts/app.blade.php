@@ -202,26 +202,39 @@
     @yield('full_bleed')
   @else
   <!-- ================= MOBILE SPORTS BAR (Screenshot 02) ================= -->
-  <div class="wb-mobile-sports-bar py-1 px-2 gap-2">
-    <a href="{{ route('vimaan') }}" class="btn btn-sm bg-black text-warning fw-bold d-inline-flex align-items-center gap-1 px-2 py-1" style="border-radius:6px;white-space:nowrap;">
-      <img src="/assets/casinoslpot/vimaan.png" style="height:16px;" alt="Vimaan"> Vimaan
+  <div class="wb-mobile-sports-bar py-1 px-2 gap-1">
+    <button type="button" class="btn btn-sm text-white fw-bold d-inline-flex align-items-center gap-1 px-2 py-1" style="background:var(--exchange-bg);border-radius:6px;white-space:nowrap;font-size:11.5px;" onclick="WB24Sidebar.toggleMobileSidebar()">
+      <i class="fas fa-bars"></i> All Leagues
+    </button>
+    <a href="{{ route('inplay') }}" class="btn btn-sm fw-bold px-2 py-1 {{ request()->routeIs('inplay') ? 'text-white' : 'text-dark' }}" style="{{ request()->routeIs('inplay') ? 'background:var(--header-bg);' : '' }}border-radius:6px;white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-stopwatch me-1"></i> In-Play
     </a>
-    <a href="{{ route('sport.highlight', '4') }}" class="btn btn-sm text-white fw-bold px-3 py-1" style="background:var(--header-bg);border-radius:6px;white-space:nowrap;">
+    <a href="{{ route('vimaan') }}" class="btn btn-sm bg-black text-warning fw-bold d-inline-flex align-items-center gap-1 px-2 py-1" style="border-radius:6px;white-space:nowrap;font-size:11.5px;">
+      <img src="/assets/casinoslpot/vimaan.png" style="height:15px;" alt="Vimaan"> Vimaan
+    </a>
+    <a href="{{ route('sport.highlight', '4') }}" class="btn btn-sm fw-bold px-2 py-1 {{ request()->is('allsport-highlight/4') ? 'text-white' : 'text-dark' }}" style="{{ request()->is('allsport-highlight/4') ? 'background:var(--header-bg);' : '' }}border-radius:6px;white-space:nowrap;font-size:11.5px;">
       <i class="fas fa-baseball-ball me-1"></i> Cricket
     </a>
-    <a href="{{ route('sport.highlight', '2') }}" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;">
-      <i class="fas fa-table-tennis me-1"></i> Tennis
-    </a>
-    <a href="{{ route('sport.highlight', '1') }}" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;">
+    <a href="{{ route('sport.highlight', '1') }}" class="btn btn-sm fw-bold px-2 py-1 {{ request()->is('allsport-highlight/1') ? 'text-white' : 'text-dark' }}" style="{{ request()->is('allsport-highlight/1') ? 'background:var(--header-bg);' : '' }}border-radius:6px;white-space:nowrap;font-size:11.5px;">
       <i class="fas fa-futbol me-1"></i> Soccer
     </a>
-    <a href="{{ route('horse.racing') }}" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;">
+    <a href="{{ route('sport.highlight', '2') }}" class="btn btn-sm fw-bold px-2 py-1 {{ request()->is('allsport-highlight/2') ? 'text-white' : 'text-dark' }}" style="{{ request()->is('allsport-highlight/2') ? 'background:var(--header-bg);' : '' }}border-radius:6px;white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-table-tennis me-1"></i> Tennis
+    </a>
+    <a href="{{ route('horse.racing') }}" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;font-size:11.5px;">
       <i class="fas fa-horse-head me-1"></i> Racing
     </a>
-    <a href="{{ route('livecasino') }}" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;">
+    <a href="{{ route('livecasino') }}" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;font-size:11.5px;">
       <i class="fas fa-dice me-1"></i> Casino
     </a>
+    <a href="{{ route('multimarket') }}" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-thumbtack me-1"></i> Multi Markets
+    </a>
+    <a href="{{ route('settings') }}" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-cog me-1"></i> Setting
+    </a>
   </div>
+  <div id="wbSidebarBackdrop" class="wb-sidebar-backdrop" onclick="WB24Sidebar.closeMobileSidebar()"></div>
 
   <!-- Flash Messages -->
   @if(session('success'))
@@ -243,13 +256,16 @@
     @php
       $currentSidebarSport = $activeSportId ?? null;
     @endphp
-    <aside class="wb-left-sidebar">
+    <aside id="wbLeftSidebar" class="wb-left-sidebar">
       <div class="wb-sidebar-head" onclick="WB24Sidebar.showMainSports()" style="cursor:pointer;" title="Back to All Sports">
         <a href="javascript:void(0)" class="path-back text-white text-decoration-none" onclick="event.stopPropagation(); WB24Sidebar.showMainSports();">
           <i class="fa fa-ellipsis-v" style="font-size:14px;"></i>
         </a>
         <a href="javascript:void(0)" class="text-white text-decoration-none" onclick="event.stopPropagation(); WB24Sidebar.showMainSports();">
           Sports
+        </a>
+        <a href="javascript:void(0)" class="d-lg-none text-white text-decoration-none ms-2" onclick="event.stopPropagation(); WB24Sidebar.closeMobileSidebar();" title="Close Menu">
+          <i class="fas fa-times" style="font-size:14px;"></i>
         </a>
       </div>
 
@@ -625,6 +641,18 @@
     }
 
     window.WB24Sidebar = {
+      toggleMobileSidebar: function () {
+        var sb = document.getElementById('wbLeftSidebar');
+        var bd = document.getElementById('wbSidebarBackdrop');
+        if (!sb) return;
+        var isOpen = sb.classList.contains('mobile-open');
+        sb.classList.toggle('mobile-open', !isOpen);
+        if (bd) bd.classList.toggle('show', !isOpen);
+      },
+      closeMobileSidebar: function () {
+        document.getElementById('wbLeftSidebar')?.classList.remove('mobile-open');
+        document.getElementById('wbSidebarBackdrop')?.classList.remove('show');
+      },
       showMainSports: function () {
         document.querySelectorAll('.js-sidebar-sport-tree').forEach(function (el) {
           el.classList.add('d-none');
