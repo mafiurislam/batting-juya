@@ -37,7 +37,7 @@
     <div class="wb-1x2-pin-space"></div>
   </div>
 
-  <div id="sportEventsContainer">
+  <div id="sportEventsContainer" class="wb-matches-scroll-pane">
     @forelse($events as $ev)
       @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds, 'onlyInPlayDefault' => true])
     @empty
@@ -56,6 +56,7 @@
   function applySportDayFilter() {
     const container = document.getElementById('sportEventsContainer');
     if (!container) return;
+    container.scrollTop = 0;
 
     const rows = container.querySelectorAll('.js-filterable-match-row');
     const counts = { inplay: 0, today: 0, tomorrow: 0, yesterday: 0 };

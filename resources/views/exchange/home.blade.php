@@ -77,7 +77,7 @@
   </div>
 
   <!-- Cricket Matches Pane (Defaults to showing ONLY In-Play live matches at the top) -->
-  <div id="hlPane_cricket" class="js-hl-pane" data-sport-pane="cricket">
+  <div id="hlPane_cricket" class="js-hl-pane wb-matches-scroll-pane" data-sport-pane="cricket">
     @foreach($cricketEvents as $ev)
       @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds, 'onlyInPlayDefault' => true])
     @endforeach
@@ -85,7 +85,7 @@
   </div>
 
   <!-- Soccer Matches Pane -->
-  <div id="hlPane_soccer" class="js-hl-pane d-none" data-sport-pane="soccer">
+  <div id="hlPane_soccer" class="js-hl-pane wb-matches-scroll-pane d-none" data-sport-pane="soccer">
     @foreach($soccerEvents as $ev)
       @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds, 'onlyInPlayDefault' => true])
     @endforeach
@@ -93,7 +93,7 @@
   </div>
 
   <!-- Tennis Matches Pane -->
-  <div id="hlPane_tennis" class="js-hl-pane d-none" data-sport-pane="tennis">
+  <div id="hlPane_tennis" class="js-hl-pane wb-matches-scroll-pane d-none" data-sport-pane="tennis">
     @foreach($tennisEvents as $ev)
       @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds, 'onlyInPlayDefault' => true])
     @endforeach
@@ -142,6 +142,7 @@
   function applyHomeDayFilter() {
     const pane = document.getElementById('hlPane_' + activeHomeSport);
     if (!pane) return;
+    pane.scrollTop = 0;
 
     const rows = pane.querySelectorAll('.js-filterable-match-row');
     const counts = { inplay: 0, today: 0, tomorrow: 0, yesterday: 0 };

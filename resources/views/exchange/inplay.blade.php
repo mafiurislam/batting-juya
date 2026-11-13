@@ -68,9 +68,11 @@
             </div>
             <div class="wb-1x2-pin-space"></div>
           </div>
-          @foreach($events as $ev)
-            @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds])
-          @endforeach
+          <div class="wb-matches-scroll-pane">
+            @foreach($events as $ev)
+              @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds])
+            @endforeach
+          </div>
         </div>
       @empty
         <div class="bg-white p-4 text-center text-muted mt-2 border">No matches currently available in {{ ucfirst($pKey) }}.</div>

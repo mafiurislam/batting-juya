@@ -2015,6 +2015,38 @@ a {
     flex-shrink: 0;
   }
 
+  /* Scrollable Matches Section on Mobile (Shows 5 rows, rest is vertically scrollable) */
+  .js-hl-pane,
+  #sportEventsContainer,
+  .wb-matches-scroll-pane {
+    max-height: 256px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #dce4ee !important;
+  }
+
+  .js-hl-pane::-webkit-scrollbar,
+  #sportEventsContainer::-webkit-scrollbar,
+  .wb-matches-scroll-pane::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .js-hl-pane::-webkit-scrollbar-track,
+  #sportEventsContainer::-webkit-scrollbar-track,
+  .wb-matches-scroll-pane::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+
+  .js-hl-pane::-webkit-scrollbar-thumb,
+  #sportEventsContainer::-webkit-scrollbar-thumb,
+  .wb-matches-scroll-pane::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 4px;
+  }
+
   /* Match List 1 | X | 2 Header & Match Rows on Mobile - Exact 1:1 Design from Provided Screenshot */
   .wb-1x2-head {
     display: none !important;
