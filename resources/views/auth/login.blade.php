@@ -59,9 +59,6 @@
           <div>
             <button type="submit" class="btn-send ui-link loginBtn wb-auth-btn">Login</button>
             <button type="button" class="btn-send ui-link loginBtn wb-auth-btn mt-1" onclick="document.getElementById('demoLoginForm').submit()">Login with Demo ID</button>
-            <button type="button" class="btn-send ui-link loginBtn wb-auth-btn mt-1" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;" onclick="document.getElementById('adminDemoLoginForm').submit()">
-              <i class="fas fa-crown me-1"></i> Open Admin Dashboard
-            </button>
           </div>
 
           <div class="text-center mt-4">
@@ -70,9 +67,6 @@
         </form>
 
         <form id="demoLoginForm" action="{{ route('auth.demo') }}" method="POST" class="d-none">
-          @csrf
-        </form>
-        <form id="adminDemoLoginForm" action="{{ route('auth.admin.demo') }}" method="POST" class="d-none">
           @csrf
         </form>
       </div>

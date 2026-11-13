@@ -485,6 +485,7 @@ class Winbook24CloneTest extends TestCase
         $loginPage->assertSee('main-Box-login');
         $loginPage->assertSee('centered-container');
         $loginPage->assertSee('Login with Demo ID');
+        $loginPage->assertDontSee('Open Admin Dashboard');
         $loginPage->assertSee('Forgot Password?');
 
         // 3. AJAX Header Login with valid credentials
