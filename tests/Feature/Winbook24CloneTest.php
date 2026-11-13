@@ -927,13 +927,21 @@ class Winbook24CloneTest extends TestCase
         $this->assertNotNull($wbblMatch);
         $this->assertTrue($wbblMatch['isLive']);
 
-        // 1. Check /home displays live Cricbuzz matches with In-Play and live score pills
+        // 1. Check /home displays live Cricbuzz matches with In-Play (without showing live score pills next to In-Play on /home)
         $homeRes = $this->get('/home');
         $homeRes->assertStatus(200);
         $homeRes->assertSee('Pakistan W v Bangladesh W');
         $homeRes->assertSee('Melbourne Renegades W v Sydney Sixers W');
         $homeRes->assertSee('Afghanistan U19 v India U19');
-        $homeRes->assertSee('wb-cricbuzz-score-pill');
+        $homeRes->assertDontSee('<span class="wb-cricbuzz-score-pill"', false);
+
+        // Check /inplay displays In-Play / Today / Tomorrow / Yesterday tabs without showing live score pills in the list
+        $inplayRes = $this->get('/inplay');
+        $inplayRes->assertStatus(200);
+        $inplayRes->assertDontSee('<span class="wb-cricbuzz-score-pill"', false);
+        $inplayRes->assertSee('Today');
+        $inplayRes->assertSee('Tomorrow');
+        $inplayRes->assertSee('Yesterday');
 
         // 2. Check clicking into Pakistan W v Bangladesh W renders full Cricbuzz live scoreboard & markets
         $pakBanEv = \App\Models\ExchangeEvent::where('event_name', 'Pakistan W v Bangladesh W')->first();
@@ -967,12 +975,12 @@ class Winbook24CloneTest extends TestCase
         $this->assertNotNull($andreevMatch);
         $this->assertTrue($andreevMatch['isLive']);
 
-        // 1. Check /allsport-highlight/2 displays live Livescore.in Tennis matches at the top with In-Play and live score pills
+        // 1. Check /allsport-highlight/2 displays live Livescore.in Tennis matches at the top with In-Play
         $tennisPage = $this->get('/allsport-highlight/2');
         $tennisPage->assertStatus(200);
         $tennisPage->assertSee('Adrian Andreev v Brancaccio');
         $tennisPage->assertSee('Compagnucci T. v Ovcharenko O.');
-        $tennisPage->assertSee('wb-cricbuzz-score-pill');
+        $tennisPage->assertDontSee('<span class="wb-cricbuzz-score-pill"', false);
 
         // 2. Check clicking into a live Tennis match renders full Livescore.in Tennis scoreboard & markets
         $andreevEv = \App\Models\ExchangeEvent::where('event_name', 'Adrian Andreev v Brancaccio')->first();
@@ -1031,7 +1039,7 @@ class Winbook24CloneTest extends TestCase
         $soccerPage->assertSee('Barcelona v Atletico Madrid');
         $soccerPage->assertSee('Real Madrid v PSV');
         $soccerPage->assertSee('Man City v Napoli');
-        $soccerPage->assertSee('wb-cricbuzz-score-pill');
+        $soccerPage->assertDontSee('<span class="wb-cricbuzz-score-pill"', false);
 
         // 2. Check clicking into a live Football match renders full live scoreboard & active 1X2 markets
         $arsEv = \App\Models\ExchangeEvent::where('event_name', 'Arsenal v Manchester City')->first();
@@ -1055,5 +1063,34 @@ class Winbook24CloneTest extends TestCase
             ->assertJsonPath('status', true)
             ->assertJsonPath('source', 'https://www.uefa.com/uefachampionsleague/')
             ->assertJsonPath('count', 35);
+    }
+
+    public function test_per_team_bet_position_book_and_inline_slip(): void
+    {
+        $user = User::where('username', 'player1')->firstOrFail();
+
+        // Place a 200 BACK bet at odds 8 on Sri Lanka in Pakistan v Sri Lanka (4002026113125357712)
+        $placeRes = $this->actingAs($user)->postJson('/api/exchange/place-bet', [
+            'event_id' => '4002026113125357712',
+            'event_name' => 'Pakistan v Sri Lanka',
+            'market_name' => 'Match Odds',
+            'selection_name' => 'Sri Lanka',
+            'bet_type' => 'BACK',
+            'odds' => 8,
+            'stake' => 200,
+            'category' => 'sports',
+        ]);
+        $placeRes->assertStatus(200)->assertJson(['status' => true]);
+
+        // Verify /fullMarket/4/4002026113125357712 renders per-runner P/L book elements and placedBets JSON
+        $fmRes = $this->actingAs($user)->get('/fullMarket/4/4002026113125357712');
+        $fmRes->assertStatus(200);
+        $fmRes->assertSee('Pakistan v Sri Lanka');
+        $fmRes->assertSee('js-runner-pl');
+        $fmRes->assertSee('js-market-pos-scope');
+        $fmRes->assertSee('recalcAllPositions');
+        $fmRes->assertSee('computeSingleBetOutcome');
+        $fmRes->assertSee('selected-odd-back');
+        $fmRes->assertSee('selected-odd-lay');
     }
 }

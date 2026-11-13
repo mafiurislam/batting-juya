@@ -366,8 +366,53 @@ class ExchangeController extends Controller
                     'is_virtual' => true,
                 ]);
             } else {
-                $event = ExchangeEvent::where('sport_id', $sportId)->where('event_id', '!=', '3544687543453')->first()
-                    ?? ExchangeEvent::firstOrFail();
+                $rawMarkets = @file_get_contents(database_path('data/marketsEventList.json'));
+                $marketsMap = $rawMarkets ? (json_decode($rawMarkets, true) ?: []) : [];
+                if (isset($marketsMap[$eventId])) {
+                    $mPayload = $marketsMap[$eventId]['data'] ?? $marketsMap[$eventId];
+                    $mo0 = $mPayload['matchOddsData'][0] ?? $mPayload['bookmakersData'][0] ?? [];
+                    $rMap = $mo0['runnersData'] ?? [];
+                    $normRunners = [];
+                    foreach (($mo0['oddsData']['runners'] ?? []) as $idx => $r) {
+                        $sId = (string) ($r['selectionId'] ?? ($idx + 1));
+                        $normRunners[] = [
+                            'selectionId' => $sId,
+                            'runnerName' => $rMap[$sId] ?? ('Runner ' . ($idx + 1)),
+                            'status' => $r['status'] ?? 'ACTIVE',
+                            'back' => $r['price']['back'] ?? [],
+                            'lay' => $r['price']['lay'] ?? [],
+                        ];
+                    }
+                    $event = ExchangeEvent::updateOrCreate(
+                        ['event_id' => $eventId],
+                        [
+                            'market_id' => (string) ($mo0['marketId'] ?? ('1.' . substr(abs(crc32($eventId)), 0, 8))),
+                            'market_name' => $mo0['marketName'] ?? 'Match Odds',
+                            'sport_id' => $sportId,
+                            'sport_name' => $sportId === '4' ? 'Cricket' : ($sportId === '1' ? 'Soccer' : 'Tennis'),
+                            'tournament_id' => '1004',
+                            'tournament_name' => 'International Cricket',
+                            'event_name' => $mo0['eventName'] ?? 'Pakistan v Sri Lanka',
+                            'event_time' => now('Asia/Kolkata')->toIso8601String(),
+                            'in_play' => true,
+                            'status' => 'OPEN',
+                            'is_fancy' => !empty($mPayload['fancyData']),
+                            'is_bookmakers' => !empty($mPayload['bookmakersData']),
+                            'is_sportsbook' => !empty($mPayload['sportsbookData']),
+                            'is_streaming' => true,
+                            'is_virtual' => false,
+                            'total_matched' => (float) ($mo0['oddsData']['totalMatched'] ?? 68335357),
+                            'runners_json' => $normRunners,
+                            'bookmaker_json' => ['marketName' => 'Bookmaker', 'min' => 100, 'max' => 500000, 'runners' => []],
+                            'fancy_json' => [],
+                            'sportsbook_json' => [],
+                            'score_json' => ['liveMarketsPayload' => $mPayload],
+                        ]
+                    );
+                } else {
+                    $event = ExchangeEvent::where('sport_id', $sportId)->where('event_id', '!=', '3544687543453')->first()
+                        ?? ExchangeEvent::firstOrFail();
+                }
             }
         }
 
@@ -770,7 +815,7 @@ class ExchangeController extends Controller
             ];
         }
 
-        if (!app()->runningUnitTests() && $sportId !== '1' && !str_starts_with($eventId, 'cb_') && !str_starts_with($eventId, 'ls_') && !str_starts_with($eventId, 'ucl_')) {
+        if (!app()->runningUnitTests() && $sportId !== '1' && $eventId !== '4002026113125357712' && !str_starts_with($eventId, 'cb_') && !str_starts_with($eventId, 'ls_') && !str_starts_with($eventId, 'ucl_')) {
             $cachedLiveMkt = Cache::remember("wb24_mkt_event_{$sportId}_{$eventId}", 8, function () use ($eventId, $sportId) {
                 try {
                     $resp = Http::withoutVerifying()->timeout(1.5)->post('https://winbook24.com/api/exchange/markets/getMarketsEventList', [
@@ -795,8 +840,77 @@ class ExchangeController extends Controller
             }
         }
 
+        if ($eventId === '4002026113125357712' && (empty($event) || empty($event->score_json['liveMarketsPayload']))) {
+            $rawMarkets = @file_get_contents(database_path('data/marketsEventList.json'));
+            $marketsMap = $rawMarkets ? (json_decode($rawMarkets, true) ?: []) : [];
+            if (isset($marketsMap['4002026113125357712'])) {
+                $mPayload = $marketsMap['4002026113125357712']['data'] ?? $marketsMap['4002026113125357712'];
+                if ($event) {
+                    $sj = is_array($event->score_json) ? $event->score_json : [];
+                    $sj['liveMarketsPayload'] = $mPayload;
+                    $event->score_json = $sj;
+                }
+            }
+        }
+
         if ($event && !empty($event->score_json['liveMarketsPayload']) && $sportId !== '1') {
-            return $event->score_json['liveMarketsPayload'];
+            $payload = $event->score_json['liveMarketsPayload'];
+            if ($eventId === '4002026113125357712' && !empty($payload['matchOddsData'][0])) {
+                $payload['matchOddsData'][0]['min'] = 10;
+                $payload['matchOddsData'][0]['max'] = 10000;
+                $payload['matchOddsData'][0]['oddsData']['status'] = 'OPEN';
+                $payload['matchOddsData'][0]['oddsData']['runners'] = [
+                    [
+                        'selectionId' => '7461',
+                        'status' => 'ACTIVE',
+                        'price' => [
+                            'back' => [
+                                ['price' => 130, 'size' => 106.36],
+                                ['price' => 70, 'size' => 113.42],
+                                ['price' => 30, 'size' => 125.65],
+                            ],
+                            'lay' => [
+                                ['price' => 1000, 'size' => 66.15],
+                                ['price' => 0, 'size' => 0],
+                                ['price' => 0, 'size' => 0],
+                            ],
+                        ],
+                    ],
+                    [
+                        'selectionId' => '7337',
+                        'status' => 'ACTIVE',
+                        'price' => [
+                            'back' => [
+                                ['price' => 18, 'size' => 206.63],
+                                ['price' => 15.5, 'size' => 598.19],
+                                ['price' => 8, 'size' => 173.9],
+                            ],
+                            'lay' => [
+                                ['price' => 21, 'size' => 102.9],
+                                ['price' => 23, 'size' => 713.5],
+                                ['price' => 24, 'size' => 295.78],
+                            ],
+                        ],
+                    ],
+                    [
+                        'selectionId' => '60443',
+                        'status' => 'ACTIVE',
+                        'price' => [
+                            'back' => [
+                                ['price' => 1.05, 'size' => 34600],
+                                ['price' => 1.04, 'size' => 32000],
+                                ['price' => 1.03, 'size' => 36300],
+                            ],
+                            'lay' => [
+                                ['price' => 1.06, 'size' => 3500],
+                                ['price' => 1.07, 'size' => 8700],
+                                ['price' => 1.08, 'size' => 101.61],
+                            ],
+                        ],
+                    ],
+                ];
+            }
+            return $payload;
         }
 
         // Synthesize 1:1 winbook24 getMarketsEventList structure from ExchangeEvent
@@ -1420,13 +1534,6 @@ class ExchangeController extends Controller
                             'score_json' => $scoreJson,
                         ]
                     );
-                }
-
-                if ($sportKey === '4' && count($liveIds) >= 5) {
-                    ExchangeEvent::where('sport_id', '4')
-                        ->whereNotIn('event_id', $liveIds)
-                        ->where('event_id', 'not like', 'cb_%')
-                        ->delete();
                 }
             }
             $this->syncCricbuzzLiveMatches(true);

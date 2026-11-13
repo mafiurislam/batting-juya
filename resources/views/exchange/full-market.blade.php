@@ -205,35 +205,67 @@
   .fm-subhead {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #c8ced3;
+    border-bottom: 1px solid #7e97a7;
     font-size: 12px;
     font-weight: 700;
     background: #fff;
   }
+  .fm-subhead .wb-minmax-pill {
+    white-space: nowrap;
+    display: inline-block;
+    background: #beddf4;
+    color: #24577a;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10.5px;
+    font-weight: 700;
+  }
   .fm-runner-row {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #c8ced3;
+    border-bottom: 1px solid #7e97a7;
     position: relative;
-    min-height: 40px;
+    min-height: 42px;
+    background: #fff;
   }
   .fm-runner-name {
     flex: 1;
     padding: 4px 10px;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 13px;
     color: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.25;
+  }
+  .fm-runner-title {
+    color: #1e1e1e;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .fm-runner-pl {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-top: 2px;
+  }
+  .fm-runner-pl.pl-pos {
+    color: #1b8c00 !important;
+  }
+  .fm-runner-pl.pl-neg {
+    color: #d0021b !important;
   }
   .fm-odds-6 {
     width: 348px;
     display: flex;
-    gap: 2px;
+    gap: 1px;
     position: relative;
     flex-shrink: 0;
   }
   .fm-odd-cell {
-    width: 56px;
-    height: 38px;
+    width: 57px;
+    height: 41px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -241,7 +273,7 @@
     cursor: pointer;
     color: #1e1e1e;
     text-decoration: none;
-    line-height: 1.1;
+    line-height: 1.15;
     user-select: none;
   }
   .fm-odd-cell strong {
@@ -253,6 +285,24 @@
     font-weight: 400;
     color: #222;
     margin-top: 1px;
+  }
+  .fm-odd-cell.selected-odd-back {
+    background: #1a8ee9 !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+  .fm-odd-cell.selected-odd-back strong,
+  .fm-odd-cell.selected-odd-back small {
+    color: #ffffff !important;
+  }
+  .fm-odd-cell.selected-odd-lay {
+    background: #e05b78 !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+  .fm-odd-cell.selected-odd-lay strong,
+  .fm-odd-cell.selected-odd-lay small {
+    color: #ffffff !important;
   }
   .fm-suspend-overlay {
     position: absolute;
@@ -271,31 +321,106 @@
     font-size: 13px;
   }
 
-  /* Inline Bet Slip inside Match Odds / Bookmaker / Fancy */
+  /* Inline Bet Slip inside Match Odds / Bookmaker / Fancy (1:1 Winbook24 style) */
   .fm-inline-slip {
     background: #beddf4;
-    border-bottom: 2px solid #7e97a7;
+    border-bottom: 1px solid #7e97a7;
     padding: 8px 10px;
   }
   .fm-inline-slip.lay-mode {
     background: #f3dce2;
   }
+  .fm-slip-btn-cancel {
+    background: linear-gradient(180deg, #ffffff 0%, #e6e6e6 100%);
+    border: 1px solid #8a99a8;
+    border-radius: 5px;
+    color: #1e1e1e;
+    font-weight: 700;
+    font-size: 13px;
+    height: 36px;
+    width: 100%;
+    cursor: pointer;
+    transition: filter 0.12s;
+  }
+  .fm-slip-btn-cancel:hover {
+    filter: brightness(0.96);
+  }
+  .fm-slip-btn-place {
+    background: linear-gradient(180deg, #2b4566 0%, #152438 100%);
+    border: 1px solid #0d1724;
+    border-radius: 5px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    height: 36px;
+    width: 100%;
+    cursor: pointer;
+    transition: filter 0.12s;
+  }
+  .fm-slip-btn-place:hover {
+    filter: brightness(1.08);
+  }
+  .fm-slip-stepper {
+    display: flex;
+    align-items: stretch;
+    height: 36px;
+    border: 1px solid #8a99a8;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+  .fm-step-btn {
+    width: 40px;
+    background: linear-gradient(180deg, #ffffff 0%, #e6e6e6 100%);
+    border: none;
+    color: #1f5f8b;
+    font-size: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    user-select: none;
+  }
+  .fm-step-btn:hover {
+    background: #dce4ec;
+  }
+  .fm-step-input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    border-left: 1px solid #b8c4ce;
+    border-right: 1px solid #b8c4ce;
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: #1e1e1e;
+    background: #ffffff;
+    outline: none;
+  }
   .fm-stake-chip {
-    background: #f9f9f9;
+    background: #f5f7f8;
     border: 1px solid #243a48;
     border-radius: 4px;
     color: #000;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 12px;
-    padding: 4px 0;
+    height: 28px;
     width: 100%;
     text-align: center;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     text-decoration: none;
   }
-  .fm-stake-chip:hover {
-    background: #e2ecf5;
+  .fm-stake-chip:hover,
+  .fm-stake-chip.active-stake {
+    background: #dfeaf4;
+    font-weight: 700;
   }
 
   /* To Win The Match Green Sportsbook Box */
@@ -1024,8 +1149,9 @@
       $moRunners = $mo['oddsData']['runners'] ?? [];
       $moRunnersMap = $mo['runnersData'] ?? [];
       $moStatus = $mo['oddsData']['status'] ?? 'OPEN';
+      $moKey = 'mo_' . $moIdx;
     @endphp
-    <div class="fm-card">
+    <div class="fm-card js-market-pos-scope" data-market-key="{{ $moKey }}" data-market-name="{{ $moTitle }}" data-market-category="exchange">
       <div class="fm-card-head">
         <div class="fm-head-tab">
           <span>{{ $moTitle }}</span>
@@ -1050,10 +1176,10 @@
         <div class="flex-grow-1"></div>
         <div class="d-flex text-center align-items-center" style="width:348px;">
           <div class="box-hide-mbl" style="width:116px;"></div>
-          <div style="width:56px;background:var(--back-1);padding:4px 0;">Back</div>
-          <div style="width:56px;background:var(--lay-1);padding:4px 0;">Lay</div>
-          <div class="box-hide-mbl ps-1" style="width:120px;">
-            <span class="wb-minmax-pill">Min/Max {{ $moMin }}-{{ $moMax }}</span>
+          <div style="width:57px;background:var(--back-1);padding:4px 0;border-top-left-radius:6px;">Back</div>
+          <div style="width:57px;background:var(--lay-1);padding:4px 0;border-top-right-radius:6px;">Lay</div>
+          <div class="box-hide-mbl ps-1" style="width:118px;">
+            <span class="wb-minmax-pill">Min/Max <strong class="text-dark">{{ $moMin }}-{{ $moMax }}</strong></span>
           </div>
         </div>
       </div>
@@ -1068,8 +1194,15 @@
           $rSusp = ($moStatus === 'SUSPENDED' || ($r['status'] ?? '') === 'SUSPENDED');
           $slipRowId = 'moSlip_' . $moIdx . '_' . $selId;
         @endphp
-        <div class="fm-runner-row">
-          <div class="fm-runner-name">{{ $rName }}</div>
+        <div class="fm-runner-row" data-selection-id="{{ $selId }}" data-runner-name="{{ $rName }}">
+          <div class="fm-runner-name">
+            <span class="fm-runner-title">{{ $rName }}</span>
+            <span class="fm-runner-pl js-runner-pl d-none"
+                  data-market-key="{{ $moKey }}"
+                  data-market-name="{{ $moTitle }}"
+                  data-selection-id="{{ $selId }}"
+                  data-runner-name="{{ $rName }}"></span>
+          </div>
           <div class="fm-odds-6">
             @if($rSusp)
               <div class="fm-suspend-overlay"><span>Suspended</span></div>
@@ -1080,10 +1213,11 @@
                 $bp = $backs[$bi]['price'] ?? 0;
                 $bs = $backs[$bi]['size'] ?? 0;
                 $bCls = $bi === 0 ? 'wb-odd-back' : ($bi === 1 ? 'wb-odd-back-2 box-hide-mbl' : 'wb-odd-back-3 box-hide-mbl');
+                $bpLabel = $bp >= 1000 ? number_format((float)$bp) : ($bp > 0 ? $bp : '0');
               @endphp
               <a href="javascript:void(0)" class="fm-odd-cell {{ $bCls }}"
-                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($moTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $bp > 0 ? $bp : 1.90 }}, 'exchange')">
-                <strong>{{ $bp ?: '-' }}</strong>
+                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($moTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $bp > 0 ? $bp : 1.90 }}, 'exchange', null, '{{ $moKey }}', this)">
+                <strong>{{ $bpLabel }}</strong>
                 <small>{{ $formatVolume($bs) }}</small>
               </a>
             @endfor
@@ -1094,10 +1228,11 @@
                 $lp = $lays[$li]['price'] ?? 0;
                 $ls = $lays[$li]['size'] ?? 0;
                 $lCls = $li === 0 ? 'wb-odd-lay' : ($li === 1 ? 'wb-odd-lay-2 box-hide-mbl' : 'wb-odd-lay-3 box-hide-mbl');
+                $lpLabel = $lp >= 1000 ? number_format((float)$lp) : ($lp > 0 ? $lp : '0');
               @endphp
               <a href="javascript:void(0)" class="fm-odd-cell {{ $lCls }}"
-                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($moTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'LAY', {{ $lp > 0 ? $lp : 1.92 }}, 'exchange')">
-                <strong>{{ $lp ?: '-' }}</strong>
+                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($moTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'LAY', {{ $lp > 0 ? $lp : 1.92 }}, 'exchange', null, '{{ $moKey }}', this)">
+                <strong>{{ $lpLabel }}</strong>
                 <small>{{ $formatVolume($ls) }}</small>
               </a>
             @endfor
@@ -1122,8 +1257,9 @@
       $bmRunners = $bm['oddsData']['runners'] ?? [];
       $bmRunnersMap = $bm['runnersData'] ?? [];
       $bmStatus = strtoupper((string) ($bm['oddsData']['status'] ?? 'ONLINE'));
+      $bmKey = 'bm_' . $bmIdx;
     @endphp
-    <div class="fm-card wb-bookmaker-table">
+    <div class="fm-card wb-bookmaker-table js-market-pos-scope" data-market-key="{{ $bmKey }}" data-market-name="{{ $bmTitle }}" data-market-category="bookmaker">
       <div class="fm-card-head">
         <div class="fm-head-tab">
           <span>{{ $bmTitle }}</span>
@@ -1147,9 +1283,9 @@
         <div class="flex-grow-1"></div>
         <div class="d-flex text-center align-items-center" style="width:348px;">
           <div class="box-hide-mbl" style="width:116px;"></div>
-          <div style="width:56px;padding:4px 0;">Back</div>
-          <div style="width:56px;padding:4px 0;">Lay</div>
-          <div class="box-hide-mbl ps-1" style="width:120px;">
+          <div style="width:57px;padding:4px 0;">Back</div>
+          <div style="width:57px;padding:4px 0;">Lay</div>
+          <div class="box-hide-mbl ps-1" style="width:118px;">
             <span class="wb-minmax-pill">Min/Max {{ $bmMin }}-{{ $bmMax }}</span>
           </div>
         </div>
@@ -1166,8 +1302,15 @@
           $suspLabel = str_contains($rStatus, 'BALL') ? 'Ballrun' : 'Suspended';
           $slipRowId = 'bmSlip_' . $bmIdx . '_' . $selId;
         @endphp
-        <div class="fm-runner-row">
-          <div class="fm-runner-name">{{ $rName }}</div>
+        <div class="fm-runner-row" data-selection-id="{{ $selId }}" data-runner-name="{{ $rName }}">
+          <div class="fm-runner-name">
+            <span class="fm-runner-title">{{ $rName }}</span>
+            <span class="fm-runner-pl js-runner-pl d-none"
+                  data-market-key="{{ $bmKey }}"
+                  data-market-name="{{ $bmTitle }}"
+                  data-selection-id="{{ $selId }}"
+                  data-runner-name="{{ $rName }}"></span>
+          </div>
           <div class="fm-odds-6">
             @if($isSusp)
               <div class="fm-suspend-overlay"><span>{{ $suspLabel }}</span></div>
@@ -1179,7 +1322,7 @@
                 $bCls = $bi === 0 ? 'wb-odd-back' : ($bi === 1 ? 'wb-odd-back-2 box-hide-mbl' : 'wb-odd-back-3 box-hide-mbl');
               @endphp
               <a href="javascript:void(0)" class="fm-odd-cell {{ $bCls }}"
-                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($bmTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $bp > 0 ? $bp : 90 }}, 'bookmaker')">
+                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($bmTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $bp > 0 ? $bp : 90 }}, 'bookmaker', null, '{{ $bmKey }}', this)">
                 <strong>{{ $bp ?: '-' }}</strong>
                 <small>{{ is_numeric($bs) ? $formatVolume($bs) : $bs }}</small>
               </a>
@@ -1192,7 +1335,7 @@
                 $lCls = $li === 0 ? 'wb-odd-lay' : ($li === 1 ? 'wb-odd-lay-2 box-hide-mbl' : 'wb-odd-lay-3 box-hide-mbl');
               @endphp
               <a href="javascript:void(0)" class="fm-odd-cell {{ $lCls }}"
-                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($bmTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'LAY', {{ $lp > 0 ? $lp : 92 }}, 'bookmaker')">
+                 onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($bmTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'LAY', {{ $lp > 0 ? $lp : 92 }}, 'bookmaker', null, '{{ $bmKey }}', this)">
                 <strong>{{ $lp ?: '-' }}</strong>
                 <small>{{ is_numeric($ls) ? $formatVolume($ls) : $ls }}</small>
               </a>
@@ -1217,8 +1360,9 @@
       $sbRunners = $sb['oddsData']['runners'] ?? [];
       $sbRunnersMap = $sb['runnersData'] ?? [];
       $sbSlipId = 'sbBoxSlip_' . $sbIdx;
+      $sbKey = 'sb_box_' . $sbIdx;
     @endphp
-    <div class="fm-card">
+    <div class="fm-card js-market-pos-scope" data-market-key="{{ $sbKey }}" data-market-name="{{ $sbTitle }}" data-market-category="sportsbook">
       <div class="d-flex justify-content-between align-items-center px-3 py-1 text-white fw-bold" style="background:linear-gradient(-180deg, #2E4B5E 0%, #243A48 82%);font-size:13px;">
         <span>{{ $sbTitle }}</span>
         <span>Min/Max: {{ $sbMin }} - {{ $sbMax }}</span>
@@ -1238,12 +1382,19 @@
             @endphp
             <div class="col-6 d-flex justify-content-center">
               <a href="javascript:void(0)" class="fm-sb-pill"
-                 onclick="FullMkt.openInlineSlip('{{ $sbSlipId }}', '{{ addslashes($sbTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $oddsVal }}, 'sportsbook')">
+                 onclick="FullMkt.openInlineSlip('{{ $sbSlipId }}', '{{ addslashes($sbTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $oddsVal }}, 'sportsbook', null, '{{ $sbKey }}', this)">
                 <div class="fm-sb-pill-left">
                   <strong style="font-size:13px;">{{ $oddsVal }}</strong>
                   <small style="font-size:10px;">{{ $volVal }}</small>
                 </div>
-                <div class="fm-sb-pill-right">{{ $rName }}</div>
+                <div class="fm-sb-pill-right flex-column">
+                  <span>{{ $rName }}</span>
+                  <span class="fm-runner-pl js-runner-pl d-none"
+                        data-market-key="{{ $sbKey }}"
+                        data-market-name="{{ $sbTitle }}"
+                        data-selection-id="{{ $selId }}"
+                        data-runner-name="{{ $rName }}"></span>
+                </div>
               </a>
             </div>
           @endforeach
@@ -1327,10 +1478,18 @@
           $fStatus = strtoupper((string) ($fItem['oddsData']['status'] ?? $fRunner['status'] ?? 'ONLINE'));
           $isFancySusp = in_array($fStatus, ['SUSPENDED', 'SUSPEND', 'BALL RUNNING', 'CLOSED']) || ($noRun == 0 && $yesRun == 0);
           $fSlipId = 'fancySlip_' . $fIdx;
+          $fKey = 'fancy_' . $fIdx;
         @endphp
-        <div class="d-flex align-items-center border-bottom py-1 px-2 js-fancy-row" data-fcat="{{ $fCat }}">
+        <div class="d-flex align-items-center border-bottom py-1 px-2 js-fancy-row js-market-pos-scope" data-fcat="{{ $fCat }}" data-market-key="{{ $fKey }}" data-market-name="{{ $fName }}" data-market-category="fancy">
           <div class="flex-grow-1 d-flex justify-content-between align-items-center pe-2">
-            <span class="fw-bold text-dark">{{ $fName }}</span>
+            <div class="d-flex flex-column">
+              <span class="fw-bold text-dark">{{ $fName }}</span>
+              <span class="fm-runner-pl js-runner-pl d-none"
+                    data-market-key="{{ $fKey }}"
+                    data-market-name="{{ $fName }}"
+                    data-selection-id="{{ $fId }}"
+                    data-runner-name="{{ $fName }}"></span>
+            </div>
             <button type="button" class="btn btn-sm text-white py-0 px-2 fw-bold"
                     style="background:var(--exchange-bg);font-size:11px;"
                     onclick="showFancyBook('{{ addslashes($fName) }}', {{ (int)$noRun }}, {{ (int)$yesRun }})">
@@ -1344,13 +1503,13 @@
             @endif
             <!-- No (Pink) -->
             <a href="javascript:void(0)" class="fm-odd-cell wb-odd-lay"
-               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', 'Fancy Bet', '{{ $fId }}', '{{ addslashes($fName) }} (NO @ {{ $noRun }})', 'NO', {{ $noRate ?: 100 }}, 'fancy', {{ (float)$noRun }})">
+               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', '{{ addslashes($fName) }}', '{{ $fId }}', '{{ addslashes($fName) }} (NO @ {{ $noRun }})', 'NO', {{ $noRate ?: 100 }}, 'fancy', {{ (float)$noRun }}, '{{ $fKey }}', this)">
               <strong>{{ $noRun }}</strong>
               <small>{{ $noRate }}</small>
             </a>
             <!-- Yes (Blue) -->
             <a href="javascript:void(0)" class="fm-odd-cell wb-odd-back ms-1"
-               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', 'Fancy Bet', '{{ $fId }}', '{{ addslashes($fName) }} (YES @ {{ $yesRun }})', 'YES', {{ $yesRate ?: 100 }}, 'fancy', {{ (float)$yesRun }})">
+               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', '{{ addslashes($fName) }}', '{{ $fId }}', '{{ addslashes($fName) }} (YES @ {{ $yesRun }})', 'YES', {{ $yesRate ?: 100 }}, 'fancy', {{ (float)$yesRun }}, '{{ $fKey }}', this)">
               <strong>{{ $yesRun }}</strong>
               <small>{{ $yesRate }}</small>
             </a>
@@ -1377,8 +1536,9 @@
           $sbMktStatus = strtoupper((string) ($sbMarket['oddsData']['status'] ?? 'ONLINE'));
           $sbRunners = $sbMarket['oddsData']['runners'] ?? ($sbMarket['runners'] ?? []);
           $sbMap = $sbMarket['runnersData'] ?? [];
+          $sbTblKey = 'sb_tbl_' . $sbMktIdx;
         @endphp
-        <div class="fancy-card sportbookmarket js-sb-market-card" data-sb-mtype="{{ $sbMktType }}">
+        <div class="fancy-card sportbookmarket js-sb-market-card js-market-pos-scope" data-sb-mtype="{{ $sbMktType }}" data-market-key="{{ $sbTblKey }}" data-market-name="{{ $sbMktName }}" data-market-category="sportsbook">
           <div class="card-header sportbook inner-sportbook card-accrdn card-fancybet"
                onclick="FullMkt.toggleSbCard('sbBody_{{ $sbMktIdx }}')">
             <strong>{{ $sbMktName }}</strong>
@@ -1414,10 +1574,14 @@
                     <tr class="odd-row js-sb-runner-row" data-selection-id="{{ $selId }}">
                       <td class="team-name sportbook-name">
                         <span class="title">{{ $rName }}</span>
-                        <span class="js-sb-pl-preview small fw-bold d-none" data-selection-name="{{ $rName }}"></span>
+                        <span class="fm-runner-pl js-runner-pl js-sb-pl-preview d-none"
+                              data-market-key="{{ $sbTblKey }}"
+                              data-market-name="{{ $sbMktName }}"
+                              data-selection-id="{{ $selId }}"
+                              data-runner-name="{{ $rName }}"></span>
                       </td>
                       <td class="back-1 count position-relative sportbook-minwidth"
-                          onclick="FullMkt.openSbTableSlip('{{ $sbSlipRowId }}', '{{ addslashes($sbMktName) }}', '{{ $selId }}', '{{ addslashes($rName) }}', {{ $oddsVal > 0 ? $oddsVal : 2.0 }})">
+                          onclick="FullMkt.openSbTableSlip('{{ $sbSlipRowId }}', '{{ addslashes($sbMktName) }}', '{{ $selId }}', '{{ addslashes($rName) }}', {{ $oddsVal > 0 ? $oddsVal : 2.0 }}, '{{ $sbTblKey }}')">
                         <div class="suspend-sportbook-cell js-sb-suspend {{ $isSbSusp ? '' : 'd-none' }}">
                           <span>{{ $sbSuspTxt }}</span>
                         </div>
@@ -1469,6 +1633,25 @@
 @endsection
 
 @push('scripts')
+@php
+  $initialMatchedBets = ($eventBets ?? collect())
+      ->where('status', 'MATCHED')
+      ->map(fn ($b) => [
+          'id' => $b->id,
+          'market_name' => (string) $b->market_name,
+          'selection_id' => (string) $b->selection_id,
+          'selection_name' => (string) $b->selection_name,
+          'bet_type' => strtoupper((string) $b->bet_type),
+          'odds' => (float) $b->odds,
+          'stake' => (float) $b->stake,
+          'category' => (string) ($b->category ?: 'exchange'),
+          'run_line' => $b->run_line !== null ? (float) $b->run_line : null,
+          'potential_profit' => (float) $b->potential_profit,
+          'liability' => (float) $b->liability,
+      ])
+      ->values()
+      ->toArray();
+@endphp
 <script>
   window.FullMkt = {
     sportId: '{{ $event->sport_id }}',
@@ -1476,8 +1659,10 @@
     eventName: '{{ addslashes($event->event_name) }}',
     activeSlip: null,
     stake: 100,
+    placedBets: @json($initialMatchedBets),
 
     init: function () {
+      this.recalcAllPositions();
       setInterval(() => this.pollLiveMarket(), 2500);
     },
 
@@ -1486,6 +1671,148 @@
       if (n >= 1000000) return +(n / 1000000).toFixed(2) + 'M';
       if (n >= 1000) return +(n / 1000).toFixed(1) + 'K';
       return n > 0 ? Math.round(n) : '0';
+    },
+
+    formatBookPl: function (val) {
+      const abs = Math.abs(parseFloat(val) || 0);
+      return '(' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ')';
+    },
+
+    computeSingleBetOutcome: function (bet, runnerSelId, runnerName) {
+      const stake = parseFloat(bet.stake) || 0;
+      const odds = parseFloat(bet.odds) || 0;
+      if (stake <= 0 || odds <= 0) return 0;
+
+      const betSelId = String(bet.selection_id ?? bet.selectionId ?? '').trim();
+      const betSelName = String(bet.selection_name ?? bet.selectionName ?? '').trim().toLowerCase();
+      const rSelId = String(runnerSelId || '').trim();
+      const rName = String(runnerName || '').trim().toLowerCase();
+
+      const isTargetRunner = (betSelId !== '' && rSelId !== '' && betSelId === rSelId) ||
+                             (betSelName !== '' && rName !== '' && (betSelName === rName || betSelName.startsWith(rName + ' (')));
+
+      const betType = String(bet.bet_type ?? bet.betType ?? 'BACK').toUpperCase();
+      const cat = String(bet.category || 'exchange').toLowerCase();
+
+      if (cat === 'bookmaker') {
+        const rate = odds / 100;
+        const winProfit = stake * rate;
+        if (betType === 'BACK') {
+          return isTargetRunner ? winProfit : -stake;
+        } else {
+          return isTargetRunner ? -winProfit : stake;
+        }
+      }
+
+      if (cat === 'fancy' || betType === 'YES' || betType === 'NO') {
+        if (!isTargetRunner) return 0;
+        const rate = odds / 100;
+        // In Fancy markets, show net exposure / liability on that session line
+        return betType === 'YES' ? -stake : -(stake * rate);
+      }
+
+      // Standard Exchange (Match Odds) & Sportsbook decimal odds: stake * (odds - 1)
+      const winProfit = stake * (odds - 1);
+      if (betType === 'BACK') {
+        return isTargetRunner ? winProfit : -stake;
+      } else {
+        return isTargetRunner ? -winProfit : stake;
+      }
+    },
+
+    recalcAllPositions: function () {
+      const scopes = document.querySelectorAll('.js-market-pos-scope');
+      scopes.forEach((scope) => {
+        const mktKey = scope.dataset.marketKey || '';
+        const mktName = scope.dataset.marketName || '';
+        const runnerEls = scope.querySelectorAll('.js-runner-pl');
+        if (!runnerEls.length) return;
+
+        // Gather matching placed bets for this market
+        const mktPlacedBets = (this.placedBets || []).filter((b) => {
+          const bMkt = String(b.market_name || '').trim().toLowerCase();
+          const sMkt = String(mktName || '').trim().toLowerCase();
+          return bMkt !== '' && bMkt === sMkt;
+        });
+
+        // Check if active inline bet slip belongs to this market
+        const slipActiveHere = this.activeSlip &&
+          ((this.activeSlip.marketKey && this.activeSlip.marketKey === mktKey) ||
+           (!this.activeSlip.marketKey && String(this.activeSlip.marketName || '').toLowerCase() === String(mktName || '').toLowerCase()));
+
+        const previewStake = slipActiveHere ? (parseFloat(this.stake) || 0) : 0;
+        const previewOdds = slipActiveHere ? (parseFloat(this.activeSlip.odds) || 0) : 0;
+        const hasPreview = slipActiveHere && previewStake > 0 && previewOdds > 0;
+        const hasActivity = mktPlacedBets.length > 0 || hasPreview;
+
+        runnerEls.forEach((el) => {
+          if (!hasActivity) {
+            el.classList.add('d-none');
+            el.classList.remove('pl-pos', 'pl-neg');
+            el.textContent = '';
+            return;
+          }
+
+          const rSelId = el.dataset.selectionId || '';
+          const rName = el.dataset.runnerName || '';
+          let net = 0;
+
+          mktPlacedBets.forEach((b) => {
+            net += this.computeSingleBetOutcome(b, rSelId, rName);
+          });
+
+          if (hasPreview) {
+            net += this.computeSingleBetOutcome({
+              selection_id: this.activeSlip.selectionId,
+              selection_name: this.activeSlip.selectionName,
+              bet_type: this.activeSlip.betType,
+              odds: previewOdds,
+              stake: previewStake,
+              category: this.activeSlip.category
+            }, rSelId, rName);
+          }
+
+          el.classList.remove('d-none', 'pl-pos', 'pl-neg');
+          el.classList.add(net >= 0 ? 'pl-pos' : 'pl-neg');
+          el.textContent = this.formatBookPl(net);
+        });
+      });
+    },
+
+    onBetPlaced: function (bet) {
+      if (!bet) return;
+      this.placedBets.push({
+        id: bet.id,
+        market_name: String(bet.market_name || ''),
+        selection_id: String(bet.selection_id || ''),
+        selection_name: String(bet.selection_name || ''),
+        bet_type: String(bet.bet_type || 'BACK').toUpperCase(),
+        odds: parseFloat(bet.odds) || 0,
+        stake: parseFloat(bet.stake) || 0,
+        category: String(bet.category || 'exchange'),
+        run_line: bet.run_line ?? null
+      });
+      this.recalcAllPositions();
+    },
+
+    onBetRemoved: function (betId) {
+      this.placedBets = (this.placedBets || []).filter(b => String(b.id) !== String(betId));
+      this.recalcAllPositions();
+    },
+
+    syncFromSidebarSlip: function (odds, stake) {
+      if (!this.activeSlip) return;
+      if (odds && !isNaN(odds)) {
+        this.activeSlip.odds = parseFloat(odds);
+        const oInp = document.getElementById('fmInlineOdds');
+        if (oInp && document.activeElement !== oInp) oInp.value = this.activeSlip.odds;
+      }
+      if (stake !== undefined && !isNaN(stake)) {
+        this.stake = parseFloat(stake) || 0;
+        const sInp = document.getElementById('fmInlineStake');
+        if (sInp && document.activeElement !== sInp) sInp.value = this.stake;
+      }
+      this.recalcAllPositions();
     },
 
     pollLiveMarket: async function () {
@@ -1633,7 +1960,7 @@
       if (pop) pop.classList.toggle('d-none');
     },
 
-    openSbTableSlip: function (containerId, marketName, selectionId, selectionName, odds) {
+    openSbTableSlip: function (containerId, marketName, selectionId, selectionName, odds, marketKey) {
       document.querySelectorAll('.sportbook-market-tbl td.back-1.select').forEach(td => td.classList.remove('select'));
       document.querySelectorAll('tr.betslipback').forEach(tr => tr.classList.add('d-none'));
 
@@ -1646,21 +1973,39 @@
       const trSlip = document.getElementById(containerId + '_tr');
       if (trSlip) trSlip.classList.remove('d-none');
 
-      this.openInlineSlip(containerId, marketName, selectionId, selectionName, 'BACK', odds, 'sportsbook', null);
+      this.openInlineSlip(containerId, marketName, selectionId, selectionName, 'BACK', odds, 'sportsbook', null, marketKey);
       const box = document.getElementById(containerId);
       if (box) {
         box.style.background = '#d3edd0';
       }
     },
 
-    openInlineSlip: function (containerId, marketName, selectionId, selectionName, betType, odds, category, runLine) {
+    openInlineSlip: function (containerId, marketName, selectionId, selectionName, betType, odds, category, runLine, marketKey, triggerEl) {
       document.querySelectorAll('.fm-inline-slip').forEach(el => {
         el.classList.add('d-none');
         el.innerHTML = '';
       });
+      document.querySelectorAll('.fm-odd-cell.selected-odd-back, .fm-odd-cell.selected-odd-lay').forEach(el => {
+        el.classList.remove('selected-odd-back', 'selected-odd-lay');
+      });
+
+      const isLay = (betType === 'LAY' || betType === 'NO');
+      if (triggerEl && triggerEl.classList && triggerEl.classList.contains('fm-odd-cell')) {
+        triggerEl.classList.add(isLay ? 'selected-odd-lay' : 'selected-odd-back');
+      }
 
       const box = document.getElementById(containerId);
-      this.activeSlip = { containerId, marketName, selectionId, selectionName, betType, odds: parseFloat(odds), category, runLine };
+      this.activeSlip = {
+        containerId,
+        marketKey: marketKey || null,
+        marketName,
+        selectionId: String(selectionId),
+        selectionName,
+        betType,
+        odds: parseFloat(odds) || 1.90,
+        category: category || 'exchange',
+        runLine: runLine ?? null
+      };
 
       // Also sync with Right Sidebar Bet Slip
       if (window.WB24 && typeof WB24.openBetSlip === 'function') {
@@ -1668,50 +2013,59 @@
           eventId: this.eventId,
           eventName: this.eventName,
           marketName,
-          selectionId,
+          selectionId: String(selectionId),
           selectionName,
           betType,
-          odds: parseFloat(odds),
-          category,
+          odds: parseFloat(odds) || 1.90,
+          category: category || 'exchange',
           runLine
         });
+        if (window.WB24.currentSlip) {
+          window.WB24.currentSlip.stake = this.stake;
+          const sInp = document.getElementById('slipStakeInput');
+          if (sInp) sInp.value = this.stake;
+          WB24.updateSlipCalculations();
+        }
       }
 
-      if (!box) return;
-      const isLay = (betType === 'LAY' || betType === 'NO');
-      box.className = 'fm-inline-slip ' + (isLay ? 'lay-mode' : '');
-      const stakes = [100, 200, 500, 5000, 10000, 25000, 50000, 100000];
-      box.innerHTML = `
-        <div class="row g-2 align-items-center mb-2">
-          <div class="col-3 d-none d-md-block">
-            <button type="button" class="btn btn-secondary btn-sm w-100 fw-bold" onclick="FullMkt.closeInlineSlip()">Cancel</button>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="input-group input-group-sm">
-              <button class="btn btn-outline-dark fw-bold" type="button" onclick="FullMkt.stepOdds(-0.01)">-</button>
-              <input type="number" step="0.01" id="fmInlineOdds" class="form-control text-center fw-bold" value="${odds}">
-              <button class="btn btn-outline-dark fw-bold" type="button" onclick="FullMkt.stepOdds(0.01)">+</button>
+      if (box) {
+        box.className = 'fm-inline-slip ' + (isLay ? 'lay-mode' : '');
+        const stakes = [100, 200, 500, 5000, 10000, 25000, 50000, 100000];
+        const oddStep = (category === 'bookmaker' || category === 'fancy' || this.activeSlip.odds >= 10) ? 1 : 0.01;
+        box.innerHTML = `
+          <div class="row g-2 align-items-center mb-2">
+            <div class="col-3 d-none d-md-block">
+              <button type="button" class="fm-slip-btn-cancel" onclick="FullMkt.closeInlineSlip()">Cancel</button>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="fm-slip-stepper">
+                <button class="fm-step-btn" type="button" onclick="FullMkt.stepOdds(-${oddStep})">&minus;</button>
+                <input type="number" step="any" id="fmInlineOdds" class="fm-step-input" value="${this.activeSlip.odds}" oninput="FullMkt.onOddsInput(this.value)">
+                <button class="fm-step-btn" type="button" onclick="FullMkt.stepOdds(${oddStep})">+</button>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="fm-slip-stepper">
+                <button class="fm-step-btn" type="button" onclick="FullMkt.stepStake(-100)">&minus;</button>
+                <input type="number" step="any" id="fmInlineStake" class="fm-step-input" value="${this.stake}" oninput="FullMkt.onStakeInput(this.value)">
+                <button class="fm-step-btn" type="button" onclick="FullMkt.stepStake(100)">+</button>
+              </div>
+            </div>
+            <div class="col-3 d-none d-md-block">
+              <button type="button" class="fm-slip-btn-place" onclick="FullMkt.submitInlineBet()">Place Bet</button>
             </div>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="input-group input-group-sm">
-              <button class="btn btn-outline-dark fw-bold" type="button" onclick="FullMkt.stepStake(-100)">-</button>
-              <input type="number" id="fmInlineStake" class="form-control text-center fw-bold" value="${this.stake}" oninput="FullMkt.stake = parseFloat(this.value)||0">
-              <button class="btn btn-outline-dark fw-bold" type="button" onclick="FullMkt.stepStake(100)">+</button>
-            </div>
+          <div class="row g-1">
+            ${stakes.map(s => `<div class="col-3 col-md"><a href="javascript:void(0)" class="fm-stake-chip ${Number(this.stake) === s ? 'active-stake' : ''}" data-stake-val="${s}" onclick="FullMkt.setStake(${s})">${s}</a></div>`).join('')}
           </div>
-          <div class="col-3 d-none d-md-block">
-            <button type="button" class="btn btn-primary btn-sm w-100 fw-bold" style="background:var(--header-bg);border-color:#000;" onclick="FullMkt.submitInlineBet()">Place Bet</button>
+          <div class="row g-2 mt-1 d-md-none">
+            <div class="col-6"><button type="button" class="fm-slip-btn-cancel" onclick="FullMkt.closeInlineSlip()">Cancel</button></div>
+            <div class="col-6"><button type="button" class="fm-slip-btn-place" onclick="FullMkt.submitInlineBet()">Place Bet</button></div>
           </div>
-        </div>
-        <div class="row g-1">
-          ${stakes.map(s => `<div class="col-3 col-md"><a href="javascript:void(0)" class="fm-stake-chip" onclick="FullMkt.setStake(${s})">${s}</a></div>`).join('')}
-        </div>
-        <div class="row g-2 mt-1 d-md-none">
-          <div class="col-6"><button type="button" class="btn btn-secondary btn-sm w-100 fw-bold" onclick="FullMkt.closeInlineSlip()">Cancel</button></div>
-          <div class="col-6"><button type="button" class="btn btn-primary btn-sm w-100 fw-bold" style="background:var(--header-bg);border-color:#000;" onclick="FullMkt.submitInlineBet()">Place Bet</button></div>
-        </div>
-      `;
+        `;
+      }
+
+      this.recalcAllPositions();
     },
 
     closeInlineSlip: function () {
@@ -1720,15 +2074,53 @@
         el.classList.add('d-none');
         el.innerHTML = '';
       });
+      document.querySelectorAll('.fm-odd-cell.selected-odd-back, .fm-odd-cell.selected-odd-lay').forEach(el => {
+        el.classList.remove('selected-odd-back', 'selected-odd-lay');
+      });
       document.querySelectorAll('tr.betslipback').forEach(tr => tr.classList.add('d-none'));
       document.querySelectorAll('.sportbook-market-tbl td.back-1.select').forEach(td => td.classList.remove('select'));
+      if (window.WB24 && typeof WB24.closeBetSlip === 'function') {
+        WB24.closeBetSlip();
+      }
+      this.recalcAllPositions();
+    },
+
+    onStakeInput: function (val) {
+      this.stake = Math.max(0, parseFloat(val) || 0);
+      document.querySelectorAll('.fm-stake-chip').forEach(ch => {
+        ch.classList.toggle('active-stake', Number(ch.dataset.stakeVal) === Number(this.stake));
+      });
+      if (window.WB24 && typeof WB24.setStake === 'function') {
+        WB24.setStake(this.stake);
+      }
+      this.recalcAllPositions();
+    },
+
+    onOddsInput: function (val) {
+      if (!this.activeSlip) return;
+      const parsed = parseFloat(val);
+      if (!isNaN(parsed) && parsed > 0) {
+        this.activeSlip.odds = parsed;
+        const rOdds = document.getElementById('slipOddsInput');
+        if (rOdds) {
+          rOdds.value = parsed;
+          if (window.WB24 && typeof WB24.updateSlipCalculations === 'function') {
+            WB24.updateSlipCalculations();
+          }
+        }
+      }
+      this.recalcAllPositions();
     },
 
     setStake: function (v) {
       this.stake = parseFloat(v) || 100;
       const inp = document.getElementById('fmInlineStake');
       if (inp) inp.value = this.stake;
+      document.querySelectorAll('.fm-stake-chip').forEach(ch => {
+        ch.classList.toggle('active-stake', Number(ch.dataset.stakeVal) === Number(this.stake));
+      });
       if (window.WB24 && typeof WB24.setStake === 'function') WB24.setStake(this.stake);
+      this.recalcAllPositions();
     },
 
     stepStake: function (d) {
@@ -1738,11 +2130,20 @@
     stepOdds: function (d) {
       const inp = document.getElementById('fmInlineOdds');
       if (!inp || !this.activeSlip) return;
-      this.activeSlip.odds = Math.max(1.01, Math.round((this.activeSlip.odds + d) * 100) / 100);
-      inp.value = this.activeSlip.odds;
+      const nextVal = Math.max(1.01, Math.round((this.activeSlip.odds + d) * 100) / 100);
+      this.activeSlip.odds = nextVal;
+      inp.value = nextVal;
+      const rOdds = document.getElementById('slipOddsInput');
+      if (rOdds) {
+        rOdds.value = nextVal;
+        if (window.WB24 && typeof WB24.updateSlipCalculations === 'function') {
+          WB24.updateSlipCalculations();
+        }
+      }
+      this.recalcAllPositions();
     },
 
-    submitInlineBet: function () {
+    submitInlineBet: async function () {
       if (window.WB24 && typeof WB24.submitBet === 'function') {
         const sInp = document.getElementById('fmInlineStake');
         const oInp = document.getElementById('fmInlineOdds');
@@ -1750,14 +2151,14 @@
         const rStake = document.getElementById('slipStakeInput');
         if (oInp && rOdds) rOdds.value = oInp.value;
         if (sInp && rStake) rStake.value = sInp.value;
-        WB24.submitBet(false);
+        await WB24.submitBet(false);
         this.closeInlineSlip();
       }
     }
   };
 
   function switchFancyOrSb(type) {
-    const isFancy = (type === 'fancy');
+    const isFancy = (type === 'Fancy' || type === 'fancy');
     document.getElementById('subNav_Fancy')?.classList.toggle('d-none', !isFancy);
     document.getElementById('subNav_SPORTSBOOK')?.classList.toggle('d-none', isFancy);
     document.getElementById('marketPane_fancy')?.classList.toggle('d-none', !isFancy);

@@ -345,6 +345,10 @@ window.WB24 = {
     const lEl = document.getElementById('slipLiabilityVal');
     if (pEl) pEl.textContent = profit.toFixed(2);
     if (lEl) lEl.textContent = liability.toFixed(2);
+
+    if (window.FullMkt && typeof window.FullMkt.syncFromSidebarSlip === 'function') {
+      window.FullMkt.syncFromSidebarSlip(odds, stake);
+    }
   },
 
   async submitBet(fromMobile = false) {
@@ -379,6 +383,9 @@ window.WB24 = {
       this.toast(data.message, 'success');
       this.updateWalletDisplay(data.wallet);
       this.prependOpenBet(data.bet);
+      if (window.FullMkt && typeof window.FullMkt.onBetPlaced === 'function') {
+        window.FullMkt.onBetPlaced(data.bet);
+      }
       this.closeBetSlip();
     } catch (e) {
       this.toast('Network error while placing bet.', 'danger');
@@ -403,6 +410,9 @@ window.WB24 = {
         this.toast(data.message, 'success');
         this.updateWalletDisplay(data.wallet);
         document.getElementById(`openBetRow_${betId}`)?.remove();
+        if (window.FullMkt && typeof window.FullMkt.onBetRemoved === 'function') {
+          window.FullMkt.onBetRemoved(betId);
+        }
       } else {
         this.toast(data.message || 'Cashout failed', 'danger');
       }

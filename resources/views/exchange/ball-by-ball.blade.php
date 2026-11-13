@@ -1566,10 +1566,11 @@
         if (!wrap) return;
         if (Math.abs(net) < 0.01) {
           wrap.innerHTML = '';
-        } else if (net > 0) {
-          wrap.innerHTML = `<span class="plus-book">${Math.abs(net).toFixed(0)}</span>`;
         } else {
-          wrap.innerHTML = `<span class="minus-book">(${Math.abs(net).toFixed(0)})</span>`;
+          const fmt = '(' + Math.abs(net).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ')';
+          wrap.innerHTML = net >= 0
+            ? `<span class="plus-book">${fmt}</span>`
+            : `<span class="minus-book">${fmt}</span>`;
         }
       });
     },
