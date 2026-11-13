@@ -13,7 +13,9 @@ Route::get('/', fn () => redirect()->route('home'));
 // Public Exchange Pages
 Route::get('/home', [ExchangeController::class, 'home'])->name('home');
 Route::get('/inplay', [ExchangeController::class, 'inplay'])->name('inplay');
+Route::get('/inPlay', [ExchangeController::class, 'inplay']);
 Route::get('/multimarket', [ExchangeController::class, 'multimarket'])->name('multimarket');
+Route::get('/multiMarkets', [ExchangeController::class, 'multimarket']);
 Route::get('/allsport-highlight/{sportId}', [ExchangeController::class, 'sportHighlight'])->name('sport.highlight');
 Route::get('/horse-racing', [ExchangeController::class, 'horseRacing'])->name('horse.racing');
 Route::get('/horse-racing/inplayHorseGame/{eventId}/{sportId}', fn ($eventId, $sportId) => redirect()->route('full.market', ['sportId' => $sportId, 'eventId' => $eventId]));

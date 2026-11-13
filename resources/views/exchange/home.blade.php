@@ -34,9 +34,35 @@
 
   <!-- Sport Tabs: Cricket | Soccer | Tennis -->
   <div class="wb-sport-tabs-bar">
-    <button type="button" class="wb-sport-tab-btn active" onclick="switchHighlightSport('cricket', this)">Cricket</button>
-    <button type="button" class="wb-sport-tab-btn" onclick="switchHighlightSport('soccer', this)">Soccer</button>
-    <button type="button" class="wb-sport-tab-btn" onclick="switchHighlightSport('tennis', this)">Tennis</button>
+    <button type="button" class="wb-sport-tab-btn active" onclick="switchHighlightSport('cricket', this)">
+      Cricket
+    </button>
+    <button type="button" class="wb-sport-tab-btn" onclick="switchHighlightSport('soccer', this)">
+      Soccer
+    </button>
+    <button type="button" class="wb-sport-tab-btn" onclick="switchHighlightSport('tennis', this)">
+      Tennis
+    </button>
+  </div>
+
+  <!-- In-Play (Live Only) | Today | Tomorrow | Yesterday Filter Bar -->
+  <div class="wb-day-filter-bar" id="homeDayFilterBar">
+    <button type="button" class="wb-day-filter-btn js-home-day-btn active" data-day-filter="inplay" onclick="switchHomeDayFilter('inplay', this)">
+      <span class="wb-cb-live-dot"></span> In-Play
+      <span class="wb-filter-count js-home-count" data-count-for="inplay">0</span>
+    </button>
+    <button type="button" class="wb-day-filter-btn js-home-day-btn" data-day-filter="today" onclick="switchHomeDayFilter('today', this)">
+      Today
+      <span class="wb-filter-count js-home-count" data-count-for="today">0</span>
+    </button>
+    <button type="button" class="wb-day-filter-btn js-home-day-btn" data-day-filter="tomorrow" onclick="switchHomeDayFilter('tomorrow', this)">
+      Tomorrow
+      <span class="wb-filter-count js-home-count" data-count-for="tomorrow">0</span>
+    </button>
+    <button type="button" class="wb-day-filter-btn js-home-day-btn" data-day-filter="yesterday" onclick="switchHomeDayFilter('yesterday', this)">
+      Yesterday
+      <span class="wb-filter-count js-home-count" data-count-for="yesterday">0</span>
+    </button>
   </div>
 
   <!-- 1 | X | 2 Header -->
@@ -50,25 +76,28 @@
     <div class="wb-1x2-pin-space"></div>
   </div>
 
-  <!-- Cricket Matches Pane -->
-  <div id="hlPane_cricket" class="js-hl-pane">
+  <!-- Cricket Matches Pane (Defaults to showing ONLY In-Play live matches at the top) -->
+  <div id="hlPane_cricket" class="js-hl-pane" data-sport-pane="cricket">
     @foreach($cricketEvents as $ev)
-      @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds])
+      @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds, 'onlyInPlayDefault' => true])
     @endforeach
+    <div class="bg-white p-3 text-center text-muted border d-none js-empty-day-msg">No Cricket matches in this filter.</div>
   </div>
 
   <!-- Soccer Matches Pane -->
-  <div id="hlPane_soccer" class="js-hl-pane d-none">
+  <div id="hlPane_soccer" class="js-hl-pane d-none" data-sport-pane="soccer">
     @foreach($soccerEvents as $ev)
-      @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds])
+      @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds, 'onlyInPlayDefault' => true])
     @endforeach
+    <div class="bg-white p-3 text-center text-muted border d-none js-empty-day-msg">No Soccer matches in this filter.</div>
   </div>
 
   <!-- Tennis Matches Pane -->
-  <div id="hlPane_tennis" class="js-hl-pane d-none">
+  <div id="hlPane_tennis" class="js-hl-pane d-none" data-sport-pane="tennis">
     @foreach($tennisEvents as $ev)
-      @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds])
+      @include('partials.match-row', ['ev' => $ev, 'pinnedIds' => $pinnedIds, 'onlyInPlayDefault' => true])
     @endforeach
+    <div class="bg-white p-3 text-center text-muted border d-none js-empty-day-msg">No Tennis matches in this filter.</div>
   </div>
 
   <!-- Home Casino Tabs & Grid (Screenshots 01_home_desktop_full & 08_live_casino_page) -->
@@ -107,11 +136,59 @@
 
 @push('scripts')
 <script>
+  let activeHomeSport = 'cricket';
+  let activeHomeDayFilter = 'inplay';
+
+  function applyHomeDayFilter() {
+    const pane = document.getElementById('hlPane_' + activeHomeSport);
+    if (!pane) return;
+
+    const rows = pane.querySelectorAll('.js-filterable-match-row');
+    const counts = { inplay: 0, today: 0, tomorrow: 0, yesterday: 0 };
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+      if (row.getAttribute('data-is-inplay') === '1') counts.inplay++;
+      if (row.getAttribute('data-is-today') === '1') counts.today++;
+      if (row.getAttribute('data-is-tomorrow') === '1') counts.tomorrow++;
+      if (row.getAttribute('data-is-yesterday') === '1') counts.yesterday++;
+
+      const matchAttr = 'data-is-' + activeHomeDayFilter;
+      if (row.getAttribute(matchAttr) === '1') {
+        row.classList.remove('d-none');
+        visibleCount++;
+      } else {
+        row.classList.add('d-none');
+      }
+    });
+
+    document.querySelectorAll('.js-home-count').forEach(badge => {
+      const key = badge.getAttribute('data-count-for');
+      if (key && counts[key] !== undefined) {
+        badge.textContent = counts[key];
+      }
+    });
+
+    const emptyMsg = pane.querySelector('.js-empty-day-msg');
+    if (emptyMsg) {
+      emptyMsg.classList.toggle('d-none', visibleCount > 0);
+    }
+  }
+
   function switchHighlightSport(key, btn) {
+    activeHomeSport = key;
     document.querySelectorAll('.wb-sport-tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('.js-hl-pane').forEach(p => p.classList.add('d-none'));
     document.getElementById('hlPane_' + key)?.classList.remove('d-none');
+    applyHomeDayFilter();
+  }
+
+  function switchHomeDayFilter(filterKey, btn) {
+    activeHomeDayFilter = filterKey;
+    document.querySelectorAll('.js-home-day-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyHomeDayFilter();
   }
 
   function switchHomeCasinoTab(key, btn) {
@@ -120,6 +197,9 @@
     document.querySelectorAll('.js-home-casino-pane').forEach(p => p.classList.add('d-none'));
     document.getElementById('homeCasinoPane_' + key)?.classList.remove('d-none');
   }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyHomeDayFilter();
+  });
 </script>
 @endpush
-

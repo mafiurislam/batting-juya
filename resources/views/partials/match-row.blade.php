@@ -17,12 +17,22 @@
   $dispLx = $hasThirdRunner ? ($lx ?: '0') : ($lx ? number_format((float)$lx, 2) : '0.0');
 
   $preBet = !empty($ev->score_json['preBet']);
+  $todayDateStr = \Carbon\Carbon::now('Asia/Kolkata')->format('Y-m-d');
+  $evDateStr = $todayDateStr;
   $formattedTime = '';
   try {
-      $formattedTime = \Carbon\Carbon::parse($ev->event_time)->setTimezone('Asia/Kolkata')->format('d-m-Y G:i');
+      $dt = \Carbon\Carbon::parse($ev->event_time)->setTimezone('Asia/Kolkata');
+      $formattedTime = $dt->format('d-m-Y G:i');
+      $evDateStr = $dt->format('Y-m-d');
   } catch (\Throwable $e) {
       $formattedTime = $ev->event_time;
   }
+
+  $isInPlay = (bool) $ev->in_play;
+  $isToday = $isInPlay || ($evDateStr === $todayDateStr);
+  $isTomorrow = !$isInPlay && ($evDateStr > $todayDateStr);
+  $isYesterday = !$isInPlay && ($evDateStr < $todayDateStr);
+  $hideInitially = !empty($onlyInPlayDefault) && !$isInPlay;
 
   $isPinned = in_array($ev->event_id, $pinnedIds ?? []);
   if ($isBallByBall) {
@@ -37,14 +47,20 @@
   $cricbuzzStatus = trim((string) ($cricbuzzMeta['status'] ?? ($cricbuzzMeta['tournament'] ?? '')));
 @endphp
 
-<div class="wb-match-row" data-event-row="{{ $ev->event_id }}">
+<div class="wb-match-row js-filterable-match-row {{ $hideInitially ? 'd-none' : '' }}"
+     data-event-row="{{ $ev->event_id }}"
+     data-sport-id="{{ $ev->sport_id }}"
+     data-is-inplay="{{ $isInPlay ? '1' : '0' }}"
+     data-is-today="{{ $isToday ? '1' : '0' }}"
+     data-is-tomorrow="{{ $isTomorrow ? '1' : '0' }}"
+     data-is-yesterday="{{ $isYesterday ? '1' : '0' }}">
   <div class="wb-match-info" style="cursor:pointer;" onclick="window.location.href='{{ $targetRoute }}'">
     <div class="wb-match-title-wrap">
       <a href="{{ $targetRoute }}" class="wb-match-link" onclick="event.stopPropagation();">{{ $ev->event_name }}</a>
       @if($ev->in_play)
-        <span class="wb-inplay-tag">In-Play</span>
+        <span class="wb-inplay-tag" onclick="event.stopPropagation(); window.location.href='{{ $targetRoute }}'" title="Click to view Live Scoreboard & Markets">In-Play</span>
         @if($cricbuzzShortScore !== '')
-          <span class="wb-cricbuzz-score-pill" data-cricbuzz-score="{{ $ev->event_id }}" title="{{ $cricbuzzStatus ?: 'Live on Cricbuzz' }}">
+          <span class="wb-cricbuzz-score-pill d-none" style="display:none !important;" data-cricbuzz-score="{{ $ev->event_id }}" title="{{ $cricbuzzStatus ?: 'Live Score' }}">
             <span class="wb-cb-live-dot"></span>
             <span class="js-cb-short-score">{{ $cricbuzzShortScore }}</span>
           </span>
@@ -125,4 +141,3 @@
     </button>
   </div>
 </div>
-
