@@ -984,7 +984,9 @@ a {
   filter: brightness(0.94);
 }
 
-.wb-odd-box.flash-change {
+.wb-odd-box.flash-change,
+.fm-odd-cell.flash-change,
+.fm-sb-pill.flash-change {
   animation: oddFlash 0.6s ease;
 }
 

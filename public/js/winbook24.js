@@ -487,6 +487,13 @@ window.WB24 = {
           Object.entries(data.updates).forEach(([eventId, payload]) => {
             const row = document.querySelector(`[data-event-row="${eventId}"]`);
             if (!row) return;
+
+            // In-Play badge sync
+            if (payload.in_play !== undefined) {
+              row.setAttribute('data-is-inplay', payload.in_play ? '1' : '0');
+            }
+
+            // Live score summary
             const liveShortSummary = payload.score?.cricbuzz?.shortScoreSummary || payload.score?.tennis?.shortScoreSummary || payload.score?.soccer?.shortScoreSummary;
             if (liveShortSummary) {
               const scorePill = row.querySelector(`[data-cricbuzz-score="${eventId}"] .js-cb-short-score`);
@@ -494,29 +501,59 @@ window.WB24 = {
                 scorePill.textContent = liveShortSummary;
               }
             }
+
+            // Badges (BM, F, S)
+            const badgesWrap = row.querySelector('.wb-badges');
+            if (badgesWrap) {
+              if (payload.is_bookmakers && !badgesWrap.querySelector('.wb-badge-bm')) {
+                const bm = document.createElement('span');
+                bm.className = 'wb-badge-bm';
+                bm.title = 'Bookmaker';
+                bm.textContent = 'BM';
+                badgesWrap.appendChild(bm);
+              }
+              if (payload.is_fancy && !badgesWrap.querySelector('.wb-badge-f')) {
+                const f = document.createElement('span');
+                f.className = 'wb-badge-f';
+                f.title = 'Fancy';
+                f.textContent = 'F';
+                badgesWrap.appendChild(f);
+              }
+              if (payload.is_sportsbook && !badgesWrap.querySelector('.wb-badge-s')) {
+                const s = document.createElement('span');
+                s.className = 'wb-badge-s';
+                s.title = 'Sportsbook';
+                s.textContent = 'S';
+                badgesWrap.appendChild(s);
+              }
+            }
+
             if (!payload.runners) return;
             payload.runners.forEach((runner, idx) => {
-              const backEl = row.querySelector(`[data-odd-cell="back-${idx}"] strong`);
-              const layEl = row.querySelector(`[data-odd-cell="lay-${idx}"] strong`);
+              const backBox = row.querySelector(`[data-odd-cell="back-${idx}"]`);
+              const layBox = row.querySelector(`[data-odd-cell="lay-${idx}"]`);
+              const backEl = backBox ? backBox.querySelector('strong') : null;
+              const layEl = layBox ? layBox.querySelector('strong') : null;
               const backPrice = runner.back?.[0]?.price ?? 0;
               const layPrice = runner.lay?.[0]?.price ?? 0;
               const backStr = String(backPrice || '0');
               const layStr = String(layPrice || '0');
+
               if (backEl && backEl.textContent.trim() !== backStr) {
                 backEl.textContent = backStr;
-                backEl.parentElement.classList.add('flash-change');
-                setTimeout(() => backEl.parentElement.classList.remove('flash-change'), 600);
+                backBox.classList.add('flash-change');
+                setTimeout(() => backBox.classList.remove('flash-change'), 600);
               }
               if (layEl && layEl.textContent.trim() !== layStr) {
                 layEl.textContent = layStr;
-                layEl.parentElement.classList.add('flash-change');
-                setTimeout(() => layEl.parentElement.classList.remove('flash-change'), 600);
+                layBox.classList.add('flash-change');
+                setTimeout(() => layBox.classList.remove('flash-change'), 600);
               }
             });
           });
         }
       } catch (e) {}
-    }, 4000);
+    }, 3000);
   },
 
   toast(message, type = 'info') {

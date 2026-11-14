@@ -1370,9 +1370,7 @@
                   data-runner-name="{{ $rName }}"></span>
           </div>
           <div class="fm-odds-6">
-            @if($rSusp)
-              <div class="fm-suspend-overlay"><span>Suspended</span></div>
-            @endif
+            <div class="fm-suspend-overlay {{ $rSusp ? '' : 'd-none' }}"><span>Suspended</span></div>
             <!-- Back 3, Back 2, Back 1 -->
             @for($bi = 2; $bi >= 0; $bi--)
               @php
@@ -1381,7 +1379,7 @@
                 $bCls = $bi === 0 ? 'wb-odd-back' : ($bi === 1 ? 'wb-odd-back-2 box-hide-mbl' : 'wb-odd-back-3 box-hide-mbl');
                 $bpLabel = $bp >= 1000 ? number_format((float)$bp) : ($bp > 0 ? $bp : '0');
               @endphp
-              <a href="javascript:void(0)" class="fm-odd-cell {{ $bCls }}"
+              <a href="javascript:void(0)" class="fm-odd-cell {{ $bCls }} js-mo-cell" data-mo-type="back" data-mo-level="{{ $bi }}"
                  onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($moTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $bp > 0 ? $bp : 1.90 }}, 'exchange', null, '{{ $moKey }}', this)">
                 <strong>{{ $bpLabel }}</strong>
                 <small>{{ $formatVolume($bs) }}</small>
@@ -1396,7 +1394,7 @@
                 $lCls = $li === 0 ? 'wb-odd-lay' : ($li === 1 ? 'wb-odd-lay-2 box-hide-mbl' : 'wb-odd-lay-3 box-hide-mbl');
                 $lpLabel = $lp >= 1000 ? number_format((float)$lp) : ($lp > 0 ? $lp : '0');
               @endphp
-              <a href="javascript:void(0)" class="fm-odd-cell {{ $lCls }}"
+              <a href="javascript:void(0)" class="fm-odd-cell {{ $lCls }} js-mo-cell" data-mo-type="lay" data-mo-level="{{ $li }}"
                  onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($moTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'LAY', {{ $lp > 0 ? $lp : 1.92 }}, 'exchange', null, '{{ $moKey }}', this)">
                 <strong>{{ $lpLabel }}</strong>
                 <small>{{ $formatVolume($ls) }}</small>
@@ -1480,16 +1478,14 @@
                   data-runner-name="{{ $rName }}"></span>
           </div>
           <div class="fm-odds-6">
-            @if($isSusp)
-              <div class="fm-suspend-overlay"><span>{{ $suspLabel }}</span></div>
-            @endif
+            <div class="fm-suspend-overlay {{ $isSusp ? '' : 'd-none' }}"><span>{{ $suspLabel }}</span></div>
             @for($bi = 2; $bi >= 0; $bi--)
               @php
                 $bp = $backs[$bi]['price'] ?? 0;
                 $bs = $backs[$bi]['size'] ?? '5M';
                 $bCls = $bi === 0 ? 'wb-odd-back' : ($bi === 1 ? 'wb-odd-back-2 box-hide-mbl' : 'wb-odd-back-3 box-hide-mbl');
               @endphp
-              <a href="javascript:void(0)" class="fm-odd-cell {{ $bCls }}"
+              <a href="javascript:void(0)" class="fm-odd-cell {{ $bCls }} js-bm-cell" data-bm-type="back" data-bm-level="{{ $bi }}"
                  onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($bmTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $bp > 0 ? $bp : 90 }}, 'bookmaker', null, '{{ $bmKey }}', this)">
                 <strong>{{ $bp ?: '-' }}</strong>
                 <small>{{ is_numeric($bs) ? $formatVolume($bs) : $bs }}</small>
@@ -1502,7 +1498,7 @@
                 $ls = $lays[$li]['size'] ?? '5M';
                 $lCls = $li === 0 ? 'wb-odd-lay' : ($li === 1 ? 'wb-odd-lay-2 box-hide-mbl' : 'wb-odd-lay-3 box-hide-mbl');
               @endphp
-              <a href="javascript:void(0)" class="fm-odd-cell {{ $lCls }}"
+              <a href="javascript:void(0)" class="fm-odd-cell {{ $lCls }} js-bm-cell" data-bm-type="lay" data-bm-level="{{ $li }}"
                  onclick="FullMkt.openInlineSlip('{{ $slipRowId }}', '{{ addslashes($bmTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'LAY', {{ $lp > 0 ? $lp : 92 }}, 'bookmaker', null, '{{ $bmKey }}', this)">
                 <strong>{{ $lp ?: '-' }}</strong>
                 <small>{{ is_numeric($ls) ? $formatVolume($ls) : $ls }}</small>
@@ -1648,7 +1644,7 @@
           $fSlipId = 'fancySlip_' . $fIdx;
           $fKey = 'fancy_' . $fIdx;
         @endphp
-        <div class="d-flex align-items-center border-bottom py-1 px-2 js-fancy-row js-market-pos-scope" data-fcat="{{ $fCat }}" data-market-key="{{ $fKey }}" data-market-name="{{ $fName }}" data-market-category="fancy">
+        <div class="d-flex align-items-center border-bottom py-1 px-2 js-fancy-row js-market-pos-scope" data-fancy-id="{{ $fId }}" data-fcat="{{ $fCat }}" data-market-key="{{ $fKey }}" data-market-name="{{ $fName }}" data-market-category="fancy">
           <div class="flex-grow-1 d-flex justify-content-between align-items-center pe-2">
             <div class="d-flex flex-column">
               <span class="fw-bold text-dark">{{ $fName }}</span>
@@ -1666,17 +1662,15 @@
           </div>
 
           <div class="d-flex position-relative">
-            @if($isFancySusp)
-              <div class="fm-suspend-overlay"><span>Suspended</span></div>
-            @endif
+            <div class="fm-suspend-overlay {{ $isFancySusp ? '' : 'd-none' }}"><span>Suspended</span></div>
             <!-- No (Pink) -->
-            <a href="javascript:void(0)" class="fm-odd-cell wb-odd-lay"
+            <a href="javascript:void(0)" class="fm-odd-cell wb-odd-lay js-fancy-no-cell"
                onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', '{{ addslashes($fName) }}', '{{ $fId }}', '{{ addslashes($fName) }} (NO @ {{ $noRun }})', 'NO', {{ $noRate ?: 100 }}, 'fancy', {{ (float)$noRun }}, '{{ $fKey }}', this)">
               <strong>{{ $noRun }}</strong>
               <small>{{ $noRate }}</small>
             </a>
             <!-- Yes (Blue) -->
-            <a href="javascript:void(0)" class="fm-odd-cell wb-odd-back ms-1"
+            <a href="javascript:void(0)" class="fm-odd-cell wb-odd-back ms-1 js-fancy-yes-cell"
                onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', '{{ addslashes($fName) }}', '{{ $fId }}', '{{ addslashes($fName) }} (YES @ {{ $yesRun }})', 'YES', {{ $yesRate ?: 100 }}, 'fancy', {{ (float)$yesRun }}, '{{ $fKey }}', this)">
               <strong>{{ $yesRun }}</strong>
               <small>{{ $yesRate }}</small>
@@ -1991,11 +1985,214 @@
         if (json.liveScore && typeof json.liveScore === 'object') {
           this.updateLiveScoreDom(json.liveScore);
         }
-        const sbData = json.data?.sportsbookData || json.sportsbookData;
+        const mData = json.data || {};
+        if (Array.isArray(mData.matchOddsData) && mData.matchOddsData.length > 0) {
+          this.updateMatchOddsDom(mData.matchOddsData);
+        }
+        if (Array.isArray(mData.bookmakersData) && mData.bookmakersData.length > 0) {
+          this.updateBookmakersDom(mData.bookmakersData);
+        }
+        if (Array.isArray(mData.fancyData) && mData.fancyData.length > 0) {
+          this.updateFancyDom(mData.fancyData);
+        }
+        const sbData = mData.sportsbookData || json.sportsbookData;
         if (Array.isArray(sbData) && sbData.length > 0) {
           this.updateSportsbookDom(sbData);
         }
       } catch (e) {}
+    },
+
+    updateMatchOddsDom: function (moList) {
+      moList.forEach((mo, moIdx) => {
+        const moTitle = mo.marketName || 'Match Odds';
+        const moStatus = String(mo.oddsData?.status || 'OPEN').toUpperCase();
+        const runners = mo.oddsData?.runners || [];
+        const card = document.querySelector(`.js-market-pos-scope[data-market-category="exchange"]`) ||
+                     document.getElementById('fmSection_match_odds');
+        if (!card) return;
+
+        if (mo.oddsData?.totalMatched) {
+          const mTxt = card.querySelector('.fm-matched-txt strong');
+          if (mTxt) mTxt.textContent = '€ ' + this.formatVol(mo.oddsData.totalMatched);
+        }
+
+        runners.forEach((r) => {
+          const selId = String(r.selectionId || '');
+          const row = card.querySelector(`.fm-runner-row[data-selection-id="${selId}"]`);
+          if (!row) return;
+
+          const rStatus = String(r.status || moStatus).toUpperCase();
+          const isSusp = ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'BALL RUNNING', 'CLOSED'].includes(rStatus) ||
+                         ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'CLOSED'].includes(moStatus);
+          const suspEl = row.querySelector('.fm-suspend-overlay');
+          if (suspEl) suspEl.classList.toggle('d-none', !isSusp);
+
+          const backs = r.price?.back || [];
+          const lays = r.price?.lay || [];
+
+          [2, 1, 0].forEach((bi) => {
+            const cell = row.querySelector(`.js-mo-cell[data-mo-type="back"][data-mo-level="${bi}"]`);
+            if (!cell) return;
+            const bp = backs[bi]?.price ?? 0;
+            const bs = backs[bi]?.size ?? 0;
+            const pStr = (bp >= 1000) ? Number(bp).toLocaleString() : (bp > 0 ? String(bp) : '0');
+            const sStr = this.formatVol(bs);
+
+            const strEl = cell.querySelector('strong');
+            const smEl = cell.querySelector('small');
+            if (strEl && strEl.textContent.trim() !== pStr) {
+              strEl.textContent = pStr;
+              cell.classList.add('flash-change');
+              setTimeout(() => cell.classList.remove('flash-change'), 600);
+            }
+            if (smEl) smEl.textContent = sStr;
+
+            cell.setAttribute('onclick', `FullMkt.openInlineSlip('moSlip_${moIdx}_${selId}', '${moTitle.replace(/'/g, "\\'")}', '${selId}', '${(r.runnerName || row.getAttribute('data-runner-name') || '').replace(/'/g, "\\'")}', 'BACK', ${bp > 0 ? bp : 1.90}, 'exchange', null, 'mo_${moIdx}', this)`);
+          });
+
+          [0, 1, 2].forEach((li) => {
+            const cell = row.querySelector(`.js-mo-cell[data-mo-type="lay"][data-mo-level="${li}"]`);
+            if (!cell) return;
+            const lp = lays[li]?.price ?? 0;
+            const ls = lays[li]?.size ?? 0;
+            const pStr = (lp >= 1000) ? Number(lp).toLocaleString() : (lp > 0 ? String(lp) : '0');
+            const sStr = this.formatVol(ls);
+
+            const strEl = cell.querySelector('strong');
+            const smEl = cell.querySelector('small');
+            if (strEl && strEl.textContent.trim() !== pStr) {
+              strEl.textContent = pStr;
+              cell.classList.add('flash-change');
+              setTimeout(() => cell.classList.remove('flash-change'), 600);
+            }
+            if (smEl) smEl.textContent = sStr;
+
+            cell.setAttribute('onclick', `FullMkt.openInlineSlip('moSlip_${moIdx}_${selId}', '${moTitle.replace(/'/g, "\\'")}', '${selId}', '${(r.runnerName || row.getAttribute('data-runner-name') || '').replace(/'/g, "\\'")}', 'LAY', ${lp > 0 ? lp : 1.92}, 'exchange', null, 'mo_${moIdx}', this)`);
+          });
+        });
+      });
+    },
+
+    updateBookmakersDom: function (bmList) {
+      bmList.forEach((bm, bmIdx) => {
+        const bmTitle = bm.marketName || 'Bookmaker';
+        const bmStatus = String(bm.oddsData?.status || 'ONLINE').toUpperCase();
+        const runners = bm.oddsData?.runners || [];
+        const card = document.querySelector(`.js-market-pos-scope[data-market-category="bookmaker"]`) ||
+                     document.getElementById('fmSection_bookmaker');
+        if (!card) return;
+
+        runners.forEach((r) => {
+          const selId = String(r.selectionId || '');
+          const row = card.querySelector(`.fm-runner-row[data-selection-id="${selId}"]`);
+          if (!row) return;
+
+          const rStatus = String(r.status || bmStatus).toUpperCase();
+          const isSusp = ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'BALL RUNNING', 'CLOSED'].includes(rStatus) ||
+                         ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'CLOSED'].includes(bmStatus);
+          const suspTxt = (rStatus.includes('BALL') || bmStatus.includes('BALL')) ? 'Ballrun' : 'Suspended';
+          const suspEl = row.querySelector('.fm-suspend-overlay');
+          if (suspEl) {
+            suspEl.classList.toggle('d-none', !isSusp);
+            const span = suspEl.querySelector('span');
+            if (span) span.textContent = suspTxt;
+          }
+
+          const backs = r.price?.back || [];
+          const lays = r.price?.lay || [];
+
+          [2, 1, 0].forEach((bi) => {
+            const cell = row.querySelector(`.js-bm-cell[data-bm-type="back"][data-bm-level="${bi}"]`);
+            if (!cell) return;
+            const bp = backs[bi]?.price ?? 0;
+            const bs = backs[bi]?.size ?? '5M';
+            const pStr = bp > 0 ? String(bp) : '-';
+            const sStr = typeof bs === 'number' ? this.formatVol(bs) : String(bs || '-');
+
+            const strEl = cell.querySelector('strong');
+            const smEl = cell.querySelector('small');
+            if (strEl && strEl.textContent.trim() !== pStr) {
+              strEl.textContent = pStr;
+              cell.classList.add('flash-change');
+              setTimeout(() => cell.classList.remove('flash-change'), 600);
+            }
+            if (smEl) smEl.textContent = sStr;
+
+            cell.setAttribute('onclick', `FullMkt.openInlineSlip('bmSlip_${bmIdx}_${selId}', '${bmTitle.replace(/'/g, "\\'")}', '${selId}', '${(r.runnerName || row.getAttribute('data-runner-name') || '').replace(/'/g, "\\'")}', 'BACK', ${bp > 0 ? bp : 90}, 'bookmaker', null, 'bm_${bmIdx}', this)`);
+          });
+
+          [0, 1, 2].forEach((li) => {
+            const cell = row.querySelector(`.js-bm-cell[data-bm-type="lay"][data-bm-level="${li}"]`);
+            if (!cell) return;
+            const lp = lays[li]?.price ?? 0;
+            const ls = lays[li]?.size ?? '5M';
+            const pStr = lp > 0 ? String(lp) : '-';
+            const sStr = typeof ls === 'number' ? this.formatVol(ls) : String(ls || '-');
+
+            const strEl = cell.querySelector('strong');
+            const smEl = cell.querySelector('small');
+            if (strEl && strEl.textContent.trim() !== pStr) {
+              strEl.textContent = pStr;
+              cell.classList.add('flash-change');
+              setTimeout(() => cell.classList.remove('flash-change'), 600);
+            }
+            if (smEl) smEl.textContent = sStr;
+
+            cell.setAttribute('onclick', `FullMkt.openInlineSlip('bmSlip_${bmIdx}_${selId}', '${bmTitle.replace(/'/g, "\\'")}', '${selId}', '${(r.runnerName || row.getAttribute('data-runner-name') || '').replace(/'/g, "\\'")}', 'LAY', ${lp > 0 ? lp : 92}, 'bookmaker', null, 'bm_${bmIdx}', this)`);
+          });
+        });
+      });
+    },
+
+    updateFancyDom: function (fancyList) {
+      fancyList.forEach((fItem, fIdx) => {
+        const fId = String(fItem.exMarketId || fItem.marketId || ('f_' + fIdx));
+        const fName = fItem.marketName || fItem.runnerName || 'Session Runs';
+        const fRunner = fItem.oddsData?.runners?.[0] || {};
+        const noRun = fRunner.price?.lay?.[0]?.price ?? fItem.noRun ?? 0;
+        const noRate = fRunner.price?.lay?.[0]?.size ?? fItem.noRate ?? 0;
+        const yesRun = fRunner.price?.back?.[0]?.price ?? fItem.yesRun ?? 0;
+        const yesRate = fRunner.price?.back?.[0]?.size ?? fItem.yesRate ?? 0;
+        const fStatus = String(fItem.oddsData?.status || fRunner.status || 'ONLINE').toUpperCase();
+        const isSusp = ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'BALL RUNNING', 'CLOSED'].includes(fStatus) || (noRun == 0 && yesRun == 0);
+
+        let row = document.querySelector(`.js-fancy-row[data-fancy-id="${fId}"]`) ||
+                  document.querySelector(`.js-fancy-row[data-market-name="${fName}"]`);
+        if (!row) return;
+
+        const suspEl = row.querySelector('.fm-suspend-overlay');
+        if (suspEl) suspEl.classList.toggle('d-none', !isSusp);
+
+        const noCell = row.querySelector('.js-fancy-no-cell');
+        if (noCell) {
+          const strEl = noCell.querySelector('strong');
+          const smEl = noCell.querySelector('small');
+          const noStr = String(noRun || '0');
+          const rateStr = String(noRate || '0');
+          if (strEl && strEl.textContent.trim() !== noStr) {
+            strEl.textContent = noStr;
+            noCell.classList.add('flash-change');
+            setTimeout(() => noCell.classList.remove('flash-change'), 600);
+          }
+          if (smEl) smEl.textContent = rateStr;
+          noCell.setAttribute('onclick', `FullMkt.openInlineSlip('fancySlip_${fIdx}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (NO @ ${noRun})', 'NO', ${noRate || 100}, 'fancy', ${parseFloat(noRun)}, 'fancy_${fIdx}', this)`);
+        }
+
+        const yesCell = row.querySelector('.js-fancy-yes-cell');
+        if (yesCell) {
+          const strEl = yesCell.querySelector('strong');
+          const smEl = yesCell.querySelector('small');
+          const yesStr = String(yesRun || '0');
+          const rateStr = String(yesRate || '0');
+          if (strEl && strEl.textContent.trim() !== yesStr) {
+            strEl.textContent = yesStr;
+            yesCell.classList.add('flash-change');
+            setTimeout(() => yesCell.classList.remove('flash-change'), 600);
+          }
+          if (smEl) smEl.textContent = rateStr;
+          yesCell.setAttribute('onclick', `FullMkt.openInlineSlip('fancySlip_${fIdx}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (YES @ ${yesRun})', 'YES', ${yesRate || 100}, 'fancy', ${parseFloat(yesRun)}, 'fancy_${fIdx}', this)`);
+        }
+      });
     },
 
     updateSportsbookDom: function (sbData) {
