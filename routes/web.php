@@ -219,6 +219,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::post('/settings', [AdminController::class, 'saveSettings'])->name('settings.save');
     Route::delete('/settings/banner', [AdminController::class, 'deleteBanner'])->name('settings.banner.delete');
+    Route::post('/settings/qr/delete', [AdminController::class, 'deleteDepositQrImage'])->name('settings.qr.delete');
+    Route::post('/dashboard/quick-settings', [AdminController::class, 'saveQuickSettings'])->name('dashboard.quick-settings');
 
     // 12. Live Scoreboards (Cricbuzz, Football/UEFA, Tennis), Ball-By-Ball & Multi-Markets CRUD
     Route::get('/live-scores', [AdminController::class, 'liveScores'])->name('live.scores');

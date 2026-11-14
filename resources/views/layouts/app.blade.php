@@ -12,6 +12,9 @@
   @stack('styles')
 </head>
 <body>
+@php
+  $activeWhatsapp = $supportWhatsapp ?? \App\Models\SiteSetting::getValue('support_whatsapp', '+919831391470');
+@endphp
 
   <!-- ================= TOP HEADER ================= -->
   <header class="wb-top-header">
@@ -373,8 +376,8 @@
       <footer class="wb-footer">
         <div class="mb-2 fw-bold">
           Support &nbsp;
-          <a href="https://wa.me/{{ preg_replace('/\D/', '', $supportWhatsapp ?? '+919831391470') }}" target="_blank" class="text-dark fw-normal">
-            <i class="fab fa-whatsapp" style="color:#28D146;font-size:16px;"></i> WhatsApp {{ $supportWhatsapp ?? '+919831391470' }}
+          <a href="https://wa.me/{{ preg_replace('/\D/', '', $activeWhatsapp) }}" target="_blank" class="text-dark fw-normal">
+            <i class="fab fa-whatsapp" style="color:#28D146;font-size:16px;"></i> WhatsApp {{ $activeWhatsapp }}
           </a>
         </div>
         <div class="wb-footer-links">
@@ -494,7 +497,7 @@
 
   <!-- ================= FLOATING CONTACT US WIDGET ================= -->
   @unless(View::hasSection('full_bleed'))
-  <a href="https://wa.me/{{ preg_replace('/\D/', '', $supportWhatsapp ?? '+919831391470') }}" target="_blank" class="wb-contact-float">
+  <a href="https://wa.me/{{ preg_replace('/\D/', '', $activeWhatsapp) }}" target="_blank" class="wb-contact-float">
     <span class="contact-label">Contact Us...</span>
     <span class="contact-circle"><i class="fas fa-comment-alt"></i></span>
   </a>

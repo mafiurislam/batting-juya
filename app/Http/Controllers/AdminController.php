@@ -61,8 +61,14 @@ class AdminController extends Controller
         $pendingTx = BankingTransaction::with('user')->latest()->take(8)->get();
         $recentUsers = User::latest()->take(8)->get();
         $recentLogs = ActivityLog::with('user')->latest()->take(8)->get();
+        $supportWhatsapp = SiteSetting::getValue('support_whatsapp', '+919831391470');
+        $depositQrImage = SiteSetting::getValue('deposit_qr_image', '');
+        $depositUpi = SiteSetting::getValue('deposit_upi_id', 'winbook24.pay@axis');
 
-        return view('admin.dashboard', compact('stats', 'recentBets', 'recentOtps', 'pendingTx', 'recentUsers', 'recentLogs'));
+        return view('admin.dashboard', compact(
+            'stats', 'recentBets', 'recentOtps', 'pendingTx', 'recentUsers', 'recentLogs',
+            'supportWhatsapp', 'depositQrImage', 'depositUpi'
+        ));
     }
 
     // =========================================================================
@@ -1582,6 +1588,7 @@ class AdminController extends Controller
             'deposit_bank_name' => SiteSetting::getValue('deposit_bank_name', 'HDFC Bank'),
             'deposit_account_number' => SiteSetting::getValue('deposit_account_number', '50200089412580'),
             'deposit_ifsc' => SiteSetting::getValue('deposit_ifsc', 'HDFC0001245'),
+            'deposit_qr_image' => SiteSetting::getValue('deposit_qr_image', ''),
             'msg91_auth_key' => SiteSetting::getValue('msg91_auth_key', ''),
             'msg91_template_id' => SiteSetting::getValue('msg91_template_id', ''),
             'msg91_sender_id' => SiteSetting::getValue('msg91_sender_id', 'CRICEX'),
@@ -1640,6 +1647,14 @@ class AdminController extends Controller
             $request->file('brand_logo')->move(public_path('assets/brand'), 'logo.png');
         }
 
+        if ($request->hasFile('deposit_qr_image')) {
+            $request->validate([
+                'deposit_qr_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            ]);
+            $path = Storage::disk('public')->putFile('qr', $request->file('deposit_qr_image'));
+            SiteSetting::setValue('deposit_qr_image', '/storage/' . $path, 'banking');
+        }
+
         return back()->with('success', 'Website, Payment, Banner & MSG91 Settings saved successfully!');
     }
 
@@ -1654,6 +1669,42 @@ class AdminController extends Controller
         SiteSetting::setValue('banners', $banners, 'general');
 
         return back()->with('success', 'Banner removed from homepage slider!');
+    }
+
+    public function deleteDepositQrImage()
+    {
+        $current = SiteSetting::getValue('deposit_qr_image', '');
+        if ($current && str_starts_with($current, '/storage/')) {
+            $storagePath = str_replace('/storage/', '', $current);
+            Storage::disk('public')->delete($storagePath);
+        }
+        SiteSetting::setValue('deposit_qr_image', '', 'banking');
+
+        return back()->with('success', 'Custom QR Code removed successfully! Default dynamic UPI QR will be used.');
+    }
+
+    public function saveQuickSettings(Request $request)
+    {
+        $request->validate([
+            'support_whatsapp' => 'nullable|string|max:50',
+            'deposit_upi_id' => 'nullable|string|max:100',
+            'deposit_qr_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        if ($request->filled('support_whatsapp')) {
+            SiteSetting::setValue('support_whatsapp', trim((string) $request->input('support_whatsapp')), 'general');
+        }
+
+        if ($request->filled('deposit_upi_id')) {
+            SiteSetting::setValue('deposit_upi_id', trim((string) $request->input('deposit_upi_id')), 'banking');
+        }
+
+        if ($request->hasFile('deposit_qr_image')) {
+            $path = Storage::disk('public')->putFile('qr', $request->file('deposit_qr_image'));
+            SiteSetting::setValue('deposit_qr_image', '/storage/' . $path, 'banking');
+        }
+
+        return back()->with('success', 'WhatsApp support number & Deposit QR Code updated successfully!');
     }
 
     // =========================================================================

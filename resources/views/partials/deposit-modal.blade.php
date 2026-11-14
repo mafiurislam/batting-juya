@@ -5,6 +5,7 @@
   $depositAccountNumber = \App\Models\SiteSetting::getValue('deposit_account_number', '50200089412580');
   $depositIfsc = \App\Models\SiteSetting::getValue('deposit_ifsc', 'HDFC0001245');
   $minDeposit = (int) \App\Models\SiteSetting::getValue('min_deposit', '100');
+  $customQrImage = \App\Models\SiteSetting::getValue('deposit_qr_image', '');
 @endphp
 
 <!-- Deposit Modal (#DepositModal - Matches 1:1 with User Specification & Image) -->
@@ -93,11 +94,12 @@
                 <span class="small text-muted fw-bold">Instant UPI QR</span>
               </div>
 
-              <!-- Dynamic UPI QR Code Image -->
+              <!-- QR Code Image (Custom Uploaded QR or Dynamic UPI QR) -->
               <div class="p-2 d-inline-block bg-white border rounded" style="box-shadow:0 2px 8px rgba(0,0,0,0.08);">
                 <img id="dynamicDepositQrImg" 
-                     src="" 
+                     src="{{ !empty($customQrImage) ? $customQrImage : '' }}" 
                      alt="UPI QR Code" 
+                     data-custom-qr="{{ !empty($customQrImage) ? $customQrImage : '' }}"
                      style="width:185px;height:185px;display:block;margin:0 auto;object-fit:contain;">
               </div>
 
@@ -224,12 +226,17 @@
       dispEl.textContent = val.toLocaleString('en-IN', { minimumFractionDigits: 2 });
     }
 
-    // Build dynamic UPI QR code URL
-    const upiId = '{{ $depositUpi }}';
-    const upiUri = 'upi://pay?pa=' + encodeURIComponent(upiId) + '&pn=WINBOOK24&am=' + val.toFixed(2) + '&cu=INR&tn=Deposit';
+    // Build dynamic UPI QR or show custom QR
     const qrImg = document.getElementById('dynamicDepositQrImg');
     if (qrImg) {
-      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' + encodeURIComponent(upiUri);
+      const customQr = qrImg.getAttribute('data-custom-qr');
+      if (customQr && customQr.trim() !== '') {
+        qrImg.src = customQr;
+      } else {
+        const upiId = '{{ $depositUpi }}';
+        const upiUri = 'upi://pay?pa=' + encodeURIComponent(upiId) + '&pn=WINBOOK24&am=' + val.toFixed(2) + '&cu=INR&tn=Deposit';
+        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' + encodeURIComponent(upiUri);
+      }
     }
 
     // Switch views

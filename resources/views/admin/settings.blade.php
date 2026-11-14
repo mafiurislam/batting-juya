@@ -79,6 +79,26 @@
               </div>
             </div>
 
+            <div class="row g-2 mb-2 p-2 border rounded bg-light align-items-center">
+              <div class="col-md-8">
+                <label class="small fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                  <i class="fas fa-qrcode text-primary"></i> Upload / Exchange Deposit QR Code Image
+                </label>
+                <input type="file" name="deposit_qr_image" class="form-control form-control-sm" accept="image/*">
+                <small class="text-muted" style="font-size:11px;">Upload custom QR code (PNG, JPG, WEBP). Overrides dynamic QR.</small>
+              </div>
+              <div class="col-md-4 text-center">
+                @if(!empty($settings['deposit_qr_image']))
+                  <div class="d-flex flex-column align-items-center gap-1">
+                    <img src="{{ $settings['deposit_qr_image'] }}" alt="Custom QR" style="width:55px;height:55px;object-fit:contain;border:1px solid #ccc;border-radius:4px;background:#fff;">
+                    <button type="submit" form="delQrForm" class="btn btn-sm btn-outline-danger py-0 px-2 fw-bold" style="font-size:10.5px;">Remove QR</button>
+                  </div>
+                @else
+                  <span class="badge bg-secondary" style="font-size:10px;">Dynamic UPI QR</span>
+                @endif
+              </div>
+            </div>
+
             <hr class="my-2">
             <div class="row g-2">
               <div class="col-md-6">
@@ -186,4 +206,8 @@
       </div>
     </div>
   </div>
+
+  <form id="delQrForm" action="{{ route('admin.settings.qr.delete') }}" method="POST" style="display:none;" onsubmit="return confirm('Remove custom QR code and revert to default dynamic UPI QR?')">
+    @csrf
+  </form>
 @endsection

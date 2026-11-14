@@ -31,6 +31,112 @@
     </div>
   </div>
 
+  <!-- Quick Payment & Support Settings Card (WhatsApp Number & Deposit QR Code Management) -->
+  <div class="card border-0 shadow-sm mb-4" style="border-radius:10px;background:#ffffff;overflow:hidden;">
+    <div class="card-header py-2 px-3 d-flex justify-content-between align-items-center" style="background:linear-gradient(135deg, #1e293b 0%, #334155 100%);color:#fff;">
+      <h6 class="m-0 fw-bold d-flex align-items-center gap-2" style="font-size:14px;">
+        <i class="fab fa-whatsapp text-success" style="font-size:16px;"></i> WhatsApp Support &amp; Deposit QR Code Management
+      </h6>
+      <a href="{{ route('admin.settings') }}" class="btn btn-sm btn-outline-light py-0 px-2 fw-bold" style="font-size:11px;">
+        <i class="fas fa-sliders-h me-1"></i> All Settings
+      </a>
+    </div>
+    <div class="card-body p-3">
+      <div class="row g-3 align-items-start">
+        
+        <!-- 1. WhatsApp Number & UPI ID Update Form -->
+        <div class="col-lg-7">
+          <form action="{{ route('admin.dashboard.quick-settings') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                <label class="small fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                  <i class="fab fa-whatsapp text-success" style="font-size:15px;"></i> WhatsApp Support Number <span class="text-danger">*</span>
+                </label>
+                <input type="text" 
+                       name="support_whatsapp" 
+                       value="{{ $supportWhatsapp }}" 
+                       class="form-control form-control-sm fw-bold" 
+                       placeholder="+919831391470" 
+                       required>
+                <small class="text-muted" style="font-size:11px;">Appears on header, footer, and floating 24x7 WhatsApp button.</small>
+              </div>
+
+              <div class="col-md-6">
+                <label class="small fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                  <i class="fas fa-university text-primary"></i> Deposit UPI ID
+                </label>
+                <input type="text" 
+                       name="deposit_upi_id" 
+                       value="{{ $depositUpi }}" 
+                       class="form-control form-control-sm fw-bold" 
+                       placeholder="winbook24.pay@axis">
+                <small class="text-muted" style="font-size:11px;">UPI ID shown to players under the QR Code.</small>
+              </div>
+            </div>
+
+            <div class="mb-3 p-2 border rounded bg-light">
+              <label class="small fw-bold text-dark d-flex align-items-center gap-1 mb-1">
+                <i class="fas fa-upload text-info"></i> Upload / Exchange New QR Code Image
+              </label>
+              <input type="file" 
+                     name="deposit_qr_image" 
+                     class="form-control form-control-sm" 
+                     accept="image/*">
+              <small class="text-muted" style="font-size:11px;">Upload your own custom Google Pay, PhonePe, Paytm or Bank QR code (PNG, JPG, WEBP).</small>
+            </div>
+
+            <button type="submit" class="btn btn-sm btn-primary fw-bold px-3 py-1">
+              <i class="fas fa-save me-1"></i> Update WhatsApp &amp; QR Code
+            </button>
+          </form>
+        </div>
+
+        <!-- 2. Active QR Code Preview & Remove / Delete Box -->
+        <div class="col-lg-5">
+          <div class="border rounded p-3 text-center bg-light h-100 d-flex flex-column justify-content-between align-items-center">
+            <div>
+              <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                <span class="small fw-bold text-dark">Active Deposit QR Code:</span>
+                @if(!empty($depositQrImage))
+                  <span class="badge bg-success">Custom Uploaded QR</span>
+                @else
+                  <span class="badge bg-primary">Dynamic UPI QR</span>
+                @endif
+              </div>
+
+              <div class="p-2 bg-white border rounded d-inline-block shadow-sm mb-2">
+                @if(!empty($depositQrImage))
+                  <img src="{{ $depositQrImage }}" alt="Custom Deposit QR" style="width:130px;height:130px;object-fit:contain;display:block;">
+                @else
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&margin=4&data={{ urlencode('upi://pay?pa=' . $depositUpi . '&pn=WINBOOK24&cu=INR') }}" alt="Default UPI QR" style="width:130px;height:130px;object-fit:contain;display:block;">
+                @endif
+              </div>
+              
+              <div class="small text-muted" style="font-size:11px;">
+                @if(!empty($depositQrImage))
+                  Players scan this custom QR code when depositing.
+                @else
+                  Automatically generated from UPI ID <code>{{ $depositUpi }}</code>.
+                @endif
+              </div>
+            </div>
+
+            @if(!empty($depositQrImage))
+              <form action="{{ route('admin.settings.qr.delete') }}" method="POST" class="mt-2 m-0" onsubmit="return confirm('Remove custom QR code and revert to default dynamic UPI QR?')">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-danger py-1 px-3 fw-bold" style="font-size:11.5px;">
+                  <i class="fas fa-trash-alt me-1"></i> Delete Custom QR Code
+                </button>
+              </form>
+            @endif
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- 8 Colorful Gradient KPI Cards -->
   <div class="row g-3 mb-4">
     <div class="col-sm-6 col-xl-3">
