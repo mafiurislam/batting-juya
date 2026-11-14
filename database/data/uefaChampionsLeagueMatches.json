@@ -9,7 +9,7 @@
     "stageText": "2nd Half • 68'",
     "minute": "68'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T20:00:00Z",
     "stadium": "Estadio Santiago Bernabéu, Madrid",
     "homeTeam": {
@@ -51,7 +51,7 @@
     "stageText": "2nd Half • 64'",
     "minute": "64'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T20:00:00Z",
     "stadium": "City of Manchester Stadium, Manchester",
     "homeTeam": {
@@ -93,7 +93,7 @@
     "stageText": "2nd Half • 71'",
     "minute": "71'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T20:00:00Z",
     "stadium": "Arsenal Stadium, London",
     "homeTeam": {
@@ -135,7 +135,7 @@
     "stageText": "Half Time • HT",
     "minute": "HT",
     "phase": "Half Time",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T20:00:00Z",
     "stadium": "Stadion Feijenoord 'De Kuip', Rotterdam",
     "homeTeam": {
@@ -177,7 +177,7 @@
     "stageText": "2nd Half • 79'",
     "minute": "79'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T17:45:00Z",
     "stadium": "Aspmyra, Bodø",
     "homeTeam": {
@@ -219,7 +219,7 @@
     "stageText": "2nd Half • 56'",
     "minute": "56'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T20:00:00Z",
     "stadium": "RB Arena, Leipzig",
     "homeTeam": {
@@ -261,7 +261,7 @@
     "stageText": "2nd Half • 81'",
     "minute": "81'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T17:45:00Z",
     "stadium": "Ali Sami Yen Spor Kompleksi, Istanbul",
     "homeTeam": {
@@ -303,7 +303,7 @@
     "stageText": "1st Half • 42'",
     "minute": "42'",
     "phase": "1st Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T20:00:00Z",
     "stadium": "Národný futbalový štadión , Bratislava",
     "homeTeam": {
@@ -345,7 +345,7 @@
     "stageText": "1st Half • 33'",
     "minute": "33'",
     "phase": "1st Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-24T20:00:00Z",
     "stadium": "Giuseppe Sinigaglia, Como",
     "homeTeam": {
@@ -387,7 +387,7 @@
     "stageText": "2nd Half • 66'",
     "minute": "66'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T20:00:00Z",
     "stadium": "Parc des Princes, Paris",
     "homeTeam": {
@@ -429,7 +429,7 @@
     "stageText": "2nd Half • 49'",
     "minute": "49'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T20:00:00Z",
     "stadium": "Stadio San Siro, Milan",
     "homeTeam": {
@@ -471,7 +471,7 @@
     "stageText": "2nd Half • 77'",
     "minute": "77'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T20:00:00Z",
     "stadium": "Estadio Metropolitano, Madrid",
     "homeTeam": {
@@ -513,7 +513,7 @@
     "stageText": "2nd Half • 53'",
     "minute": "53'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T20:00:00Z",
     "stadium": "Estádio José Alvalade, Lisbon",
     "homeTeam": {
@@ -555,7 +555,7 @@
     "stageText": "2nd Half • 62'",
     "minute": "62'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T20:00:00Z",
     "stadium": "Jan Breydelstadion, Bruges",
     "homeTeam": {
@@ -597,7 +597,7 @@
     "stageText": "2nd Half • 74'",
     "minute": "74'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T20:00:00Z",
     "stadium": "Stade Pierre Mauroy, Villeneuve d'Ascq",
     "homeTeam": {
@@ -639,7 +639,7 @@
     "stageText": "2nd Half • 69'",
     "minute": "69'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T20:00:00Z",
     "stadium": "Stamford Bridge, London",
     "homeTeam": {
@@ -681,7 +681,7 @@
     "stageText": "1st Half • 38'",
     "minute": "38'",
     "phase": "1st Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T17:45:00Z",
     "stadium": "Eden Arena, Prague",
     "homeTeam": {
@@ -723,7 +723,7 @@
     "stageText": "2nd Half • 59'",
     "minute": "59'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-25T17:45:00Z",
     "stadium": "Baku Olympic Stadium, Baku",
     "homeTeam": {
@@ -765,7 +765,7 @@
     "stageText": "2nd Half • 78'",
     "minute": "78'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Go Media Stadium, Auckland",
     "homeTeam": {
@@ -807,7 +807,7 @@
     "stageText": "2nd Half • 63'",
     "minute": "63'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Milliy Stadium, Tashkent",
     "homeTeam": {
@@ -849,7 +849,7 @@
     "stageText": "2nd Half • 54'",
     "minute": "54'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Dariaus ir Girėno Stadionas, Kaunas",
     "homeTeam": {
@@ -891,7 +891,7 @@
     "stageText": "2nd Half • 82'",
     "minute": "82'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "RB Training Center, Leipzig",
     "homeTeam": {
@@ -933,7 +933,7 @@
     "stageText": "2nd Half • 67'",
     "minute": "67'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Heinz von Heiden Arena, Hannover",
     "homeTeam": {
@@ -975,7 +975,7 @@
     "stageText": "2nd Half • 69'",
     "minute": "69'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Atatürk Olympic Stadium, Istanbul",
     "homeTeam": {
@@ -1017,7 +1017,7 @@
     "stageText": "2nd Half • 73'",
     "minute": "73'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Vazgen Sargsyan Republican Stadium, Yerevan",
     "homeTeam": {
@@ -1059,7 +1059,7 @@
     "stageText": "2nd Half • 77'",
     "minute": "77'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Stadio San Siro, Milan",
     "homeTeam": {
@@ -1101,7 +1101,7 @@
     "stageText": "2nd Half • 61'",
     "minute": "61'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "San Marino Stadium, Serravalle",
     "homeTeam": {
@@ -1143,7 +1143,7 @@
     "stageText": "2nd Half • 52'",
     "minute": "52'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Podgorica City Stadium, Podgorica",
     "homeTeam": {
@@ -1185,7 +1185,7 @@
     "stageText": "2nd Half • 81'",
     "minute": "81'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Wembley Stadium, London",
     "homeTeam": {
@@ -1227,7 +1227,7 @@
     "stageText": "2nd Half • 66'",
     "minute": "66'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Air Albania Stadium, Tirana",
     "homeTeam": {
@@ -1269,7 +1269,7 @@
     "stageText": "2nd Half • 75'",
     "minute": "75'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Fortuna Arena, Prague",
     "homeTeam": {
@@ -1311,7 +1311,7 @@
     "stageText": "2nd Half • 70'",
     "minute": "70'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Estadio Departamental Libertad, Pasto",
     "homeTeam": {
@@ -1353,7 +1353,7 @@
     "stageText": "2nd Half • 74'",
     "minute": "74'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Emirates Stadium, London",
     "homeTeam": {
@@ -1395,7 +1395,7 @@
     "stageText": "2nd Half • 78'",
     "minute": "78'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Estadio Santiago Bernabéu, Madrid",
     "homeTeam": {
@@ -1437,7 +1437,7 @@
     "stageText": "2nd Half • 72'",
     "minute": "72'",
     "phase": "2nd Half",
-    "isLive": true,
+    "isLive": false,
     "startDate": "2026-11-12T17:00:00Z",
     "stadium": "Estadi Olímpic Lluís Companys, Barcelona",
     "homeTeam": {

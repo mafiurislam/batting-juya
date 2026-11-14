@@ -248,14 +248,27 @@ class ExchangeController extends Controller
 
     public function inplay()
     {
+        if (!app()->runningUnitTests()) {
+            $this->syncLiveEventsFromWinbook24();
+        }
         $data = $this->sharedViewData();
         $todayStr = \Carbon\Carbon::now('Asia/Kolkata')->format('Y-m-d');
+
+        $sportOrder = [
+            'Cricket' => 1,
+            'Soccer' => 2,
+            'Tennis' => 3,
+            'Horse Racing' => 4,
+            'Greyhound Racing' => 5,
+            'Basketball' => 6,
+        ];
 
         $orderedAll = collect()
             ->concat($this->getOrderedCricketEvents())
             ->concat($this->getOrderedSoccerEvents())
             ->concat($this->getOrderedTennisEvents())
-            ->concat(ExchangeEvent::whereNotIn('sport_id', ['4', '1', '2'])->orderByDesc('in_play')->orderBy('id')->get());
+            ->concat(ExchangeEvent::whereIn('sport_id', ['7', '4339', '7522'])->orderByDesc('in_play')->orderBy('id')->get())
+            ->concat(ExchangeEvent::whereNotIn('sport_id', ['4', '1', '2', '7', '4339', '7522', '66104', '2378961'])->orderByDesc('in_play')->orderBy('id')->get());
 
         $inplayCollection = collect();
         $todayCollection = collect();
@@ -270,6 +283,11 @@ class ExchangeController extends Controller
                 $evDateStr = $todayStr;
             }
 
+            // Exclude lottery and politics from live sport panes
+            if (in_array((string) $ev->sport_id, ['66104', '2378961'], true)) {
+                continue;
+            }
+
             if ($ev->in_play) {
                 $inplayCollection->push($ev);
                 $todayCollection->push($ev);
@@ -282,11 +300,17 @@ class ExchangeController extends Controller
             }
         }
 
+        $sortGrouped = function ($collection) use ($sportOrder) {
+            return $collection->groupBy('sport_name')->sortBy(function ($events, $sportName) use ($sportOrder) {
+                return $sportOrder[$sportName] ?? 99;
+            });
+        };
+
         return view('exchange.inplay', array_merge($data, [
-            'inplayBySport' => $inplayCollection->groupBy('sport_name'),
-            'todayBySport' => $todayCollection->groupBy('sport_name'),
-            'tomorrowBySport' => $tomorrowCollection->groupBy('sport_name'),
-            'yesterdayBySport' => $yesterdayCollection->groupBy('sport_name'),
+            'inplayBySport' => $sortGrouped($inplayCollection),
+            'todayBySport' => $sortGrouped($todayCollection),
+            'tomorrowBySport' => $sortGrouped($tomorrowCollection),
+            'yesterdayBySport' => $sortGrouped($yesterdayCollection),
             'inplayCount' => $inplayCollection->count(),
             'todayCount' => $todayCollection->count(),
             'tomorrowCount' => $tomorrowCollection->count(),
@@ -1399,7 +1423,7 @@ class ExchangeController extends Controller
             $eventsBySport = $resp->json('data');
             $wbInPlayIds = [];
 
-            foreach (['4', '1', '2', '7'] as $sportKey) {
+            foreach (['4', '1', '2', '7', '4339', '7522'] as $sportKey) {
                 $events = $eventsBySport[$sportKey] ?? [];
                 if (empty($events) || !is_array($events)) {
                     continue;
@@ -1413,7 +1437,7 @@ class ExchangeController extends Controller
                     }
                     $eventName = $ev['eventName'] ?? 'Match';
                     $sportId = (string) ($ev['sportId'] ?? $sportKey);
-                    $sportName = $ev['sportName'] ?? ($sportKey === '4' ? 'Cricket' : ($sportKey === '1' ? 'Soccer' : ($sportKey === '2' ? 'Tennis' : 'Horse Racing')));
+                    $sportName = $ev['sportName'] ?? ($sportKey === '4' ? 'Cricket' : ($sportKey === '1' ? 'Soccer' : ($sportKey === '2' ? 'Tennis' : ($sportKey === '7' ? 'Horse Racing' : ($sportKey === '4339' ? 'Greyhound Racing' : 'Basketball')))));
                     $inPlay = !empty($ev['oddsData']['inPlay']);
                     if ($inPlay) {
                         $wbInPlayIds[] = $eventId;
@@ -1468,9 +1492,6 @@ class ExchangeController extends Controller
                     $existing = ExchangeEvent::where('event_id', $eventId)->first();
                     $scoreJson = $existing?->score_json ?? [];
                     $scoreJson['preBet'] = $preBet;
-                    if (!empty($scoreJson['cricbuzz']['isLive']) || !empty($scoreJson['tennis']['isLive']) || !empty($scoreJson['soccer']['isLive'])) {
-                        $inPlay = true;
-                    }
 
                     ExchangeEvent::updateOrCreate(
                         ['event_id' => $eventId],
@@ -1503,13 +1524,14 @@ class ExchangeController extends Controller
 
             // Sync any live status updates for numeric events not currently in-play
             if (!empty($wbInPlayIds)) {
-                ExchangeEvent::whereIn('sport_id', ['4', '1', '2', '7'])
+                ExchangeEvent::whereIn('sport_id', ['4', '1', '2', '7', '4339', '7522'])
                     ->where('in_play', true)
                     ->where('event_id', '!=', '3544687543453')
                     ->whereNotIn('event_id', $wbInPlayIds)
                     ->whereRaw('event_id REGEXP "^[0-9]+$"')
                     ->update(['in_play' => false]);
             }
+            ExchangeEvent::whereIn('sport_id', ['66104', '2378961'])->update(['in_play' => false]);
 
             $this->syncCricbuzzLiveMatches(true);
             $this->syncLivescoreTennisMatches(true);
@@ -1550,11 +1572,14 @@ class ExchangeController extends Controller
             $existingSoccer = ExchangeEvent::where('sport_id', '1')->get();
 
             foreach ($existingSoccer as $ev) {
-                if (str_starts_with((string) $ev->event_id, 'soc_')) {
+                if (str_starts_with((string) $ev->event_id, 'soc_') || ctype_digit((string) $ev->event_id)) {
                     continue;
                 }
                 $um = $uefaSvc->matchEventToUefa((string) $ev->event_name, $allMatches, (string) $ev->event_id);
                 if (!$um) {
+                    if (!$ev->in_play) {
+                        continue;
+                    }
                     $um = $uefaSvc->synthesizeLiveFootballMatch(
                         (string) $ev->event_name,
                         (string) ($ev->tournament_name ?: 'Football Live'),
@@ -1564,7 +1589,7 @@ class ExchangeController extends Controller
 
                 $mId = (string) $um['matchId'];
                 $matchedIds[$mId] = true;
-                $isLive = true;
+                $isLive = !empty($um['isLive']);
                 $tName = $um['tournament'] ?? ($ev->tournament_name ?: 'Football Live');
 
                 $scoreJson = is_array($ev->score_json) ? $ev->score_json : [];
@@ -1576,7 +1601,7 @@ class ExchangeController extends Controller
                     'stageText' => $um['stageText'] ?? 'LIVE',
                     'minute' => $um['minute'] ?? "65'",
                     'stadium' => $um['stadium'] ?? 'International Stadium',
-                    'isLive' => true,
+                    'isLive' => $isLive,
                     'score1' => $um['score1'] ?? '0',
                     'score2' => $um['score2'] ?? '0',
                     'htScore1' => $um['htScore1'] ?? '0',
@@ -1638,7 +1663,7 @@ class ExchangeController extends Controller
                         'tournament_name' => $tName,
                         'event_name' => $eventName,
                         'event_time' => now('Asia/Kolkata')->toIso8601String(),
-                        'in_play' => true,
+                        'in_play' => !empty($um['isLive']),
                         'status' => 'OPEN',
                         'is_fancy' => false,
                         'is_bookmakers' => true,
@@ -1848,7 +1873,7 @@ class ExchangeController extends Controller
                         'tournament_name' => $tm['tournament'] ?? 'Tennis Tour',
                         'event_name' => $eventName,
                         'event_time' => now('Asia/Kolkata')->toIso8601String(),
-                        'in_play' => true,
+                        'in_play' => !empty($tm['isLive']),
                         'status' => 'OPEN',
                         'is_fancy' => false,
                         'is_bookmakers' => true,
@@ -1957,7 +1982,7 @@ class ExchangeController extends Controller
 
                 $inPlay = app()->runningUnitTests()
                     ? ($ev->in_play || !empty($cbMatch['isLive']))
-                    : !empty($cbMatch['isLive']);
+                    : (ctype_digit((string) $ev->event_id) ? (bool) $ev->in_play : !empty($cbMatch['isLive']));
 
                 $runners = is_array($ev->runners_json) ? $ev->runners_json : [];
                 if ($inPlay && !empty($runners)) {
@@ -2000,11 +2025,22 @@ class ExchangeController extends Controller
                     continue;
                 }
 
-                $isLive = !empty($cbMatch['isLive']);
-                $eventId = 'cb_' . $mId;
                 $t1Name = $cbMatch['team1']['name'] ?? 'Team 1';
                 $t2Name = $cbMatch['team2']['name'] ?? 'Team 2';
                 $eventName = "{$t1Name} v {$t2Name}";
+
+                // Skip creating duplicate event if already present under winbook24 numeric ID
+                $alreadyExists = ExchangeEvent::where('sport_id', '4')
+                    ->where(function ($q) use ($t1Name, $t2Name) {
+                        $q->where('event_name', 'like', "%{$t1Name}%")
+                          ->where('event_name', 'like', "%{$t2Name}%");
+                    })->exists();
+                if ($alreadyExists) {
+                    continue;
+                }
+
+                $isLive = !empty($cbMatch['isLive']);
+                $eventId = 'cb_' . $mId;
                 $isTest = strtoupper((string) ($cbMatch['matchFormat'] ?? 'T20')) === 'TEST';
 
                 $runners = [

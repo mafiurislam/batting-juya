@@ -490,7 +490,15 @@ window.WB24 = {
 
             // In-Play badge sync
             if (payload.in_play !== undefined) {
-              row.setAttribute('data-is-inplay', payload.in_play ? '1' : '0');
+              const wasInPlay = row.getAttribute('data-is-inplay') === '1';
+              const isInPlayNow = Boolean(payload.in_play);
+              row.setAttribute('data-is-inplay', isInPlayNow ? '1' : '0');
+
+              // If match ended while inside inplay pane, hide it
+              const inplayContainer = row.closest('#ipPane_inplay');
+              if (inplayContainer && !isInPlayNow) {
+                row.style.display = 'none';
+              }
             }
 
             // Live score summary
@@ -539,6 +547,9 @@ window.WB24 = {
               const backStr = String(backPrice || '0');
               const layStr = String(layPrice || '0');
 
+              if (backBox) backBox.setAttribute('data-odds', backStr);
+              if (layBox) layBox.setAttribute('data-odds', layStr);
+
               if (backEl && backEl.textContent.trim() !== backStr) {
                 backEl.textContent = backStr;
                 backBox.classList.add('flash-change');
@@ -551,9 +562,19 @@ window.WB24 = {
               }
             });
           });
+
+          // Sync inplay badge counter
+          const inplayPane = document.getElementById('ipPane_inplay');
+          if (inplayPane) {
+            const visibleLive = inplayPane.querySelectorAll('.wb-match-row:not([style*="display: none"])');
+            const inplayBadge = document.querySelector('.js-ip-tab[onclick*="inplay"] .wb-filter-count');
+            if (inplayBadge && visibleLive.length >= 0) {
+              inplayBadge.textContent = visibleLive.length;
+            }
+          }
         }
       } catch (e) {}
-    }, 3000);
+    }, 2500);
   },
 
   toast(message, type = 'info') {

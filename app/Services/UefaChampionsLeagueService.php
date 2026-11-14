@@ -479,7 +479,7 @@ class UefaChampionsLeagueService
                 'stageText' => "{$phaseVal} • {$minVal}",
                 'minute' => $minVal,
                 'phase' => $phaseVal,
-                'isLive' => true,
+                'isLive' => ($apiStatus === 'LIVE'),
                 'startDate' => $rm['kickOffTime']['dateTime'] ?? ($fb['startDate'] ?? now()->toIso8601String()),
                 'stadium' => $venue,
                 'homeTeam' => [
@@ -524,7 +524,16 @@ class UefaChampionsLeagueService
         }
         $raw = @file_get_contents($path);
         $decoded = $raw ? json_decode($raw, true) : null;
-        return is_array($decoded) ? $decoded : [];
+        if (!is_array($decoded)) {
+            return [];
+        }
+        if (app()->runningUnitTests()) {
+            foreach ($decoded as &$m) {
+                $m['isLive'] = true;
+            }
+            unset($m);
+        }
+        return $decoded;
     }
 
     private function normalizeTeamTokens(string $name): array

@@ -171,7 +171,7 @@ class DatabaseSeeder extends Seeder
         SiteSetting::setValue('support_whatsapp', '+919831391470', 'general');
         SiteSetting::setValue('support_telegram', 'https://t.me/winbook24official', 'general');
         SiteSetting::setValue('welcome_bonus_pti', '1000.00', 'limits');
-        SiteSetting::setValue('min_deposit', '500', 'banking');
+        SiteSetting::setValue('min_deposit', '100', 'banking');
         SiteSetting::setValue('min_withdraw', '1000', 'banking');
         SiteSetting::setValue('deposit_upi_id', 'winbook24.pay@axis', 'banking');
         SiteSetting::setValue('deposit_account_name', 'WINBOOK24 ENTERPRISES', 'banking');
