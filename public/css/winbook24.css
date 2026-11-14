@@ -987,15 +987,16 @@ a {
 .wb-odd-box.flash-change,
 .fm-odd-cell.flash-change,
 .fm-sb-pill.flash-change {
-  animation: oddFlash 0.6s ease;
+  animation: oddFlash 0.5s ease-out;
+  transition: background-color 0.4s ease;
 }
 
 @keyframes oddFlash {
   0% {
-    background-color: #ffe066;
+    background-color: #ffe066 !important;
   }
-
-  100% {}
+  100% {
+  }
 }
 
 .wb-pin-cell {

@@ -1814,6 +1814,8 @@
       ->values()
       ->toArray();
 @endphp
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
   window.FullMkt = {
     sportId: '{{ $event->sport_id }}',
@@ -1825,7 +1827,216 @@
 
     init: function () {
       this.recalcAllPositions();
-      setInterval(() => this.pollLiveMarket(), 2500);
+      this.initFirebaseRealtimeSync();
+      setInterval(() => this.pollLiveMarket(), 2000);
+    },
+
+    initFirebaseRealtimeSync: function () {
+      if (typeof firebase === 'undefined') return;
+      const sId = String(this.sportId);
+      const evId = String(this.eventId);
+
+      const configs = {
+        '4': {
+          apiKey: "AIzaSyDaMs1YEOXQ7V7HmsfR5Jq-6XKl64m40lM",
+          authDomain: "t20-cricket-add9b.firebaseapp.com",
+          projectId: "t20-cricket-add9b",
+          storageBucket: "t20-cricket-add9b.appspot.com",
+          messagingSenderId: "449000859514",
+          appId: "1:449000859514:web:e0b2cdb52895251bf9d8c3"
+        },
+        '1': {
+          apiKey: "AIzaSyDYVXCzVHdLcBekTiLe7kayipIqzl1YYwE",
+          authDomain: "soccer-57fb9.firebaseapp.com",
+          projectId: "soccer-57fb9",
+          storageBucket: "soccer-57fb9.appspot.com",
+          messagingSenderId: "457682119930",
+          appId: "1:457682119930:web:ae10649b51b3b4bc096d43"
+        },
+        '2': {
+          apiKey: "AIzaSyBU7jAPhaqXDElWY0Dv0XT64EobhRP02OM",
+          authDomain: "tennis-101ef.firebaseapp.com",
+          projectId: "tennis-101ef",
+          storageBucket: "tennis-101ef.appspot.com",
+          messagingSenderId: "374641683570",
+          appId: "1:374641683570:web:1f0449bf7af38f79bb26eb"
+        },
+        'default': {
+          apiKey: "AIzaSyDSSs68xjpnOgXa5uIfvnXj2pDPtR98IX4",
+          authDomain: "other-sports-1bba3.firebaseapp.com",
+          projectId: "other-sports-1bba3",
+          storageBucket: "other-sports-1bba3.appspot.com",
+          messagingSenderId: "998572867339",
+          appId: "1:998572867339:web:6b4659ceff82238d67ac0e"
+        }
+      };
+
+      try {
+        const cfg = configs[sId] || configs['default'];
+        const appName = 'wb24_realtime_' + sId;
+        let app;
+        try {
+          app = firebase.app(appName);
+        } catch (e) {
+          app = firebase.initializeApp(cfg, appName);
+        }
+        const db = firebase.firestore(app);
+
+        // 1. Live Match Odds (Betfair)
+        db.collection('Betfair').where('exEventId', '==', evId).onSnapshot((snap) => {
+          const moList = [];
+          snap.forEach(doc => {
+            const d = doc.data();
+            if (d) moList.push(d);
+          });
+          if (moList.length > 0) {
+            this.updateMatchOddsDom(moList);
+          }
+        }, () => {});
+
+        // 2. Live Bookmakers
+        db.collection('Bookmakers').where('exEventId', '==', evId).onSnapshot((snap) => {
+          const bmList = [];
+          snap.forEach(doc => {
+            const d = doc.data();
+            if (d) bmList.push(d);
+          });
+          if (bmList.length > 0) {
+            this.updateBookmakersDom(bmList);
+          }
+        }, () => {});
+
+        // 3. Live Fancy Bet
+        db.collection('Fancy').where('exEventId', '==', evId).where('isClosed', '==', 0).onSnapshot((snap) => {
+          const fList = [];
+          snap.forEach(doc => {
+            const d = doc.data();
+            if (d) fList.push(d);
+          });
+          if (fList.length > 0) {
+            this.updateFancyDom(fList);
+          }
+        }, () => {});
+
+        // 4. Live Sportsbook
+        db.collection('Sportsbook').where('exEventId', '==', evId).where('isClosed', '==', 0).onSnapshot((snap) => {
+          const sbList = [];
+          snap.forEach(doc => {
+            const d = doc.data();
+            if (d) sbList.push(d);
+          });
+          if (sbList.length > 0) {
+            this.updateSportsbookDom(sbList);
+          }
+        }, () => {});
+
+        // 5. Live Universe Scorecard
+        const scoreCfg = {
+          apiKey: "AIzaSyBjh-y7heT8kshYPCpKu403q9UzaCKf26U",
+          authDomain: "universe-score.firebaseapp.com",
+          projectId: "universe-score",
+          storageBucket: "universe-score.appspot.com",
+          messagingSenderId: "228835528040",
+          appId: "1:228835528040:web:43dca760c279a64b169add"
+        };
+        let scoreApp;
+        try {
+          scoreApp = firebase.app('wb24_score');
+        } catch (e) {
+          scoreApp = firebase.initializeApp(scoreCfg, 'wb24_score');
+        }
+        const scoreDb = firebase.firestore(scoreApp);
+        const collName = sId === '2' ? 'tennisScore' : (sId === '1' ? 'soccerScore' : 'cricketScore');
+        scoreDb.collection(collName).where('eventId', '==', evId).onSnapshot((snap) => {
+          snap.forEach(doc => {
+            const sc = doc.data();
+            if (sc) this.updateFirebaseScorecard(sc);
+          });
+        }, () => {});
+      } catch (err) {
+        console.warn('Realtime streaming fallback to HTTP polling active.', err);
+      }
+    },
+
+    updateFirebaseScorecard: function (sc) {
+      if (!sc) return;
+      const card = document.getElementById('wbUniverseScorecard');
+      if (!card) return;
+
+      const setTxt = (sel, val) => {
+        const el = card.querySelector(sel);
+        if (el && val !== undefined && val !== null) el.textContent = val;
+      };
+
+      if (sc.commentary) {
+        setTxt('.js-sc-commentary-text', sc.commentary);
+      }
+
+      const scoreObj = sc.slider?.[0]?.score;
+      if (!scoreObj) return;
+
+      if (scoreObj.statusCommentry) {
+        setTxt('.js-sc-status-commentary', scoreObj.statusCommentry);
+      }
+
+      const items = scoreObj.scoreItems || [];
+      if (items[0]) {
+        const t1Data = items[0].scoreData || [];
+        const sItem = t1Data.find(d => d.displayText === 'SCORE' || d.displayText === '1st INNINGS');
+        const oItem = t1Data.find(d => d.displayText === 'OVS' || (d.displayText && d.displayText.includes('Overs')));
+        const rrItem = t1Data.find(d => d.displayText === 'RR');
+        const fItem = t1Data.find(d => d.displayText === '4S');
+        const sxItem = t1Data.find(d => d.displayText === '6S');
+        const wItem = t1Data.find(d => d.displayText === 'WIDES');
+
+        if (sItem?.value) setTxt('.js-sc-t1-score', sItem.value);
+        if (oItem?.value) setTxt('.js-sc-t1-ovs', oItem.value);
+        if (rrItem?.value) setTxt('.js-sc-t1-rr', rrItem.value);
+        if (fItem?.value) setTxt('.js-sc-t1-4s', fItem.value);
+        if (sxItem?.value) setTxt('.js-sc-t1-6s', sxItem.value);
+        if (wItem?.value) setTxt('.js-sc-t1-wides', wItem.value);
+      }
+
+      if (items[1]) {
+        const t2Data = items[1].scoreData || [];
+        const sItem = t2Data.find(d => d.displayText === 'SCORE' || d.displayText === '1st INNINGS');
+        const oItem = t2Data.find(d => d.displayText === 'OVS' || (d.displayText && d.displayText.includes('Overs')));
+        const rrItem = t2Data.find(d => d.displayText === 'RR');
+        const fItem = t2Data.find(d => d.displayText === '4S');
+        const sxItem = t2Data.find(d => d.displayText === '6S');
+        const wItem = t2Data.find(d => d.displayText === 'WIDES');
+
+        if (sItem?.value) setTxt('.js-sc-t2-score', sItem.value);
+        if (oItem?.value) setTxt('.js-sc-t2-ovs', oItem.value);
+        if (rrItem?.value) setTxt('.js-sc-t2-rr', rrItem.value);
+        if (fItem?.value) setTxt('.js-sc-t2-4s', fItem.value);
+        if (sxItem?.value) setTxt('.js-sc-t2-6s', sxItem.value);
+        if (wItem?.value) setTxt('.js-sc-t2-wides', wItem.value);
+      }
+
+      if (Array.isArray(scoreObj.batsman) && scoreObj.batsman.length > 0) {
+        const bText = scoreObj.batsman.map(b => `${b.name || 'Batsman'} ${b.run || 0}${b.isFacing ? '*' : ''} (${b.ball || 0})`).join(', ');
+        const bEl = card.querySelector('.js-sc-batsmen');
+        if (bEl && bText) bEl.innerHTML = `<span style="color:#f8e71c;">BAT:</span> ${bText}`;
+      }
+
+      if (Array.isArray(scoreObj.bowler) && scoreObj.bowler.length > 0) {
+        const b = scoreObj.bowler[0];
+        const bowlText = `${b.name || 'Bowler'} ${b.wicket || 0}-${b.run || 0} (${b.over || 0})`;
+        const bowlEl = card.querySelector('.js-sc-bowler');
+        if (bowlEl && bowlText) bowlEl.innerHTML = `<span style="color:#00d2ff;">BOWL:</span> ${bowlText}`;
+      }
+
+      if (Array.isArray(scoreObj.balls) && scoreObj.balls.length > 0) {
+        const ballsWrap = card.querySelector('.wb-sc-balls-list');
+        if (ballsWrap) {
+          ballsWrap.innerHTML = scoreObj.balls.map(ball => {
+            const bStr = String(ball).trim();
+            const bCls = bStr === '4' ? 'ball-four' : (bStr === '6' ? 'ball-six' : (bStr.includes('W') ? 'ball-wicket' : ''));
+            return `<span class="wb-sc-ball ${bCls}">${bStr || '0'}</span>`;
+          }).join('');
+        }
+      }
     },
 
     formatVol: function (val) {
@@ -2016,9 +2227,14 @@
           if (mTxt) mTxt.textContent = '€ ' + this.formatVol(mo.oddsData.totalMatched);
         }
 
-        runners.forEach((r) => {
-          const selId = String(r.selectionId || '');
-          const row = card.querySelector(`.fm-runner-row[data-selection-id="${selId}"]`);
+        const allRows = card.querySelectorAll('.fm-runner-row');
+
+        runners.forEach((r, rIdx) => {
+          const selId = String(r.selectionId ?? '');
+          let row = card.querySelector(`.fm-runner-row[data-selection-id="${selId}"]`);
+          if (!row && allRows[rIdx]) {
+            row = allRows[rIdx];
+          }
           if (!row) return;
 
           const rStatus = String(r.status || moStatus).toUpperCase();
@@ -2082,9 +2298,14 @@
                      document.getElementById('fmSection_bookmaker');
         if (!card) return;
 
-        runners.forEach((r) => {
-          const selId = String(r.selectionId || '');
-          const row = card.querySelector(`.fm-runner-row[data-selection-id="${selId}"]`);
+        const allRows = card.querySelectorAll('.fm-runner-row');
+
+        runners.forEach((r, rIdx) => {
+          const selId = String(r.selectionId ?? '');
+          let row = card.querySelector(`.fm-runner-row[data-selection-id="${selId}"]`);
+          if (!row && allRows[rIdx]) {
+            row = allRows[rIdx];
+          }
           if (!row) return;
 
           const rStatus = String(r.status || bmStatus).toUpperCase();
@@ -2104,7 +2325,8 @@
           [2, 1, 0].forEach((bi) => {
             const cell = row.querySelector(`.js-bm-cell[data-bm-type="back"][data-bm-level="${bi}"]`);
             if (!cell) return;
-            const bp = backs[bi]?.price ?? 0;
+            const rawP = backs[bi]?.price;
+            const bp = (rawP !== null && rawP !== undefined && !isNaN(rawP) && rawP > 0) ? rawP : 0;
             const bs = backs[bi]?.size ?? '5M';
             const pStr = bp > 0 ? String(bp) : '-';
             const sStr = typeof bs === 'number' ? this.formatVol(bs) : String(bs || '-');
@@ -2124,7 +2346,8 @@
           [0, 1, 2].forEach((li) => {
             const cell = row.querySelector(`.js-bm-cell[data-bm-type="lay"][data-bm-level="${li}"]`);
             if (!cell) return;
-            const lp = lays[li]?.price ?? 0;
+            const rawP = lays[li]?.price;
+            const lp = (rawP !== null && rawP !== undefined && !isNaN(rawP) && rawP > 0) ? rawP : 0;
             const ls = lays[li]?.size ?? '5M';
             const pStr = lp > 0 ? String(lp) : '-';
             const sStr = typeof ls === 'number' ? this.formatVol(ls) : String(ls || '-');
@@ -2147,7 +2370,7 @@
     updateFancyDom: function (fancyList) {
       fancyList.forEach((fItem, fIdx) => {
         const fId = String(fItem.exMarketId || fItem.marketId || ('f_' + fIdx));
-        const fName = fItem.marketName || fItem.runnerName || 'Session Runs';
+        const fName = String(fItem.marketName || fItem.runnerName || 'Session Runs').trim();
         const fRunner = fItem.oddsData?.runners?.[0] || {};
         const noRun = fRunner.price?.lay?.[0]?.price ?? fItem.noRun ?? 0;
         const noRate = fRunner.price?.lay?.[0]?.size ?? fItem.noRate ?? 0;
@@ -2158,6 +2381,41 @@
 
         let row = document.querySelector(`.js-fancy-row[data-fancy-id="${fId}"]`) ||
                   document.querySelector(`.js-fancy-row[data-market-name="${fName}"]`);
+        if (!row) {
+          const pane = document.getElementById('marketPane_fancy');
+          if (pane) {
+            const div = document.createElement('div');
+            div.className = 'd-flex align-items-center border-bottom py-1 px-2 js-fancy-row js-market-pos-scope';
+            div.setAttribute('data-fancy-id', fId);
+            div.setAttribute('data-fcat', fItem.catName || 'Fancy');
+            div.setAttribute('data-market-key', 'fancy_' + fId);
+            div.setAttribute('data-market-name', fName);
+            div.setAttribute('data-market-category', 'fancy');
+            div.innerHTML = `
+              <div class="flex-grow-1 d-flex justify-content-between align-items-center pe-2">
+                <div class="d-flex flex-column">
+                  <span class="fw-bold text-dark">${fName}</span>
+                  <span class="fm-runner-pl js-runner-pl d-none" data-market-key="fancy_${fId}" data-market-name="${fName}" data-selection-id="${fId}" data-runner-name="${fName}"></span>
+                </div>
+                <button type="button" class="btn btn-sm text-white py-0 px-2 fw-bold" style="background:var(--exchange-bg);font-size:11px;" onclick="showFancyBook('${fName.replace(/'/g, "\\'")}', ${parseInt(noRun)}, ${parseInt(yesRun)})">Book</button>
+              </div>
+              <div class="d-flex position-relative">
+                <div class="fm-suspend-overlay ${isSusp ? '' : 'd-none'}"><span>Suspended</span></div>
+                <a href="javascript:void(0)" class="fm-odd-cell wb-odd-lay js-fancy-no-cell" onclick="FullMkt.openInlineSlip('fancySlip_${fIdx}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (NO @ ${noRun})', 'NO', ${noRate || 100}, 'fancy', ${parseFloat(noRun)}, 'fancy_${fId}', this)">
+                  <strong>${noRun || '0'}</strong>
+                  <small>${noRate || '0'}</small>
+                </a>
+                <a href="javascript:void(0)" class="fm-odd-cell wb-odd-back ms-1 js-fancy-yes-cell" onclick="FullMkt.openInlineSlip('fancySlip_${fIdx}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (YES @ ${yesRun})', 'YES', ${yesRate || 100}, 'fancy', ${parseFloat(yesRun)}, 'fancy_${fId}', this)">
+                  <strong>${yesRun || '0'}</strong>
+                  <small>${yesRate || '0'}</small>
+                </a>
+              </div>
+              <div style="width:110px;text-align:center;" class="fw-bold small text-dark fm-fancy-minmax-col">10 - 50000</div>
+            `;
+            pane.appendChild(div);
+            row = div;
+          }
+        }
         if (!row) return;
 
         const suspEl = row.querySelector('.fm-suspend-overlay');
