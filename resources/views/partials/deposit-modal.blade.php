@@ -108,28 +108,7 @@
               </div>
             </div>
 
-            <!-- UPI ID Section (Below QR Box) -->
-            <div class="bg-white border rounded p-2 px-3 mb-3 shadow-sm">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <div class="text-muted" style="font-size:10.5px;font-weight:700;text-transform:uppercase;">UPI ID</div>
-                  <div class="fw-bolder text-dark" style="font-size:14px;letter-spacing:0.2px;" id="valDepositUpiId">{{ $depositUpi }}</div>
-                </div>
-                <button type="button" 
-                        class="btn btn-sm btn-outline-dark fw-bold d-inline-flex align-items-center gap-1" 
-                        id="btnCopyDepositUpi" 
-                        onclick="copyDepositUpi('{{ $depositUpi }}')">
-                  <i class="fas fa-copy"></i> <span>Copy</span>
-                </button>
-              </div>
-              @if(!empty($depositAccountName))
-                <div class="mt-1 pt-1 border-top" style="font-size:11.5px;color:#555;">
-                  <strong>A/C Name:</strong> {{ $depositAccountName }}
-                </div>
-              @endif
-            </div>
-
-            <!-- Upload Payment Screenshot Section (Below UPI ID) -->
+            <!-- Upload Payment Screenshot Section (Below QR Box) -->
             <div class="bg-white border rounded p-3 mb-3 shadow-sm">
               <div class="mb-3">
                 <label class="form-label fw-bold text-dark d-flex justify-content-between align-items-center mb-1" style="font-size:13px;">
