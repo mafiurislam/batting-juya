@@ -413,49 +413,5 @@
     </div>
   </div>
 
-  <!-- Deposit Modal (#DepositModal - 05a_deposit_modal.png + Laravel Storage Receipt Upload) -->
-  <div class="modal fade" id="DepositModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content" style="border:none;background:transparent;">
-        <div class="wb-deposit-alert-box">
-          <form action="{{ route('banking.deposit') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="mb-2">
-              <input type="number" name="amount" id="depositInputID" class="form-control" placeholder="Deposit Amount*" min="100" required style="height:36px;font-size:13px;">
-            </div>
-            <div class="fw-bold mb-2" style="font-size:13px;color:#155724;">
-              Minimum deposit Amount is 100.
-            </div>
-
-            <!-- Optional UTR & Laravel Storage Receipt Upload -->
-            <div class="text-start mt-2 pt-2 border-top border-success-subtle" style="font-size:12px;">
-              <div class="row g-2">
-                <div class="col-6">
-                  <label class="fw-bold mb-1">Method</label>
-                  <select name="method" class="form-select form-select-sm">
-                    <option value="UPI">UPI ({{ $depositUpi }})</option>
-                    <option value="IMPS">IMPS / Bank</option>
-                    <option value="QR">QR Pay</option>
-                  </select>
-                </div>
-                <div class="col-6">
-                  <label class="fw-bold mb-1">UTR / Ref No.</label>
-                  <input type="text" name="utr_number" class="form-control form-control-sm" placeholder="12-digit UTR" value="UTR{{ rand(10000000, 99999999) }}">
-                </div>
-                <div class="col-12">
-                  <label class="fw-bold mb-1">Payment Screenshot (Optional)</label>
-                  <input type="file" name="receipt" class="form-control form-control-sm" accept=".jpg,.jpeg,.png,.webp,.pdf">
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <button type="submit" class="wb-deposit-btn">Deposit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 @endif
 @endsection

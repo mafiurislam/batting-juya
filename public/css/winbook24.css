@@ -334,6 +334,29 @@ a {
   cursor: pointer;
 }
 
+.wb-header-deposit-btn {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #fff !important;
+  border: 1px solid #14532d;
+  border-radius: 4px;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.35);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.wb-header-deposit-btn:hover {
+  background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+  transform: translateY(-1px);
+}
+
 .wb-myaccount-dropdown .wb-myaccount-btn {
   background: var(--desktop-account-btn-bg);
   color: #fff;
@@ -995,8 +1018,8 @@ a {
   0% {
     background-color: #ffe066 !important;
   }
-  100% {
-  }
+
+  100% {}
 }
 
 .wb-pin-cell {
@@ -1964,6 +1987,12 @@ a {
     font-size: 10.5px;
     line-height: 1.2;
     margin-right: 2px;
+  }
+
+  .wb-header-deposit-btn {
+    height: 26px;
+    padding: 0 7px;
+    font-size: 10.5px;
   }
 
   .wb-refresh-btn {

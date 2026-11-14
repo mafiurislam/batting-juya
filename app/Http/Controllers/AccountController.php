@@ -168,7 +168,7 @@ class AccountController extends Controller
             'amount' => 'required|numeric|min:100|max:5000000',
             'method' => 'nullable|string|in:UPI,QR,IMPS,NEFT,BANK,BKASH,NAGAD,USDT',
             'utr_number' => 'nullable|string|min:4|max:60',
-            'receipt' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
+            'receipt' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf|max:10240',
             'instant_credit' => 'nullable|boolean',
         ]);
 
@@ -183,8 +183,8 @@ class AccountController extends Controller
             $receiptPath = Storage::disk('public')->putFile('receipts', $request->file('receipt'));
         }
 
-        // Instant auto-credit if requested or in local demo/testing mode so user can immediately play with deposited funds
-        $autoApprove = $request->boolean('instant_credit', true);
+        // Transactions with uploaded screenshots wait for Admin verification by default
+        $autoApprove = $request->boolean('instant_credit', false);
 
         DB::transaction(function () use ($user, $amount, $method, $utrNumber, $receiptPath, $autoApprove) {
             $tx = BankingTransaction::create([
@@ -198,7 +198,7 @@ class AccountController extends Controller
                 'utr_number' => $utrNumber,
                 'receipt_path' => $receiptPath,
                 'status' => $autoApprove ? 'APPROVED' : 'PENDING',
-                'admin_note' => $autoApprove ? 'Auto-Verified UTR Deposit' : 'Awaiting Admin Verification',
+                'admin_note' => $autoApprove ? 'Auto-Verified Deposit' : 'Screenshot Uploaded - Awaiting Admin Verification',
                 'processed_at' => $autoApprove ? now() : null,
             ]);
 
@@ -220,8 +220,8 @@ class AccountController extends Controller
         return back()->with(
             'success',
             $autoApprove
-                ? "Deposit of " . number_format($amount, 2) . " PTI credited to your wallet!"
-                : "Deposit request of " . number_format($amount, 2) . " PTI submitted for approval."
+                ? "Deposit of ₹" . number_format($amount, 2) . " credited to your wallet!"
+                : "Deposit request of ₹" . number_format($amount, 2) . " submitted successfully! Your account will be credited once payment screenshot is verified by admin."
         );
     }
 

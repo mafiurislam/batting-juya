@@ -111,6 +111,10 @@
           <i class="fas fa-undo-alt"></i>
         </button>
 
+        <button type="button" class="btn btn-sm wb-header-deposit-btn me-1" data-bs-toggle="modal" data-bs-target="#DepositModal" title="Deposit Money">
+          <i class="fas fa-wallet me-1"></i> Deposit
+        </button>
+
         <a href="{{ route('banking') }}" class="wb-refresh-btn d-lg-none" title="Banking">
           <i class="fas fa-university"></i>
         </a>
@@ -140,6 +144,9 @@
             <a class="dropdown-item {{ request()->routeIs('two.factor') ? 'active-item' : '' }}" href="{{ route('two.factor') }}">Two Factor Authentication</a>
             <a class="dropdown-item {{ request()->routeIs('refer.earn') ? 'active-item' : '' }}" href="{{ route('refer.earn') }}">Refer &amp; Earn</a>
             <a class="dropdown-item {{ request()->routeIs('rolling.commission') ? 'active-item' : '' }}" href="{{ route('rolling.commission') }}">Rolling Commission</a>
+            <a class="dropdown-item fw-bold text-success" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#DepositModal">
+              <i class="fas fa-plus-circle me-1"></i> Deposit
+            </a>
             <a class="dropdown-item {{ request()->routeIs('banking*') ? 'active-item' : '' }}" href="{{ route('banking') }}">Banking</a>
             <a class="dropdown-item {{ request()->routeIs('account.statement') ? 'active-item' : '' }}" href="{{ route('account.statement') }}">Account Statement</a>
             <a class="dropdown-item {{ request()->routeIs('bet.history') ? 'active-item' : '' }}" href="{{ route('bet.history') }}">Bets History</a>
@@ -687,6 +694,9 @@
       }
     };
   </script>
+  @auth
+    @include('partials.deposit-modal')
+  @endauth
   @stack('scripts')
 </body>
 </html>
