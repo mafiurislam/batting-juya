@@ -41,25 +41,15 @@
                        style="height:38px;font-size:14px;background:#ffffff;border:1px solid #ced4da;border-radius:4px;box-shadow:none;">
               </div>
 
-              <!-- Quick Selection Chips -->
-              <div class="d-flex flex-wrap justify-content-start gap-1 mb-2">
-                @foreach([100, 500, 1000, 2000, 5000, 10000] as $chip)
-                  <button type="button" 
-                          class="btn btn-sm py-0 px-2 fw-bold text-dark" 
-                          style="background:#ffffff;border:1px solid #b7dfbf;border-radius:12px;font-size:11px;"
-                          onclick="setDepositChipAmount({{ $chip }})">+{{ $chip }}</button>
-                @endforeach
-              </div>
-
               <!-- Minimum Deposit Message (Matching exact screenshot: bold green, left-aligned) -->
-              <div class="fw-bold mb-2 text-start" style="font-size:13.5px;color:#0d542b;line-height:1.4;">
+              <div class="fw-bold mb-3 text-start" style="font-size:13.5px;color:#0d542b;line-height:1.4;">
                 Minimum deposit Amount is {{ $minDeposit }}.
               </div>
 
               <div id="step1ValidationAlert" class="alert alert-danger py-1 px-2 small fw-bold d-none text-start my-2"></div>
 
               <!-- Deposit Button (Matching exact screenshot: centered, dark slate, white text) -->
-              <div class="text-center pt-2">
+              <div class="text-center pt-1">
                 <button type="button" 
                         class="wb-deposit-btn" 
                         id="btnDepositStep1"
@@ -105,6 +95,34 @@
 
               <div class="small text-muted mt-2">
                 Scan with Google Pay, PhonePe, Paytm, BHIM or any UPI app
+              </div>
+            </div>
+
+            <!-- Exact UPI ID Box (Matches user screenshot 1:1) -->
+            <div class="bg-white border rounded p-3 mb-3 shadow-sm" style="border-color:#dee2e6 !important;">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="small fw-bold text-muted text-uppercase" style="letter-spacing:0.5px;font-size:12.5px;">UPI ID</span>
+                <button type="button" 
+                        class="btn btn-sm btn-outline-dark d-inline-flex align-items-center gap-1 py-1 px-3" 
+                        id="btnCopyDepositUpi"
+                        onclick="copyDepositUpi('{{ $depositUpi }}')"
+                        style="font-size:13px;font-weight:600;border:1.5px solid #212529;border-radius:4px;background:#ffffff;color:#212529;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  Copy
+                </button>
+              </div>
+
+              <div class="fw-bolder mb-2 text-dark" id="displayUpiIdText" style="font-size:18px;letter-spacing:-0.2px;">
+                {{ $depositUpi }}
+              </div>
+
+              <hr class="my-2" style="border-top:1px solid #e9ecef;opacity:1;">
+
+              <div class="small" style="font-size:13px;color:#212529;">
+                <span class="fw-bold">A/C Name:</span> <span class="text-uppercase fw-semibold text-secondary">{{ $depositAccountName }}</span>
               </div>
             </div>
 
