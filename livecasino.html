@@ -1,0 +1,2907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/batting-new-vertion/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="csrf-token" content="gcDNz88YQybw4ih8HGxEpmBSC9VRucdYzvIJ67kq">
+  <title>Live Casino - winbook24</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link href="public/css/winbook24.css" rel="stylesheet">
+  </head>
+<body>
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="wb-top-header">
+    <div class="d-flex align-items-center gap-2" style="height:62px;max-height:62px;overflow:hidden;">
+            <a href="./" class="wb-logo">
+        <img src="public/assets/brand/logo.png?v=2" alt="cricexperts.com">
+      </a>
+          </div>
+
+    <div class="wb-header-right login-signup-uname-pass" id="wbHeaderLoginForm">
+      <!-- Live Event & Casino Search (1:1 with winbook24.com app-desktop-header) -->
+      <ul class="desktopviewButton m-0 p-0 d-flex align-items-center" style="list-style:none;position:relative;">
+        <li style="position:relative;">
+          <div id="wbSearchBox" class="searchIconDiv me-2 ng-input slide-in">
+            <i aria-hidden="true" class="fa fa-search searchIcon"></i>
+            <input type="text" placeholder="" aria-label="Search" id="myInput" class="form-control searchbar" autocomplete="off" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')" onmousedown="this.removeAttribute('readonly')">
+            <span aria-hidden="true" id="myClose" class="searchIconCross" onclick="WB24.closeSearch()">×</span>
+            <div id="wbSearchDropdown" class="searchBox">
+              <div class="scrollSearchBox">
+                <ul id="wbSearchGameUl" class="search-game-ul" style="margin-bottom:0px;"></ul>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="search float-left me-2">
+          <a onclick="WB24.toggleSearch()" style="cursor:pointer;" title="Search Events">
+            <i id="searchiconDesktopID" class="fas fa-search-plus wb-search-trigger"></i>
+          </a>
+        </li>
+
+                <li class="float-left account d-none d-lg-block">
+          <!-- Hidden decoy inputs to block browser password manager autofill -->
+          <input type="text" name="prevent_autofill_user" tabindex="-1" autocomplete="username" style="position:absolute;opacity:0;height:0;width:0;pointer-events:none;">
+          <input type="password" name="prevent_autofill_pass" tabindex="-1" autocomplete="current-password" style="position:absolute;opacity:0;height:0;width:0;pointer-events:none;">
+          <div class="d-flex align-items-center">
+            <div class="form-group mb-0">
+              <input type="text" id="wbHeaderUsername" name="usernameForLogin" value="" class="form-control uname wb-header-input me-2" placeholder="Username" maxlength="30" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-form-type="other" readonly onfocus="this.removeAttribute('readonly')" onmousedown="this.removeAttribute('readonly')">
+            </div>
+            <div class="form-group mb-0 margin-setting">
+              <input type="password" id="wbHeaderPassword" name="passForLogin" value="" class="form-control pass wb-header-input me-2" placeholder="Password" autocomplete="new-password" data-lpignore="true" data-form-type="other" readonly onfocus="this.removeAttribute('readonly')" onmousedown="this.removeAttribute('readonly')">
+            </div>
+          </div>
+          <span id="wbHeaderLoginError" class="wb-header-err d-none"></span>
+        </li>
+              </ul>
+
+              <!-- Desktop Login + Signup Buttons (1:1 with winbook24.com) -->
+        <div class="login-signup d-none d-lg-flex align-items-center">
+          <button type="button" class="btn login wb-btn-login-head me-1" onclick="WB24.handleHeaderLoginClick()">
+            <b style="width:33px;height:18px;">Login</b> <i class="fa fa-sign-in-alt ms-1"></i>
+          </button>
+          <button type="button" class="btn login wb-btn-signup-head" onclick="WB24.handleHeaderSignupClick()">
+            <b style="width:33px;height:18px;">Signup</b>
+          </button>
+        </div>
+
+        <!-- Mobile Login / Sign up Buttons -->
+        <div class="d-flex d-lg-none align-items-center gap-1">
+          <a href="http://localhost/login" class="wb-btn-login-head px-2" onclick="return WB24.handleMobileAuthClick(event, 'http://localhost/login')">
+            <b>Login</b> <i class="fas fa-sign-in-alt ms-1"></i>
+          </a>
+          <a href="http://localhost/signup" class="wb-btn-signup-head px-2" onclick="return WB24.handleMobileAuthClick(event, 'http://localhost/signup')">
+            <b>Sign up</b>
+          </a>
+        </div>
+          </div>
+  </header>
+
+  <!-- ================= DESKTOP GREEN NAVIGATION BAR ================= -->
+  <nav class="wb-green-navbar">
+    <ul class="wb-nav-list">
+      <li><a href="./" class="">Home</a></li>
+      <li><a href="http://localhost/inplay" class="">In-Play</a></li>
+      <li><a href="http://localhost/multimarket" class="">Multi Markets</a></li>
+      <li><a href="http://localhost/allsport-highlight/4" class="">Cricket</a></li>
+      <li class="vimaan-item">
+        <a href="http://localhost/vimaan">
+          <img src="public/assets/casinoslpot/vimaan.png" alt="Vimaan"> Vimaan
+        </a>
+      </li>
+      <li><a href="http://localhost/allsport-highlight/2" class="">Tennis</a></li>
+      <li><a href="http://localhost/allsport-highlight/1" class="">Soccer</a></li>
+      <li><a href="http://localhost/horse-racing" class="">Horse Racing</a></li>
+      <li><a href="http://localhost/horse-racing?type=greyhound" class="">Greyhound Racing</a></li>
+      <li><a href="http://localhost/allsport-highlight/7522" class="">Basketball</a></li>
+      <li><a href="http://localhost/allsport-highlight/66104" class="">Lottery</a></li>
+              <li><a href="http://localhost/livecasino" class="active">Live Casino</a></li>
+        <li><a href="http://localhost/newCasino" class="">Our Casino</a></li>
+        <li><a href="http://localhost/tips-previews" class="">Tips &amp; Previews</a></li>
+          </ul>
+    <a href="http://localhost/settings" class="wb-nav-setting">
+      Setting <i class="fas fa-cog ms-1"></i>
+    </a>
+  </nav>
+
+  
+    <!-- ================= MOBILE SPORTS BAR (Screenshot 02) ================= -->
+  <div class="wb-mobile-sports-bar py-1 px-2 gap-1">
+    <button type="button" class="btn btn-sm text-white fw-bold d-inline-flex align-items-center gap-1 px-2 py-1" style="background:var(--exchange-bg);border-radius:6px;white-space:nowrap;font-size:11.5px;" onclick="WB24Sidebar.toggleMobileSidebar()">
+      <i class="fas fa-bars"></i> All Leagues
+    </button>
+    <a href="http://localhost/inplay" class="btn btn-sm fw-bold px-2 py-1 text-dark" style="border-radius:6px;white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-stopwatch me-1"></i> In-Play
+    </a>
+    <a href="http://localhost/vimaan" class="btn btn-sm bg-black text-warning fw-bold d-inline-flex align-items-center gap-1 px-2 py-1" style="border-radius:6px;white-space:nowrap;font-size:11.5px;">
+      <img src="public/assets/casinoslpot/vimaan.png" style="height:15px;" alt="Vimaan"> Vimaan
+    </a>
+    <a href="http://localhost/allsport-highlight/4" class="btn btn-sm fw-bold px-2 py-1 text-dark" style="border-radius:6px;white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-baseball-ball me-1"></i> Cricket
+    </a>
+    <a href="http://localhost/allsport-highlight/1" class="btn btn-sm fw-bold px-2 py-1 text-dark" style="border-radius:6px;white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-futbol me-1"></i> Soccer
+    </a>
+    <a href="http://localhost/allsport-highlight/2" class="btn btn-sm fw-bold px-2 py-1 text-dark" style="border-radius:6px;white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-table-tennis me-1"></i> Tennis
+    </a>
+    <a href="http://localhost/horse-racing" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-horse-head me-1"></i> Racing
+    </a>
+    <a href="http://localhost/livecasino" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-dice me-1"></i> Casino
+    </a>
+    <a href="http://localhost/multimarket" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-thumbtack me-1"></i> Multi Markets
+    </a>
+    <a href="http://localhost/settings" class="btn btn-sm text-dark fw-bold px-2 py-1" style="white-space:nowrap;font-size:11.5px;">
+      <i class="fas fa-cog me-1"></i> Setting
+    </a>
+  </div>
+  <div id="wbSidebarBackdrop" class="wb-sidebar-backdrop" onclick="WB24Sidebar.closeMobileSidebar()"></div>
+
+  <!-- Flash Messages -->
+    
+  <!-- ================= 3-COLUMN EXCHANGE BODY ================= -->
+  <div class="wb-app-body">
+    <!-- Left Sports Sidebar (1:1 with winbook24.com app-side-bar) -->
+        <aside id="wbLeftSidebar" class="wb-left-sidebar">
+      <div class="wb-sidebar-head" onclick="WB24Sidebar.showMainSports()" style="cursor:pointer;" title="Back to All Sports">
+        <a href="javascript:void(0)" class="path-back text-white text-decoration-none" onclick="event.stopPropagation(); WB24Sidebar.showMainSports();">
+          <i class="fa fa-ellipsis-v" style="font-size:14px;"></i>
+        </a>
+        <a href="javascript:void(0)" class="text-white text-decoration-none" onclick="event.stopPropagation(); WB24Sidebar.showMainSports();">
+          Sports
+        </a>
+        <a href="javascript:void(0)" class="d-lg-none text-white text-decoration-none ms-2" onclick="event.stopPropagation(); WB24Sidebar.closeMobileSidebar();" title="Close Menu">
+          <i class="fas fa-times" style="font-size:14px;"></i>
+        </a>
+      </div>
+
+      <!-- Level 1: Main 7 Sports (Cricket, Casino, Tennis, Soccer, Horse Racing, Basketball, Lottery) -->
+      <ul id="wbSidebarMainSports" class="wb-sidebar-menu ">
+        <li>
+          <a href="http://localhost/allsport-highlight/4" onclick="return WB24Sidebar.selectSport(event, '4', 'http://localhost/allsport-highlight/4')">
+            <span>Cricket</span>
+            <span class="wb-sidebar-arrow" onclick="event.preventDefault(); event.stopPropagation(); WB24Sidebar.openSportTree('4');" title="Expand Cricket Tournaments">
+              <i class="fas fa-chevron-right"></i>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="http://localhost/livecasino">
+            <span>Casino</span>
+            <span class="wb-sidebar-arrow"><i class="fas fa-chevron-right"></i></span>
+          </a>
+        </li>
+        <li>
+          <a href="http://localhost/allsport-highlight/2" onclick="return WB24Sidebar.selectSport(event, '2', 'http://localhost/allsport-highlight/2')">
+            <span>Tennis</span>
+            <span class="wb-sidebar-arrow" onclick="event.preventDefault(); event.stopPropagation(); WB24Sidebar.openSportTree('2');" title="Expand Tennis Tournaments">
+              <i class="fas fa-chevron-right"></i>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="http://localhost/allsport-highlight/1" onclick="return WB24Sidebar.selectSport(event, '1', 'http://localhost/allsport-highlight/1')">
+            <span>Soccer</span>
+            <span class="wb-sidebar-arrow" onclick="event.preventDefault(); event.stopPropagation(); WB24Sidebar.openSportTree('1');" title="Expand Soccer Tournaments">
+              <i class="fas fa-chevron-right"></i>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="http://localhost/horse-racing">
+            <span>Horse Racing</span>
+            <span class="wb-sidebar-arrow"><i class="fas fa-chevron-right"></i></span>
+          </a>
+        </li>
+        <li>
+          <a href="http://localhost/allsport-highlight/7522" onclick="return WB24Sidebar.selectSport(event, '7522', 'http://localhost/allsport-highlight/7522')">
+            <span>Basketball</span>
+            <span class="wb-sidebar-arrow" onclick="event.preventDefault(); event.stopPropagation(); WB24Sidebar.openSportTree('7522');" title="Expand Basketball Tournaments">
+              <i class="fas fa-chevron-right"></i>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="http://localhost/allsport-highlight/66104" onclick="return WB24Sidebar.selectSport(event, '66104', 'http://localhost/allsport-highlight/66104')">
+            <span>Lottery</span>
+            <span class="wb-sidebar-arrow" onclick="event.preventDefault(); event.stopPropagation(); WB24Sidebar.openSportTree('66104');" title="Expand Lottery">
+              <i class="fas fa-chevron-right"></i>
+            </span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Level 2 & 3: Sport -> Tournament Accordion -> Match Links -->
+          </aside>
+
+    <!-- Center Main Content -->
+    <main class="wb-center-content">
+        <!-- Live Casino Tab Bar (Screenshot 08_live_casino_page.png) -->
+  <div class="wb-casino-tab-bar mt-0 d-flex justify-content-between align-items-center flex-wrap">
+    <div class="d-flex align-items-center gap-1 overflow-auto">
+              <button type="button"
+                class="wb-casino-tab-link active"
+                onclick="switchLiveCasinoPane('popular', this)">
+          Popular
+          <span class="badge bg-dark ms-1" style="font-size:9px;">22</span>
+        </button>
+              <button type="button"
+                class="wb-casino-tab-link "
+                onclick="switchLiveCasinoPane('universe-live', this)">
+          Universe Live
+          <span class="badge bg-dark ms-1" style="font-size:9px;">41</span>
+        </button>
+              <button type="button"
+                class="wb-casino-tab-link "
+                onclick="switchLiveCasinoPane('universe-original', this)">
+          Universe Original
+          <span class="badge bg-dark ms-1" style="font-size:9px;">5</span>
+        </button>
+              <button type="button"
+                class="wb-casino-tab-link "
+                onclick="switchLiveCasinoPane('international', this)">
+          International
+          <span class="badge bg-dark ms-1" style="font-size:9px;">21</span>
+        </button>
+              <button type="button"
+                class="wb-casino-tab-link "
+                onclick="switchLiveCasinoPane('slot', this)">
+          Slot
+          <span class="badge bg-dark ms-1" style="font-size:9px;">142</span>
+        </button>
+          </div>
+    <div class="pe-1">
+      <input type="text" id="liveCasinoFilter" class="form-control form-control-sm"
+             style="height:26px;font-size:11px;width:170px;"
+             placeholder="Filter 217 games..."
+             oninput="filterCasinoCards(this.value)">
+    </div>
+  </div>
+
+          <div id="lcPane_popular" class="wb-casino-grid js-lc-pane ">
+              <a href="http://localhost/vimaan/88.0022"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="vimaan"
+           title="Play VIMAAN">
+          <img src="public/assets/casino/88_0022.webp" alt="VIMAAN" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">VIMAAN</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0010"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="20-20 teenpatti"
+           title="Play 20-20 TEENPATTI">
+          <img src="public/assets/casino/99_0010.webp" alt="20-20 TEENPATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">20-20 TEENPATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/lucky7/99.0030"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky 7"
+           title="Play LUCKY 7">
+          <img src="public/assets/casino/99_0030.webp" alt="LUCKY 7" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">LUCKY 7</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0013"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="1day teen patti"
+           title="Play 1DAY TEEN PATTI">
+          <img src="public/assets/casino/99_0013.webp" alt="1DAY TEEN PATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">1DAY TEEN PATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0016"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="joker teen patti"
+           title="Play JOKER TEEN PATTI">
+          <img src="public/assets/casino/99_0016.webp" alt="JOKER TEEN PATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">JOKER TEEN PATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0019"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="20-20 dragon tiger"
+           title="Play 20-20 DRAGON TIGER">
+          <img src="public/assets/casino/99_0019.webp" alt="20-20 DRAGON TIGER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">20-20 DRAGON TIGER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0001"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="baccarat"
+           title="Play BACCARAT">
+          <img src="public/assets/casino/99_0001.webp" alt="BACCARAT" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">BACCARAT</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0025"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="andar bahar"
+           title="Play ANDAR BAHAR">
+          <img src="public/assets/casino/99_0025.webp" alt="ANDAR BAHAR" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ANDAR BAHAR</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0022"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="32 cards"
+           title="Play 32 CARDS">
+          <img src="public/assets/casino/99_0022.webp" alt="32 CARDS" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">32 CARDS</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0007"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="poker"
+           title="Play POKER">
+          <img src="public/assets/casino/99_0007.webp" alt="POKER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">POKER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0041"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dtl"
+           title="Play DTL">
+          <img src="public/assets/casino/99_0041.webp" alt="DTL" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DTL</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/99.0021"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="1 day dragon tiger"
+           title="Play 1 DAY DRAGON TIGER">
+          <img src="public/assets/casino/99_0021.webp" alt="1 DAY DRAGON TIGER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">1 DAY DRAGON TIGER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0014"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="muflis teen patti"
+           title="Play MUFLIS TEEN PATTI">
+          <img src="public/assets/casino/99_0014.webp" alt="MUFLIS TEEN PATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">MUFLIS TEEN PATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0046"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="card race"
+           title="Play CARD RACE">
+          <img src="public/assets/casino/99_0046.webp" alt="CARD RACE" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">CARD RACE</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0005"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="amar akbar anthony"
+           title="Play AMAR AKBAR ANTHONY">
+          <img src="public/assets/casino/99_0005.webp" alt="AMAR AKBAR ANTHONY" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">AMAR AKBAR ANTHONY</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/99.0018"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dragon tiger"
+           title="Play DRAGON TIGER">
+          <img src="public/assets/casino/99_0018.webp" alt="DRAGON TIGER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DRAGON TIGER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0027"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="casino war"
+           title="Play CASINO WAR">
+          <img src="public/assets/casino/99_0027.webp" alt="CASINO WAR" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">CASINO WAR</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0040"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="3 card judgement - a"
+           title="Play 3 CARD JUDGEMENT - A">
+          <img src="public/assets/casino/99_0040.webp" alt="3 CARD JUDGEMENT - A" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">3 CARD JUDGEMENT - A</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/balloon/88.0023"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="balloon"
+           title="Play BALLOON">
+          <img src="public/assets/casino/88_0023.webp" alt="BALLOON" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">BALLOON</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/headNtails/88.0021"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="heads &amp; tails"
+           title="Play HEADS &amp; TAILS">
+          <img src="public/assets/casino/88_0021.webp" alt="HEADS &amp; TAILS" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">HEADS &amp; TAILS</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/88.0020"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dream catcher"
+           title="Play DREAM CATCHER">
+          <img src="public/assets/casino/88_0020.png" alt="DREAM CATCHER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DREAM CATCHER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/lucky0To9/88.0019"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky 0 to 9"
+           title="Play LUCKY 0 TO 9">
+          <img src="public/assets/casino/88_0019.webp" alt="LUCKY 0 TO 9" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">LUCKY 0 TO 9</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+          </div>
+          <div id="lcPane_universe-live" class="wb-casino-grid js-lc-pane d-none">
+              <a href="http://localhost/casino3Patti/99.0010"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="20-20 teenpatti"
+           title="Play 20-20 TEENPATTI">
+          <img src="public/assets/casino/99_0010.webp" alt="20-20 TEENPATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">20-20 TEENPATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/lucky7/99.0030"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky 7"
+           title="Play LUCKY 7">
+          <img src="public/assets/casino/99_0030.webp" alt="LUCKY 7" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">LUCKY 7</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0013"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="1day teen patti"
+           title="Play 1DAY TEEN PATTI">
+          <img src="public/assets/casino/99_0013.webp" alt="1DAY TEEN PATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">1DAY TEEN PATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0016"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="joker teen patti"
+           title="Play JOKER TEEN PATTI">
+          <img src="public/assets/casino/99_0016.webp" alt="JOKER TEEN PATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">JOKER TEEN PATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0019"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="20-20 dragon tiger"
+           title="Play 20-20 DRAGON TIGER">
+          <img src="public/assets/casino/99_0019.webp" alt="20-20 DRAGON TIGER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">20-20 DRAGON TIGER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0001"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="baccarat"
+           title="Play BACCARAT">
+          <img src="public/assets/casino/99_0001.webp" alt="BACCARAT" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">BACCARAT</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0025"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="andar bahar"
+           title="Play ANDAR BAHAR">
+          <img src="public/assets/casino/99_0025.webp" alt="ANDAR BAHAR" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ANDAR BAHAR</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0022"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="32 cards"
+           title="Play 32 CARDS">
+          <img src="public/assets/casino/99_0022.webp" alt="32 CARDS" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">32 CARDS</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0007"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="poker"
+           title="Play POKER">
+          <img src="public/assets/casino/99_0007.webp" alt="POKER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">POKER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0041"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dtl"
+           title="Play DTL">
+          <img src="public/assets/casino/99_0041.webp" alt="DTL" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DTL</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/99.0021"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="1 day dragon tiger"
+           title="Play 1 DAY DRAGON TIGER">
+          <img src="public/assets/casino/99_0021.webp" alt="1 DAY DRAGON TIGER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">1 DAY DRAGON TIGER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/99.0014"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="muflis teen patti"
+           title="Play MUFLIS TEEN PATTI">
+          <img src="public/assets/casino/99_0014.webp" alt="MUFLIS TEEN PATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">MUFLIS TEEN PATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0046"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="card race"
+           title="Play CARD RACE">
+          <img src="public/assets/casino/99_0046.webp" alt="CARD RACE" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">CARD RACE</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0005"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="amar akbar anthony"
+           title="Play AMAR AKBAR ANTHONY">
+          <img src="public/assets/casino/99_0005.webp" alt="AMAR AKBAR ANTHONY" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">AMAR AKBAR ANTHONY</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/99.0018"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dragon tiger"
+           title="Play DRAGON TIGER">
+          <img src="public/assets/casino/99_0018.webp" alt="DRAGON TIGER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DRAGON TIGER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0027"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="casino war"
+           title="Play CASINO WAR">
+          <img src="public/assets/casino/99_0027.webp" alt="CASINO WAR" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">CASINO WAR</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99.0040"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="3 card judgement - a"
+           title="Play 3 CARD JUDGEMENT - A">
+          <img src="public/assets/casino/99_0040.webp" alt="3 CARD JUDGEMENT - A" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">3 CARD JUDGEMENT - A</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/oc_point_tp"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="point teen patti"
+           title="Play POINT TEEN PATTI">
+          <img src="public/assets/casino/99_0010.webp" alt="POINT TEEN PATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">POINT TEEN PATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/oc_dtl_tp"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dtl teenpatti"
+           title="Play DTL TEENPATTI">
+          <img src="public/assets/casino/99_0013.webp" alt="DTL TEENPATTI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DTL TEENPATTI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_poker_a"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="20-20 poker - a"
+           title="Play 20-20 POKER - A">
+          <img src="public/assets/casino/99_0007.webp" alt="20-20 POKER - A" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">20-20 POKER - A</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_poker_b"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="20-20 poker - b"
+           title="Play 20-20 POKER - B">
+          <img src="public/assets/casino/99_0007.webp" alt="20-20 POKER - B" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">20-20 POKER - B</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_29_bacc"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="29 card baccarat"
+           title="Play 29 CARD BACCARAT">
+          <img src="public/assets/casino/99_0001.webp" alt="29 CARD BACCARAT" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">29 CARD BACCARAT</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_bacc_a"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="baccarat - a"
+           title="Play BACCARAT - A">
+          <img src="public/assets/casino/99_0001.webp" alt="BACCARAT - A" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">BACCARAT - A</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_bacc_c"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="baccarat - c"
+           title="Play BACCARAT - C">
+          <img src="public/assets/casino/99_0001.webp" alt="BACCARAT - C" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">BACCARAT - C</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/oc_fast_dt"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fast dragon tiger"
+           title="Play FAST DRAGON TIGER">
+          <img src="public/assets/casino/99_0019.webp" alt="FAST DRAGON TIGER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">FAST DRAGON TIGER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_dtl_a"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dtl - a"
+           title="Play DTL - A">
+          <img src="public/assets/casino/99_0041.webp" alt="DTL - A" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DTL - A</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_32cards_a"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="32 cards - a"
+           title="Play 32 CARDS - A">
+          <img src="public/assets/casino/99_0022.webp" alt="32 CARDS - A" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">32 CARDS - A</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_32cards_b"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="32 cards - b"
+           title="Play 32 CARDS - B">
+          <img src="public/assets/casino/99_0022.webp" alt="32 CARDS - B" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">32 CARDS - B</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_ab_a"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="andar bahar - a"
+           title="Play ANDAR BAHAR - A">
+          <img src="public/assets/casino/99_0025.webp" alt="ANDAR BAHAR - A" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ANDAR BAHAR - A</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_ab_c"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="andar bahar - c"
+           title="Play ANDAR BAHAR - C">
+          <img src="public/assets/casino/99_0025.webp" alt="ANDAR BAHAR - C" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ANDAR BAHAR - C</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/lucky7/oc_lucky7_a"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky 7 - a"
+           title="Play LUCKY 7 - A">
+          <img src="public/assets/casino/99_0030.webp" alt="LUCKY 7 - A" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">LUCKY 7 - A</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/lucky7/oc_fast_lucky7"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fast lucky - 7"
+           title="Play FAST LUCKY - 7">
+          <img src="public/assets/casino/99_0030.webp" alt="FAST LUCKY - 7" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">FAST LUCKY - 7</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/lucky7/oc_lucky7_b"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky 7 - b"
+           title="Play LUCKY 7 - B">
+          <img src="public/assets/casino/99_0030.webp" alt="LUCKY 7 - B" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">LUCKY 7 - B</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_worli"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="instant worli"
+           title="Play INSTANT WORLI">
+          <img src="public/assets/casino/88_0019.webp" alt="INSTANT WORLI" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">INSTANT WORLI</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_bollywood"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="bollywood casino"
+           title="Play BOLLYWOOD CASINO">
+          <img src="public/assets/casino/99_0005.webp" alt="BOLLYWOOD CASINO" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">BOLLYWOOD CASINO</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_inaminadika"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ina mina dika"
+           title="Play INA MINA DIKA">
+          <img src="public/assets/casino/99_0005.webp" alt="INA MINA DIKA" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">INA MINA DIKA</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_1card_meter"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="1 card meter"
+           title="Play 1 CARD METER">
+          <img src="public/assets/casino/99_0040.webp" alt="1 CARD METER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">1 CARD METER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_1card_2020"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="1 card 20-20"
+           title="Play 1 CARD 20-20">
+          <img src="public/assets/casino/99_0040.webp" alt="1 CARD 20-20" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">1 CARD 20-20</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_trio"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="trio"
+           title="Play TRIO">
+          <img src="public/assets/casino/99_0016.webp" alt="TRIO" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">TRIO</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_kbc"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="kbc"
+           title="Play KBC">
+          <img src="public/assets/casino/88_0020.png" alt="KBC" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">KBC</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/oc_casino_meter"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="casino meter"
+           title="Play CASINO METER">
+          <img src="public/assets/casino/99_0027.webp" alt="CASINO METER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">CASINO METER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+          </div>
+          <div id="lcPane_universe-original" class="wb-casino-grid js-lc-pane d-none">
+              <a href="http://localhost/vimaan/88.0022"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="vimaan"
+           title="Play VIMAAN">
+          <img src="public/assets/casino/88_0022.webp" alt="VIMAAN" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">VIMAAN</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/balloon/88.0023"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="balloon"
+           title="Play BALLOON">
+          <img src="public/assets/casino/88_0023.webp" alt="BALLOON" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">BALLOON</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/headNtails/88.0021"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="heads &amp; tails"
+           title="Play HEADS &amp; TAILS">
+          <img src="public/assets/casino/88_0021.webp" alt="HEADS &amp; TAILS" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">HEADS &amp; TAILS</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/88.0020"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dream catcher"
+           title="Play DREAM CATCHER">
+          <img src="public/assets/casino/88_0020.png" alt="DREAM CATCHER" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DREAM CATCHER</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/lucky0To9/88.0019"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky 0 to 9"
+           title="Play LUCKY 0 TO 9">
+          <img src="public/assets/casino/88_0019.webp" alt="LUCKY 0 TO 9" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">LUCKY 0 TO 9</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+          </div>
+          <div id="lcPane_international" class="wb-casino-grid js-lc-pane d-none">
+              <a href="http://localhost/casino/play/wc-top_games"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-top_games"
+           title="Play wc-top_games">
+          <img src="public/assets/casino/wc-top_games.png" alt="wc-top_games" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-top_games</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/wc-dragontiger"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-dragontiger"
+           title="Play wc-dragontiger">
+          <img src="public/assets/casino/wc-dragontiger.png" alt="wc-dragontiger" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-dragontiger</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-baccarat"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-baccarat"
+           title="Play wc-baccarat">
+          <img src="public/assets/casino/wc-baccarat.png" alt="wc-baccarat" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-baccarat</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-sicbo"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-sicbo"
+           title="Play wc-sicbo">
+          <img src="public/assets/casino/wc-sicbo.png" alt="wc-sicbo" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-sicbo</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-fantan"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-fantan"
+           title="Play wc-fantan">
+          <img src="public/assets/casino/wc-fantan.png" alt="wc-fantan" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-fantan</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-blackjack"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-blackjack"
+           title="Play wc-blackjack">
+          <img src="public/assets/casino/wc-blackjack.png" alt="wc-blackjack" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-blackjack</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-roulette"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-roulette"
+           title="Play wc-roulette">
+          <img src="public/assets/casino/wc-roulette.png" alt="wc-roulette" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-roulette</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-poker"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-poker"
+           title="Play wc-poker">
+          <img src="public/assets/casino/wc-poker.png" alt="wc-poker" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-poker</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-game_shows"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-game_shows"
+           title="Play wc-game_shows">
+          <img src="public/assets/casino/wc-game_shows.png" alt="wc-game_shows" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-game_shows</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-rng"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-rng"
+           title="Play wc-rng">
+          <img src="public/assets/casino/wc-rng.png" alt="wc-rng" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-rng</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-casinos_choice"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-casinos_choice"
+           title="Play wc-casinos_choice">
+          <img src="public/assets/casino/wc-casinos_choice.png" alt="wc-casinos_choice" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-casinos_choice</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/wc-all_games"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wc-all_games"
+           title="Play wc-all_games">
+          <img src="public/assets/casino/wc-all_games.png" alt="wc-all_games" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">wc-all_games</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/ezugi"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ezugi"
+           title="Play ezugi">
+          <img src="public/assets/casino/ezugi.png" alt="ezugi" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ezugi</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/ezugi_blackjack"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ezugi_blackjack"
+           title="Play ezugi_blackjack">
+          <img src="public/assets/casino/ezugi_blackjack.png" alt="ezugi_blackjack" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ezugi_blackjack</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/ezugi_baccarat"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ezugi_baccarat"
+           title="Play ezugi_baccarat">
+          <img src="public/assets/casino/ezugi_baccarat.png" alt="ezugi_baccarat" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ezugi_baccarat</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/ezugi_roulette"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ezugi_roulette"
+           title="Play ezugi_roulette">
+          <img src="public/assets/casino/ezugi_roulette.png" alt="ezugi_roulette" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ezugi_roulette</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/ezugi_lottery"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ezugi_lottery"
+           title="Play ezugi_lottery">
+          <img src="public/assets/casino/ezugi_lottery.png" alt="ezugi_lottery" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ezugi_lottery</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/ezugi_poker"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ezugi_poker"
+           title="Play ezugi_poker">
+          <img src="public/assets/casino/ezugi_poker.png" alt="ezugi_poker" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">ezugi_poker</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/sagaming_lobby"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sagaming_lobby"
+           title="Play sagaming_lobby">
+          <img src="public/assets/casino/sagaming_lobby.png" alt="sagaming_lobby" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">sagaming_lobby</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/dreamgaming-lobby"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dreamgaming-lobby"
+           title="Play dreamgaming-lobby">
+          <img src="public/assets/casino/dreamgaming-lobby.png" alt="dreamgaming-lobby" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">dreamgaming-lobby</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/yeebet-live"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="yeebet-live"
+           title="Play yeebet-live">
+          <img src="public/assets/casino/yeebet-live.png" alt="yeebet-live" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">yeebet-live</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+          </div>
+          <div id="lcPane_slot" class="wb-casino-grid js-lc-pane d-none">
+              <a href="http://localhost/casino/play/4"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="arabian legacy"
+           title="Play Arabian Legacy">
+          <img src="public/assets/casino/4.gif" alt="Arabian Legacy" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Arabian Legacy</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/5"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="the legends of pirates"
+           title="Play The Legends Of Pirates">
+          <img src="public/assets/casino/5.gif" alt="The Legends Of Pirates" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">The Legends Of Pirates</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/6"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dragon hunter"
+           title="Play Dragon Hunter">
+          <img src="public/assets/casino/6.gif" alt="Dragon Hunter" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Dragon Hunter</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/7"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="secret treasure of pharaoh"
+           title="Play Secret Treasure Of Pharaoh">
+          <img src="public/assets/casino/7.gif" alt="Secret Treasure Of Pharaoh" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Secret Treasure Of Pharaoh</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/12"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="gladiator"
+           title="Play Gladiator">
+          <img src="public/assets/casino/12.gif" alt="Gladiator" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Gladiator</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/13"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="pearl heart"
+           title="Play Pearl Heart">
+          <img src="public/assets/casino/13.gif" alt="Pearl Heart" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Pearl Heart</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/14"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="voodoo jungle"
+           title="Play Voodoo Jungle">
+          <img src="public/assets/casino/14.gif" alt="Voodoo Jungle" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Voodoo Jungle</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/16"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="warriors journey"
+           title="Play Warriors Journey">
+          <img src="public/assets/casino/16.gif" alt="Warriors Journey" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Warriors Journey</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/18"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="glitch city"
+           title="Play Glitch City">
+          <img src="public/assets/casino/18.gif" alt="Glitch City" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Glitch City</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/20"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="root seekers"
+           title="Play Root Seekers">
+          <img src="public/assets/casino/20.gif" alt="Root Seekers" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Root Seekers</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/21"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="call of the sea"
+           title="Play Call Of The Sea">
+          <img src="public/assets/casino/21.gif" alt="Call Of The Sea" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Call Of The Sea</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/22"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="epoch of sands"
+           title="Play Epoch Of Sands">
+          <img src="public/assets/casino/22.gif" alt="Epoch Of Sands" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Epoch Of Sands</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/23"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wild red noon"
+           title="Play Wild Red Noon">
+          <img src="public/assets/casino/23.gif" alt="Wild Red Noon" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Wild Red Noon</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/24"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="swamp mafia"
+           title="Play Swamp Mafia">
+          <img src="public/assets/casino/24.gif" alt="Swamp Mafia" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Swamp Mafia</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/25"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="junk town"
+           title="Play Junk Town">
+          <img src="public/assets/casino/25.gif" alt="Junk Town" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Junk Town</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/26"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="jade hills"
+           title="Play Jade Hills">
+          <img src="public/assets/casino/26.gif" alt="Jade Hills" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Jade Hills</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/27"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="spooky night"
+           title="Play Spooky Night">
+          <img src="public/assets/casino/27.gif" alt="Spooky Night" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Spooky Night</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/43"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="hot fruits 5"
+           title="Play Hot Fruits 5">
+          <img src="public/assets/casino/43.jpg" alt="Hot Fruits 5" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Hot Fruits 5</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/44"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fruits shock"
+           title="Play Fruits Shock">
+          <img src="public/assets/casino/44.jpg" alt="Fruits Shock" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Fruits Shock</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/45"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="hot fruit box"
+           title="Play Hot Fruit Box">
+          <img src="public/assets/casino/45.jpg" alt="Hot Fruit Box" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Hot Fruit Box</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/46"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="hot tropic"
+           title="Play Hot Tropic">
+          <img src="public/assets/casino/46.jpg" alt="Hot Tropic" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Hot Tropic</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/47"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fruits sizzle"
+           title="Play Fruits Sizzle">
+          <img src="public/assets/casino/47.jpg" alt="Fruits Sizzle" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Fruits Sizzle</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/48"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="freezing wild"
+           title="Play Freezing Wild">
+          <img src="public/assets/casino/48.jpg" alt="Freezing Wild" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Freezing Wild</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/49"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="squishy fruits"
+           title="Play Squishy Fruits">
+          <img src="public/assets/casino/49.jpg" alt="Squishy Fruits" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Squishy Fruits</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/50"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fruits 2 gold"
+           title="Play Fruits 2 Gold">
+          <img src="public/assets/casino/50.jpg" alt="Fruits 2 Gold" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Fruits 2 Gold</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/51"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wealthy fruits 50"
+           title="Play Wealthy Fruits 50">
+          <img src="public/assets/casino/51.jpg" alt="Wealthy Fruits 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Wealthy Fruits 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/52"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sweet burn 50"
+           title="Play Sweet Burn 50">
+          <img src="public/assets/casino/52.jpg" alt="Sweet Burn 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Sweet Burn 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/53"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sweet fortune 50"
+           title="Play Sweet Fortune 50">
+          <img src="public/assets/casino/53.jpg" alt="Sweet Fortune 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Sweet Fortune 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/54"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="tropica fortuna 50"
+           title="Play Tropica Fortuna 50">
+          <img src="public/assets/casino/54.jpg" alt="Tropica Fortuna 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Tropica Fortuna 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/55"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="burn wild burn"
+           title="Play Burn Wild Burn">
+          <img src="public/assets/casino/55.jpg" alt="Burn Wild Burn" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Burn Wild Burn</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/56"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="atomic wild"
+           title="Play Atomic Wild">
+          <img src="public/assets/casino/56.jpg" alt="Atomic Wild" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Atomic Wild</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/57"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="bunch of fruit"
+           title="Play Bunch of Fruit">
+          <img src="public/assets/casino/57.jpg" alt="Bunch of Fruit" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Bunch of Fruit</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/58"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fruit charm"
+           title="Play Fruit Charm">
+          <img src="public/assets/casino/58.jpg" alt="Fruit Charm" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Fruit Charm</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/59"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fruit pulse"
+           title="Play Fruit Pulse">
+          <img src="public/assets/casino/59.jpg" alt="Fruit Pulse" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Fruit Pulse</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/60"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wild cocktail"
+           title="Play Wild Cocktail">
+          <img src="public/assets/casino/60.jpg" alt="Wild Cocktail" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Wild Cocktail</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/61"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fire gems"
+           title="Play Fire Gems">
+          <img src="public/assets/casino/61.jpg" alt="Fire Gems" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Fire Gems</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/62"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="shocky gems"
+           title="Play Shocky Gems">
+          <img src="public/assets/casino/62.jpg" alt="Shocky Gems" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Shocky Gems</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/63"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="twinkle gems"
+           title="Play Twinkle Gems">
+          <img src="public/assets/casino/63.jpg" alt="Twinkle Gems" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Twinkle Gems</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/64"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="hot gemstone 5"
+           title="Play Hot Gemstone 5">
+          <img src="public/assets/casino/64.jpg" alt="Hot Gemstone 5" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Hot Gemstone 5</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/65"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="gem cave"
+           title="Play Gem Cave">
+          <img src="public/assets/casino/65.jpg" alt="Gem Cave" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Gem Cave</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/66"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="gem garden 50"
+           title="Play Gem Garden 50">
+          <img src="public/assets/casino/66.jpg" alt="Gem Garden 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Gem Garden 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/67"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="space stones 50"
+           title="Play Space Stones 50">
+          <img src="public/assets/casino/67.jpg" alt="Space Stones 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Space Stones 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/68"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="50 galaxy stones"
+           title="Play 50 Galaxy Stones">
+          <img src="public/assets/casino/68.jpg" alt="50 Galaxy Stones" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">50 Galaxy Stones</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/69"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="xtra volt"
+           title="Play Xtra Volt">
+          <img src="public/assets/casino/69.jpg" alt="Xtra Volt" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Xtra Volt</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/70"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="xtra fruits"
+           title="Play Xtra Fruits">
+          <img src="public/assets/casino/70.jpg" alt="Xtra Fruits" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Xtra Fruits</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/71"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="xhot fruits"
+           title="Play xHot Fruits">
+          <img src="public/assets/casino/71.jpg" alt="xHot Fruits" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">xHot Fruits</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/72"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sweetx"
+           title="Play SweetX">
+          <img src="public/assets/casino/72.jpg" alt="SweetX" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">SweetX</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/73"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="xtra bright"
+           title="Play Xtra Bright">
+          <img src="public/assets/casino/73.jpg" alt="Xtra Bright" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Xtra Bright</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/74"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="soul stones 50"
+           title="Play Soul Stones 50">
+          <img src="public/assets/casino/74.jpg" alt="Soul Stones 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Soul Stones 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/75"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="poly fruits 50"
+           title="Play Poly Fruits 50">
+          <img src="public/assets/casino/75.jpg" alt="Poly Fruits 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Poly Fruits 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/76"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="xtra gem"
+           title="Play Xtra Gem">
+          <img src="public/assets/casino/76.jpg" alt="Xtra Gem" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Xtra Gem</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/77"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="diamondx"
+           title="Play DiamondX">
+          <img src="public/assets/casino/77.jpg" alt="DiamondX" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">DiamondX</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/78"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="magic opals x"
+           title="Play Magic Opals X">
+          <img src="public/assets/casino/78.jpg" alt="Magic Opals X" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Magic Opals X</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/79"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="glass stones x"
+           title="Play Glass Stones X">
+          <img src="public/assets/casino/79.jpg" alt="Glass Stones X" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Glass Stones X</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/80"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="xtra flashy"
+           title="Play Xtra Flashy">
+          <img src="public/assets/casino/80.jpg" alt="Xtra Flashy" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Xtra Flashy</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/81"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="glowing wild"
+           title="Play Glowing Wild">
+          <img src="public/assets/casino/81.jpg" alt="Glowing Wild" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Glowing Wild</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/82"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wild ring"
+           title="Play Wild Ring">
+          <img src="public/assets/casino/82.jpg" alt="Wild Ring" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Wild Ring</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/83"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ages of wild"
+           title="Play Ages Of Wild">
+          <img src="public/assets/casino/83.jpg" alt="Ages Of Wild" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Ages Of Wild</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/84"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wild fossils"
+           title="Play Wild Fossils">
+          <img src="public/assets/casino/84.jpg" alt="Wild Fossils" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Wild Fossils</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/85"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="blazing wild"
+           title="Play Blazing Wild">
+          <img src="public/assets/casino/85.jpg" alt="Blazing Wild" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Blazing Wild</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/86"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="bloom wild"
+           title="Play Bloom Wild">
+          <img src="public/assets/casino/86.jpg" alt="Bloom Wild" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Bloom Wild</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/87"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="jet fashion 50"
+           title="Play Jet Fashion 50">
+          <img src="public/assets/casino/87.jpg" alt="Jet Fashion 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Jet Fashion 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/88"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="xtra sunshine"
+           title="Play Xtra Sunshine">
+          <img src="public/assets/casino/88.jpg" alt="Xtra Sunshine" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Xtra Sunshine</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/89"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="hot fabuleuse 5"
+           title="Play Hot Fabuleuse 5">
+          <img src="public/assets/casino/89.jpg" alt="Hot Fabuleuse 5" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Hot Fabuleuse 5</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/90"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="hot bar 7"
+           title="Play Hot Bar 7">
+          <img src="public/assets/casino/90.jpg" alt="Hot Bar 7" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Hot Bar 7</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/91"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="xtra 777 bar"
+           title="Play Xtra 777 Bar">
+          <img src="public/assets/casino/91.jpg" alt="Xtra 777 Bar" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Xtra 777 Bar</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/92"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky bar 50"
+           title="Play Lucky Bar 50">
+          <img src="public/assets/casino/92.jpg" alt="Lucky Bar 50" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Lucky Bar 50</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/93"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="wildy bars 7"
+           title="Play Wildy Bars 7">
+          <img src="public/assets/casino/93.jpg" alt="Wildy Bars 7" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Wildy Bars 7</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/94"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sweet fortune wheel"
+           title="Play Sweet Fortune Wheel">
+          <img src="public/assets/casino/94.jpg" alt="Sweet Fortune Wheel" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Sweet Fortune Wheel</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/95"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky rollers"
+           title="Play Lucky Rollers">
+          <img src="public/assets/casino/95.jpg" alt="Lucky Rollers" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Lucky Rollers</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/96"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="antique fortune"
+           title="Play Antique Fortune">
+          <img src="public/assets/casino/96.jpg" alt="Antique Fortune" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Antique Fortune</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/97"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="80s retro spin"
+           title="Play 80s Retro Spin">
+          <img src="public/assets/casino/97.jpg" alt="80s Retro Spin" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">80s Retro Spin</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/98"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="bounty hunter wheel"
+           title="Play Bounty Hunter Wheel">
+          <img src="public/assets/casino/98.jpg" alt="Bounty Hunter Wheel" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Bounty Hunter Wheel</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/99"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="funky pirates"
+           title="Play Funky Pirates">
+          <img src="public/assets/casino/99.jpg" alt="Funky Pirates" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Funky Pirates</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/100"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="prehistoric wheel"
+           title="Play Prehistoric Wheel">
+          <img src="public/assets/casino/100.jpg" alt="Prehistoric Wheel" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Prehistoric Wheel</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/101"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="elixir of fortune"
+           title="Play Elixir Of Fortune">
+          <img src="public/assets/casino/101.jpg" alt="Elixir Of Fortune" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Elixir Of Fortune</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/102"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="holiday cocktails"
+           title="Play Holiday Cocktails">
+          <img src="public/assets/casino/102.jpg" alt="Holiday Cocktails" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Holiday Cocktails</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/103"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="the viking berserkers"
+           title="Play The Viking Berserkers">
+          <img src="public/assets/casino/103.jpg" alt="The Viking Berserkers" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">The Viking Berserkers</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/104"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of amon"
+           title="Play Book Of Amon">
+          <img src="public/assets/casino/104.gif" alt="Book Of Amon" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Amon</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/105"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="great fire 7s"
+           title="Play Great Fire 7s">
+          <img src="public/assets/casino/105.jpg" alt="Great Fire 7s" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Great Fire 7s</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/106"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sweet 7s"
+           title="Play Sweet 7s">
+          <img src="public/assets/casino/106.jpg" alt="Sweet 7s" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Sweet 7s</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/107"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="thunder 777"
+           title="Play Thunder 777">
+          <img src="public/assets/casino/107.jpg" alt="Thunder 777" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Thunder 777</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/108"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="double yield 77"
+           title="Play Double Yield 77">
+          <img src="public/assets/casino/108.jpg" alt="Double Yield 77" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Double Yield 77</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/109"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dazzling jewels 77"
+           title="Play Dazzling Jewels 77">
+          <img src="public/assets/casino/109.jpg" alt="Dazzling Jewels 77" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Dazzling Jewels 77</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/110"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="precious gems 77"
+           title="Play Precious Gems 77">
+          <img src="public/assets/casino/110.jpg" alt="Precious Gems 77" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Precious Gems 77</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/111"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="hot shine 7s"
+           title="Play Hot Shine 7s">
+          <img src="public/assets/casino/111.jpg" alt="Hot Shine 7s" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Hot Shine 7s</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/112"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="doubled gems 77"
+           title="Play Doubled Gems 77">
+          <img src="public/assets/casino/112.jpg" alt="Doubled Gems 77" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Doubled Gems 77</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/113"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="hot twins 7s"
+           title="Play Hot Twins 7s">
+          <img src="public/assets/casino/113.jpg" alt="Hot Twins 7s" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Hot Twins 7s</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/114"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="stack bars 7"
+           title="Play Stack Bars 7">
+          <img src="public/assets/casino/114.jpg" alt="Stack Bars 7" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Stack Bars 7</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/115"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="surprise xmas gift"
+           title="Play Surprise Xmas Gift">
+          <img src="public/assets/casino/115.gif" alt="Surprise Xmas Gift" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Surprise Xmas Gift</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/116"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="rise of mafia"
+           title="Play Rise Of Mafia">
+          <img src="public/assets/casino/116.jpg" alt="Rise Of Mafia" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Rise Of Mafia</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/117"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of panic"
+           title="Play Book Of Panic">
+          <img src="public/assets/casino/117.jpg" alt="Book Of Panic" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Panic</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/118"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="tribe codes"
+           title="Play Tribe Codes">
+          <img src="public/assets/casino/118.jpg" alt="Tribe Codes" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Tribe Codes</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino3Patti/119"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="dragon parchment"
+           title="Play Dragon Parchment">
+          <img src="public/assets/casino/119.jpg" alt="Dragon Parchment" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Dragon Parchment</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/120"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of immortality"
+           title="Play Book Of Immortality">
+          <img src="public/assets/casino/120.jpg" alt="Book Of Immortality" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Immortality</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/121"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of deep"
+           title="Play Book Of Deep">
+          <img src="public/assets/casino/121.jpg" alt="Book Of Deep" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Deep</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/122"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of samurai"
+           title="Play Book Of Samurai">
+          <img src="public/assets/casino/122.jpg" alt="Book Of Samurai" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Samurai</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/123"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of future"
+           title="Play Book Of Future">
+          <img src="public/assets/casino/123.jpg" alt="Book Of Future" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Future</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/124"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sugar pop bonanza"
+           title="Play Sugar Pop Bonanza">
+          <img src="public/assets/casino/124.jpg" alt="Sugar Pop Bonanza" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Sugar Pop Bonanza</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/125"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sweet valantine"
+           title="Play Sweet Valantine">
+          <img src="public/assets/casino/125.jpg" alt="Sweet Valantine" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Sweet Valantine</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/126"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="valentine letter"
+           title="Play Valentine Letter">
+          <img src="public/assets/casino/126.jpg" alt="Valentine Letter" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Valentine Letter</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/127"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="twin samba"
+           title="Play Twin Samba">
+          <img src="public/assets/casino/127.jpg" alt="Twin Samba" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Twin Samba</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/128"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="squishy bonanza"
+           title="Play Squishy Bonanza">
+          <img src="public/assets/casino/128.jpg" alt="Squishy Bonanza" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Squishy Bonanza</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/129"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="bomb balloonza"
+           title="Play Bomb Balloonza">
+          <img src="public/assets/casino/129.jpg" alt="Bomb Balloonza" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Bomb Balloonza</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/130"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fat fish"
+           title="Play Fat Fish">
+          <img src="public/assets/casino/130.jpg" alt="Fat Fish" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Fat Fish</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/131"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="pyramid treasure token quest"
+           title="Play Pyramid Treasure Token Quest">
+          <img src="public/assets/casino/131.jpg" alt="Pyramid Treasure Token Quest" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Pyramid Treasure Token Quest</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/132"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of lama"
+           title="Play Book Of Lama">
+          <img src="public/assets/casino/132.jpg" alt="Book Of Lama" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Lama</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/133"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of forest"
+           title="Play Book Of Forest">
+          <img src="public/assets/casino/133.jpg" alt="Book Of Forest" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Forest</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/134"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of safari"
+           title="Play Book Of Safari">
+          <img src="public/assets/casino/134.jpg" alt="Book Of Safari" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Safari</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/135"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="unknown monolith"
+           title="Play Unknown Monolith">
+          <img src="public/assets/casino/135.jpg" alt="Unknown Monolith" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Unknown Monolith</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/136"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="the grand arena"
+           title="Play The Grand Arena">
+          <img src="public/assets/casino/136.jpg" alt="The Grand Arena" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">The Grand Arena</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/137"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="zeuss war"
+           title="Play Zeuss War">
+          <img src="public/assets/casino/137.gif" alt="Zeuss War" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Zeuss War</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/138"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="aztec legends"
+           title="Play Aztec Legends">
+          <img src="public/assets/casino/138.gif" alt="Aztec Legends" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Aztec Legends</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/139"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="western bandit"
+           title="Play Western Bandit">
+          <img src="public/assets/casino/139.gif" alt="Western Bandit" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Western Bandit</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/140"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lord of hell"
+           title="Play Lord Of Hell">
+          <img src="public/assets/casino/140.jpg" alt="Lord Of Hell" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Lord Of Hell</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/143"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="ftn future"
+           title="Play Ftn Future">
+          <img src="public/assets/casino/143.gif" alt="Ftn Future" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Ftn Future</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/144"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="gold of goblin"
+           title="Play Gold Of Goblin">
+          <img src="public/assets/casino/144.jpg" alt="Gold Of Goblin" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Gold Of Goblin</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/145"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="arcane scratch"
+           title="Play Arcane Scratch">
+          <img src="public/assets/casino/145.jpg" alt="Arcane Scratch" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Arcane Scratch</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/146"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="scratch league"
+           title="Play Scratch League">
+          <img src="public/assets/casino/146.jpg" alt="Scratch League" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Scratch League</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/147"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="cherry riches"
+           title="Play Cherry Riches">
+          <img src="public/assets/casino/147.jpg" alt="Cherry Riches" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Cherry Riches</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/148"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="temple treasure scratch"
+           title="Play Temple Treasure Scratch">
+          <img src="public/assets/casino/148.jpg" alt="Temple Treasure Scratch" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Temple Treasure Scratch</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/149"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="instant win beach"
+           title="Play Instant Win Beach">
+          <img src="public/assets/casino/149.jpg" alt="Instant Win Beach" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Instant Win Beach</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/150"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="mega prize"
+           title="Play Mega Prize">
+          <img src="public/assets/casino/150.jpg" alt="Mega Prize" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Mega Prize</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/151"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky gold strike"
+           title="Play Lucky Gold Strike">
+          <img src="public/assets/casino/151.jpg" alt="Lucky Gold Strike" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Lucky Gold Strike</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/152"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="great millions scratch"
+           title="Play Great Millions Scratch">
+          <img src="public/assets/casino/152.jpg" alt="Great Millions Scratch" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Great Millions Scratch</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/153"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="mega diamond fortune"
+           title="Play Mega Diamond Fortune">
+          <img src="public/assets/casino/153.jpg" alt="Mega Diamond Fortune" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Mega Diamond Fortune</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/154"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="jump shot scratch"
+           title="Play Jump Shot Scratch">
+          <img src="public/assets/casino/154.jpg" alt="Jump Shot Scratch" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Jump Shot Scratch</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/155"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="the booos scratch"
+           title="Play The Booos Scratch">
+          <img src="public/assets/casino/155.jpg" alt="The Booos Scratch" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">The Booos Scratch</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/156"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="frosty scratch"
+           title="Play Frosty Scratch">
+          <img src="public/assets/casino/156.jpg" alt="Frosty Scratch" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Frosty Scratch</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/157"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="fire breath fortune"
+           title="Play Fire Breath Fortune">
+          <img src="public/assets/casino/157.jpg" alt="Fire Breath Fortune" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Fire Breath Fortune</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/158"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="lucky goblin scratch"
+           title="Play Lucky Goblin Scratch">
+          <img src="public/assets/casino/158.jpg" alt="Lucky Goblin Scratch" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Lucky Goblin Scratch</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/159"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="serve and score"
+           title="Play Serve And Score">
+          <img src="public/assets/casino/159.jpg" alt="Serve And Score" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Serve And Score</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/160"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of the street"
+           title="Play Book Of The Street">
+          <img src="public/assets/casino/160.jpg" alt="Book Of The Street" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of The Street</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/161"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of los muertos"
+           title="Play Book Of Los Muertos">
+          <img src="public/assets/casino/161.jpg" alt="Book Of Los Muertos" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Los Muertos</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/162"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="book of knight"
+           title="Play Book Of Knight">
+          <img src="public/assets/casino/162.jpg" alt="Book Of Knight" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Book Of Knight</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/headNtails/88.0021"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="head fights book"
+           title="Play Head Fights Book">
+          <img src="public/assets/casino/163.jpg" alt="Head Fights Book" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Head Fights Book</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/164"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="chefs book"
+           title="Play Chefs Book">
+          <img src="public/assets/casino/164.jpg" alt="Chefs Book" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Chefs Book</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/165"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="tombs of immortal"
+           title="Play Tombs Of Immortal">
+          <img src="public/assets/casino/165.jpg" alt="Tombs Of Immortal" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Tombs Of Immortal</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/166"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="arcane infinity"
+           title="Play Arcane Infinity">
+          <img src="public/assets/casino/166.jpg" alt="Arcane Infinity" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Arcane Infinity</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/167"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="mexican 1024 ways"
+           title="Play Mexican 1024 Ways">
+          <img src="public/assets/casino/167.jpg" alt="Mexican 1024 Ways" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Mexican 1024 Ways</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/168"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="the booos"
+           title="Play The Booos">
+          <img src="public/assets/casino/168.jpg" alt="The Booos" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">The Booos</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+              <a href="http://localhost/casino/play/169"
+           class="wb-casino-card js-casino-card-item"
+           data-gname="sands of mummy"
+           title="Play Sands Of Mummy">
+          <img src="public/assets/casino/169.jpg" alt="Sands Of Mummy" loading="lazy" onerror="this.src='/assets/casino/99_0010.webp'">
+          <div class="wb-casino-card-overlay">
+            <div class="text-white fw-bold text-center mb-1" style="font-size:11px;text-shadow:0 1px 3px #000;">Sands Of Mummy</div>
+            <span class="wb-casino-play-pill"><i class="fas fa-play me-1"></i> PLAY NOW</span>
+          </div>
+        </a>
+          </div>
+  
+      <!-- Exchange Footer (Screenshot 08) -->
+      <footer class="wb-footer">
+        <div class="mb-2 fw-bold">
+          Support &nbsp;
+          <a href="https://wa.me/919831391470" target="_blank" class="text-dark fw-normal">
+            <i class="fab fa-whatsapp" style="color:#28D146;font-size:16px;"></i> WhatsApp +919831391470
+          </a>
+        </div>
+        <div class="wb-footer-links">
+          <a onclick="showFooterPolicy('Privacy Policy')">Privacy Policy</a> |
+          <a onclick="showFooterPolicy('KYC Policy')">KYC</a> |
+          <a onclick="showFooterPolicy('Terms and Conditions')">Terms and Conditions</a> |
+          <a onclick="showFooterPolicy('Rules and Regulations')">Rules and Regulations</a> |
+          <a onclick="showFooterPolicy('Responsible Gambling')">Responsible Gambling</a>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Right Open Bets & Bet Slip Sidebar -->
+    <aside class="wb-right-sidebar">
+      <div class="wb-right-title">
+        <span>Open Bets</span>
+                                </div>
+
+            <div class="p-2 border-bottom">
+        <select class="form-select form-select-sm" style="font-size:12px;border-color:#c8ced3;">
+          <option value="all">Select Market</option>
+          <option value="match_odds">Match Odds</option>
+          <option value="bookmaker">Bookmaker</option>
+          <option value="fancy">Fancy Bet</option>
+          <option value="sportsbook">Sportsbook</option>
+        </select>
+      </div>
+      
+      <!-- Interactive Bet Slip Panel -->
+      <div id="wbBetSlipPanel" class="wb-betslip-panel">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <div>
+            <span id="slipBetTypeBadge" class="badge bg-primary">BACK</span>
+            <strong id="slipSelectionName" class="ms-1">Runner</strong>
+          </div>
+          <button type="button" class="btn-close btn-sm" onclick="WB24.closeBetSlip()"></button>
+        </div>
+        <div id="slipMarketName" class="text-muted mb-2" style="font-size:10px;">Match • Match Odds</div>
+
+        <div class="row g-2 align-items-center mb-2">
+          <div class="col-6">
+            <label class="small fw-bold d-block mb-1">Odds</label>
+            <div class="input-group input-group-sm">
+              <button class="btn btn-outline-secondary" type="button" onclick="WB24.stepOdds(-0.01)">-</button>
+              <input type="number" step="0.01" id="slipOddsInput" class="form-control text-center fw-bold" oninput="WB24.updateSlipCalculations()">
+              <button class="btn btn-outline-secondary" type="button" onclick="WB24.stepOdds(0.01)">+</button>
+            </div>
+          </div>
+          <div class="col-6">
+            <label class="small fw-bold d-block mb-1">Stake (PTI)</label>
+            <input type="number" step="10" id="slipStakeInput" class="form-control form-control-sm text-center fw-bold" oninput="WB24.updateSlipCalculations()">
+          </div>
+        </div>
+
+                <div class="wb-stake-grid">
+                      <button type="button" class="wb-stake-btn" onclick="WB24.setStake(100)">+100</button>
+                      <button type="button" class="wb-stake-btn" onclick="WB24.setStake(500)">+500</button>
+                      <button type="button" class="wb-stake-btn" onclick="WB24.setStake(1000)">+1000</button>
+                      <button type="button" class="wb-stake-btn" onclick="WB24.setStake(5000)">+5000</button>
+                      <button type="button" class="wb-stake-btn" onclick="WB24.setStake(10000)">+10000</button>
+                      <button type="button" class="wb-stake-btn" onclick="WB24.setStake(25000)">+25000</button>
+                      <button type="button" class="wb-stake-btn" onclick="WB24.setStake(50000)">+50000</button>
+                      <button type="button" class="wb-stake-btn" onclick="WB24.setStake(100000)">+100000</button>
+                  </div>
+
+        <div class="d-flex justify-content-between small mt-2 pt-1 border-top border-secondary-subtle">
+          <span>Profit: <strong class="text-success" id="slipProfitVal">0.00</strong></span>
+          <span>Liability: <strong class="text-danger" id="slipLiabilityVal">0.00</strong></span>
+        </div>
+
+        <div class="d-flex justify-content-between mt-2">
+          <button type="button" class="wb-btn-cancelbet" onclick="WB24.closeBetSlip()">Cancel</button>
+          <button type="button" id="btnPlaceBetSubmit" class="wb-btn-placebet" onclick="WB24.submitBet(false)">Place Bet</button>
+        </div>
+      </div>
+
+      <!-- Open Bets List -->
+      <div id="wbOpenBetsList" class="p-1">
+                            <div class="js-no-open-bets text-center text-muted py-3 small">
+            Click on any Back (blue) or Lay (pink) odds box to place a bet.
+          </div>
+                        </div>
+    </aside>
+  </div>
+  
+  <!-- ================= FLOATING CONTACT US WIDGET ================= -->
+    <a href="https://wa.me/919831391470" target="_blank" class="wb-contact-float">
+    <span class="contact-label">Contact Us...</span>
+    <span class="contact-circle"><i class="fas fa-comment-alt"></i></span>
+  </a>
+  
+  <!-- ================= MOBILE BOTTOM NAVIGATION (Screenshot 02) ================= -->
+  <nav class="wb-mobile-bottom-nav">
+    <a href="./" class="">
+      <i class="fas fa-home fs-5 mb-1"></i>
+      <span>Home</span>
+    </a>
+    <a href="http://localhost/inplay" class="">
+      <i class="fas fa-stopwatch fs-5 mb-1"></i>
+      <span>In-Play</span>
+    </a>
+    <a href="http://localhost/sports" class="">
+      <i class="fas fa-trophy fs-5 mb-1"></i>
+      <span>Sports</span>
+    </a>
+    <a href="http://localhost/livecasino" class="active">
+      <i class="fas fa-dice fs-5 mb-1"></i>
+      <span>Casino</span>
+    </a>
+    <a href="http://localhost/login" class="">
+      <i class="fas fa-user-circle fs-5 mb-1"></i>
+      <span>Account</span>
+    </a>
+  </nav>
+
+  <!-- ================= 18+ NON-GAMBLING TERRITORIES MODAL (Guest Only) ================= -->
+    <div class="modal fade wb-age-modal" id="ageconfirmationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <span class="wb-age-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></span>
+        <div class="text1 text-confirm-bold">Non-Gambling Territories.</div>
+        <hr class="confirm-line">
+        <div class="text2 mb-3">
+          Connecting to our site from non gambling countries, it will be User's responsibility to ensure that their use of the service is lawful.
+        </div>
+        <div class="text1 text-confirm-bold">Underage gambling is prohibited.</div>
+        <hr class="confirm-line">
+        <div class="text2 mb-3">
+          Please confirm if you are <span>18 years old and above</span> as of today.
+        </div>
+        <div class="d-flex justify-content-center gap-3 mt-2">
+          <button type="button" class="wb-age-btn-confirm" onclick="WB24.confirmAge()">Confirm</button>
+          <button type="button" class="wb-age-btn-exit" data-bs-dismiss="modal">Exit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ================= EXPOSURE DETAIL MODAL ================= -->
+  <div class="modal fade" id="exposureModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header py-2 text-white" style="background:var(--header-bg);">
+          <h6 class="modal-title fw-bold m-0">Exposure Detail</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-2">
+          <table class="table table-bordered table-sm mb-0 small text-center">
+            <thead class="table-light">
+              <tr>
+                <th>Sport Name</th>
+                <th>Event Name</th>
+                <th>Market Name</th>
+                <th>Liability</th>
+              </tr>
+            </thead>
+            <tbody>
+                              <tr>
+                  <td colspan="4" class="text-center text-muted py-2">No real-time exposure records found</td>
+                </tr>
+                          </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MOBILE BETSLIP MODAL ================= -->
+  <div class="modal fade" id="mobileBetSlipModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header py-2 text-white" style="background:var(--header-bg);">
+          <h6 class="modal-title fw-bold m-0">Place Bet - <span id="mblSlipSelection">Selection</span></h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="small fw-bold">Odds</label>
+              <input type="number" step="0.01" id="mblSlipOdds" class="form-control form-control-sm fw-bold text-center">
+            </div>
+            <div class="col-6">
+              <label class="small fw-bold">Stake (PTI)</label>
+              <input type="number" step="10" id="mblSlipStake" class="form-control form-control-sm fw-bold text-center">
+            </div>
+          </div>
+          <div class="wb-stake-grid mb-3">
+                          <button type="button" class="wb-stake-btn" onclick="WB24.setStake(100)">+100</button>
+                          <button type="button" class="wb-stake-btn" onclick="WB24.setStake(500)">+500</button>
+                          <button type="button" class="wb-stake-btn" onclick="WB24.setStake(1000)">+1000</button>
+                          <button type="button" class="wb-stake-btn" onclick="WB24.setStake(5000)">+5000</button>
+                          <button type="button" class="wb-stake-btn" onclick="WB24.setStake(10000)">+10000</button>
+                          <button type="button" class="wb-stake-btn" onclick="WB24.setStake(25000)">+25000</button>
+                          <button type="button" class="wb-stake-btn" onclick="WB24.setStake(50000)">+50000</button>
+                          <button type="button" class="wb-stake-btn" onclick="WB24.setStake(100000)">+100000</button>
+                      </div>
+          <button type="button" class="wb-btn-placebet w-100 py-2" data-bs-dismiss="modal" onclick="WB24.submitBet(true)">
+            Confirm &amp; Place Bet
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER POLICY MODAL ================= -->
+  <div class="modal fade" id="footerPolicyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header py-2 text-white" style="background:var(--header-bg);">
+          <h6 class="modal-title fw-bold m-0" id="footerPolicyTitle">Rules and Regulations</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body small">
+          <p class="fw-bold mb-2">winbook24.com Official Exchange Policy</p>
+          <p class="mb-2">1. All users must be 18 years of age or older. Underage gambling is strictly prohibited.</p>
+          <p class="mb-2">2. All sports exchange markets (Match Odds, Bookmaker, Fancy Bet, Sportsbook) are settled according to official governing federation results.</p>
+          <p class="mb-0">3. Minimum Deposit is 500 PTI and Minimum Withdrawal is 1000 PTI with 24x7 customer support.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="public/js/winbook24.js"></script>
+  <script>
+    function showFooterPolicy(title) {
+      document.getElementById('footerPolicyTitle').textContent = title;
+      new bootstrap.Modal(document.getElementById('footerPolicyModal')).show();
+    }
+
+    window.WB24Sidebar = {
+      toggleMobileSidebar: function () {
+        var sb = document.getElementById('wbLeftSidebar');
+        var bd = document.getElementById('wbSidebarBackdrop');
+        if (!sb) return;
+        var isOpen = sb.classList.contains('mobile-open');
+        sb.classList.toggle('mobile-open', !isOpen);
+        if (bd) bd.classList.toggle('show', !isOpen);
+      },
+      closeMobileSidebar: function () {
+        document.getElementById('wbLeftSidebar')?.classList.remove('mobile-open');
+        document.getElementById('wbSidebarBackdrop')?.classList.remove('show');
+      },
+      showMainSports: function () {
+        document.querySelectorAll('.js-sidebar-sport-tree').forEach(function (el) {
+          el.classList.add('d-none');
+        });
+        var main = document.getElementById('wbSidebarMainSports');
+        if (main) main.classList.remove('d-none');
+      },
+      openSportTree: function (sportId) {
+        var tree = document.getElementById('wbSidebarSportTree_' + sportId);
+        if (!tree) return false;
+        var main = document.getElementById('wbSidebarMainSports');
+        if (main) main.classList.add('d-none');
+        document.querySelectorAll('.js-sidebar-sport-tree').forEach(function (el) {
+          el.classList.add('d-none');
+        });
+        tree.classList.remove('d-none');
+        return true;
+      },
+      selectSport: function (e, sportId, url) {
+        this.openSportTree(sportId);
+        return true;
+      },
+      toggleTournament: function (slug, anchor) {
+        var ul = document.getElementById(slug);
+        if (!ul) return;
+        var isHidden = ul.classList.contains('d-none');
+        ul.classList.toggle('d-none', !isHidden);
+        if (anchor) {
+          var li = anchor.closest('.wb-sidebar-dropdown');
+          if (li) li.classList.toggle('open', isHidden);
+        }
+      }
+    };
+
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('.wb-match-link, .wb-inplay-tag, .wb-match-info, a[href*="/exchange/full-market"], a[href*="/fullMarket/"]');
+      if (link && !e.defaultPrevented) {
+        var loader = document.getElementById('wbGlobalMatchLoader');
+        if (loader) {
+          loader.classList.remove('d-none');
+          loader.style.display = 'flex';
+        }
+      }
+    }, true);
+  </script>
+
+  <!-- ================= GLOBAL MATCH LOADING MODAL (Winbook24 1:1) ================= -->
+  <div id="wbGlobalMatchLoader" class="d-none" style="position:fixed;inset:0;background:rgba(0,0,0,0.25);z-index:999999;align-items:center;justify-content:center;">
+    <div style="background:#ffffff;padding:12px 28px;border-radius:6px;box-shadow:0 8px 30px rgba(0,0,0,0.35);font-weight:700;font-size:14px;color:#243a48;display:flex;align-items:center;gap:10px;">
+      <span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+      <span>Loading..</span>
+    </div>
+  </div>
+    <script>
+  function switchLiveCasinoPane(slug, btn) {
+    document.querySelectorAll('.wb-casino-tab-link').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.js-lc-pane').forEach(p => p.classList.add('d-none'));
+    document.getElementById('lcPane_' + slug)?.classList.remove('d-none');
+  }
+
+  function filterCasinoCards(q) {
+    const term = q.trim().toLowerCase();
+    document.querySelectorAll('.js-casino-card-item').forEach(el => {
+      el.style.display = (!term || el.dataset.gname.includes(term)) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
+
