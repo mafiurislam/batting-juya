@@ -28,20 +28,21 @@
   </div>
 
   <!-- Highlights Section -->
-  <div class="wb-highlights-header">
-    Highlights
+  <div class="wb-highlights-header d-flex align-items-center">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+    <span>Highlights</span>
   </div>
 
   <!-- Sport Tabs: Cricket | Soccer | Tennis -->
   <div class="wb-sport-tabs-bar">
     <button type="button" class="wb-sport-tab-btn active" onclick="switchHighlightSport('cricket', this)">
-      Cricket
+      <span class="wb-tab-check me-1">&#10003;</span>Cricket
     </button>
     <button type="button" class="wb-sport-tab-btn" onclick="switchHighlightSport('soccer', this)">
-      Soccer
+      <span class="wb-tab-check me-1 d-none">&#10003;</span>Soccer
     </button>
     <button type="button" class="wb-sport-tab-btn" onclick="switchHighlightSport('tennis', this)">
-      Tennis
+      <span class="wb-tab-check me-1 d-none">&#10003;</span>Tennis
     </button>
   </div>
 
@@ -178,8 +179,14 @@
 
   function switchHighlightSport(key, btn) {
     activeHomeSport = key;
-    document.querySelectorAll('.wb-sport-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.wb-sport-tab-btn').forEach(b => {
+      b.classList.remove('active');
+      const c = b.querySelector('.wb-tab-check');
+      if (c) c.classList.add('d-none');
+    });
     btn.classList.add('active');
+    const chk = btn.querySelector('.wb-tab-check');
+    if (chk) chk.classList.remove('d-none');
     document.querySelectorAll('.js-hl-pane').forEach(p => p.classList.add('d-none'));
     document.getElementById('hlPane_' + key)?.classList.remove('d-none');
     applyHomeDayFilter();

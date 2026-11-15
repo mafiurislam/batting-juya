@@ -696,7 +696,26 @@
         }
       }
     };
+
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('.wb-match-link, .wb-inplay-tag, .wb-match-info, a[href*="/exchange/full-market"], a[href*="/fullMarket/"]');
+      if (link && !e.defaultPrevented) {
+        var loader = document.getElementById('wbGlobalMatchLoader');
+        if (loader) {
+          loader.classList.remove('d-none');
+          loader.style.display = 'flex';
+        }
+      }
+    }, true);
   </script>
+
+  <!-- ================= GLOBAL MATCH LOADING MODAL (Winbook24 1:1) ================= -->
+  <div id="wbGlobalMatchLoader" class="d-none" style="position:fixed;inset:0;background:rgba(0,0,0,0.25);z-index:999999;align-items:center;justify-content:center;">
+    <div style="background:#ffffff;padding:12px 28px;border-radius:6px;box-shadow:0 8px 30px rgba(0,0,0,0.35);font-weight:700;font-size:14px;color:#243a48;display:flex;align-items:center;gap:10px;">
+      <span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+      <span>Loading..</span>
+    </div>
+  </div>
   @auth
     @include('partials.deposit-modal')
   @endauth

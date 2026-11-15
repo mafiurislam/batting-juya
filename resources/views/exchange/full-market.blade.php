@@ -307,7 +307,7 @@
   .fm-suspend-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(20, 26, 33, 0.76);
+    background: rgba(20, 26, 33, 0.78);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -316,9 +316,20 @@
     cursor: not-allowed;
   }
   .fm-suspend-overlay span {
-    color: #ff2a2a;
+    color: #ff3333;
     font-weight: 700;
     font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .fm-suspend-overlay span.fm-ballrun-badge {
+    color: #ffc107 !important;
+    font-style: italic !important;
+    text-transform: none !important;
+  }
+  .wb-bookmaker-table .fm-runner-row,
+  .wb-bookmaker-table .fm-runner-name {
+    background: #f8f7ee !important;
   }
 
   /* Inline Bet Slip inside Match Odds / Bookmaker / Fancy (1:1 Winbook24 style) */
@@ -1326,7 +1337,7 @@
           </span>
         </div>
 
-        @if(count($moRunners) === 2)
+        @if(count($moRunners) === 2 && stripos($moTitle, 'Tied') === false)
           <button type="button" class="fm-cashout-btn">
             <span class="fm-cashout-dot"></span> Cash Out
           </button>
@@ -1444,8 +1455,9 @@
       </div>
 
       <div class="fm-subhead" style="background:transparent;">
-        <div class="flex-grow-1">
+        <div class="flex-grow-1 d-flex align-items-center">
           <span class="wb-minmax-pill fm-mbl-minmax">Min/Max {{ $bmMin }}-{{ $bmMax }}</span>
+          <span class="text-danger fw-bold ms-3 small box-hide-mbl" style="font-size:11px;">To Win The Match Bet Started In Sportsbook Market</span>
         </div>
         <div class="fm-subhead-right">
           <div class="box-hide-mbl" style="width:116px;"></div>
@@ -2218,7 +2230,9 @@
         const moTitle = mo.marketName || 'Match Odds';
         const moStatus = String(mo.oddsData?.status || 'OPEN').toUpperCase();
         const runners = mo.oddsData?.runners || [];
-        const card = document.querySelector(`.js-market-pos-scope[data-market-category="exchange"]`) ||
+        const card = document.querySelector(`.js-market-pos-scope[data-market-key="mo_${moIdx}"]`) ||
+                     document.querySelectorAll(`.js-market-pos-scope[data-market-category="exchange"]`)[moIdx] ||
+                     document.querySelector(`.js-market-pos-scope[data-market-category="exchange"]`) ||
                      document.getElementById('fmSection_match_odds');
         if (!card) return;
 
@@ -2238,10 +2252,18 @@
           if (!row) return;
 
           const rStatus = String(r.status || moStatus).toUpperCase();
+          const isBallrun = rStatus.includes('BALL') || moStatus.includes('BALL');
           const isSusp = ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'BALL RUNNING', 'CLOSED'].includes(rStatus) ||
                          ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'CLOSED'].includes(moStatus);
           const suspEl = row.querySelector('.fm-suspend-overlay');
-          if (suspEl) suspEl.classList.toggle('d-none', !isSusp);
+          if (suspEl) {
+            suspEl.classList.toggle('d-none', !isSusp);
+            const span = suspEl.querySelector('span');
+            if (span) {
+              span.textContent = isBallrun ? 'Ballrun' : 'Suspended';
+              span.className = isBallrun ? 'fm-ballrun-badge' : 'fm-suspended-badge';
+            }
+          }
 
           const backs = r.price?.back || [];
           const lays = r.price?.lay || [];
@@ -2311,12 +2333,16 @@
           const rStatus = String(r.status || bmStatus).toUpperCase();
           const isSusp = ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'BALL RUNNING', 'CLOSED'].includes(rStatus) ||
                          ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'CLOSED'].includes(bmStatus);
-          const suspTxt = (rStatus.includes('BALL') || bmStatus.includes('BALL')) ? 'Ballrun' : 'Suspended';
+          const isBallrun = rStatus.includes('BALL') || bmStatus.includes('BALL');
+          const suspTxt = isBallrun ? 'Ballrun' : 'Suspended';
           const suspEl = row.querySelector('.fm-suspend-overlay');
           if (suspEl) {
             suspEl.classList.toggle('d-none', !isSusp);
             const span = suspEl.querySelector('span');
-            if (span) span.textContent = suspTxt;
+            if (span) {
+              span.textContent = suspTxt;
+              span.className = isBallrun ? 'fm-ballrun-badge' : 'fm-suspended-badge';
+            }
           }
 
           const backs = r.price?.back || [];
@@ -2418,8 +2444,17 @@
         }
         if (!row) return;
 
+        const isBallrun = fStatus.includes('BALL');
+        const suspTxt = isBallrun ? 'Ballrun' : 'Suspended';
         const suspEl = row.querySelector('.fm-suspend-overlay');
-        if (suspEl) suspEl.classList.toggle('d-none', !isSusp);
+        if (suspEl) {
+          suspEl.classList.toggle('d-none', !isSusp);
+          const span = suspEl.querySelector('span');
+          if (span) {
+            span.textContent = suspTxt;
+            span.className = isBallrun ? 'fm-ballrun-badge' : 'fm-suspended-badge';
+          }
+        }
 
         const noCell = row.querySelector('.js-fancy-no-cell');
         if (noCell) {

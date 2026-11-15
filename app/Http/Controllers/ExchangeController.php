@@ -584,11 +584,101 @@ class ExchangeController extends Controller
         $payload = $this->resolveMarketsPayload($sportId, $eventId, $event);
         $liveScore = $this->fetchUniverseLiveScore($sportId, $eventId, $event);
 
+        if ($event?->in_play && !app()->runningUnitTests()) {
+            $payload = $this->applyDynamicLiveTicks($payload, $sportId, $eventId);
+        }
+
         return response()->json([
             'meta' => ['status_code' => 200, 'status' => true, 'message' => 'Market List'],
             'data' => $payload,
             'liveScore' => $liveScore,
         ]);
+    }
+
+    private function applyDynamicLiveTicks(array $payload, string $sportId, string $eventId): array
+    {
+        $tickKey = "wb24_sim_tick_{$eventId}";
+        $tick = (int) Cache::get($tickKey, 0) + 1;
+        Cache::put($tickKey, $tick, 300);
+
+        // Every 16 ticks (~32s), simulate a 4-second ball running
+        $isBallRun = ($sportId === '4' && ($tick % 16 === 0 || $tick % 16 === 1));
+
+        // 1. Match Odds subtle price/vol ticks
+        if (!empty($payload['matchOddsData'][0]['oddsData']['runners'])) {
+            foreach ($payload['matchOddsData'][0]['oddsData']['runners'] as $idx => &$r) {
+                if ($isBallRun) {
+                    $r['status'] = 'BALLRUN';
+                    continue;
+                }
+                $r['status'] = 'ONLINE';
+                $offset = (($tick + $idx) % 3 - 1) * 0.01;
+                if (!empty($r['price']['back'][0]['price'])) {
+                    $r['price']['back'][0]['price'] = max(1.02, round((float) $r['price']['back'][0]['price'] + $offset, 2));
+                    $r['price']['back'][0]['size'] = (int) ($r['price']['back'][0]['size'] ?? 45000) + (($tick * 137) % 5000);
+                }
+                if (!empty($r['price']['lay'][0]['price'])) {
+                    $r['price']['lay'][0]['price'] = max(1.03, round((float) $r['price']['lay'][0]['price'] + $offset, 2));
+                    $r['price']['lay'][0]['size'] = (int) ($r['price']['lay'][0]['size'] ?? 42000) + (($tick * 151) % 5000);
+                }
+            }
+            unset($r);
+            if (!empty($payload['matchOddsData'][0]['oddsData']['totalMatched'])) {
+                $payload['matchOddsData'][0]['oddsData']['totalMatched'] += (($tick * 211) % 15000);
+            }
+        }
+
+        // 2. Bookmaker subtle rate ticks
+        if (!empty($payload['bookmakersData'][0]['oddsData']['runners'])) {
+            foreach ($payload['bookmakersData'][0]['oddsData']['runners'] as $idx => &$br) {
+                if ($isBallRun) {
+                    $br['status'] = 'BALLRUN';
+                    continue;
+                }
+                $br['status'] = 'ONLINE';
+                $bmOffset = (($tick + $idx) % 3 - 1);
+                if (!empty($br['price']['back'][0]['price'])) {
+                    $cur = (int) $br['price']['back'][0]['price'];
+                    $newRate = max(10, min(95, $cur + $bmOffset));
+                    $br['price']['back'][0]['price'] = $newRate;
+                    if (isset($br['price']['back'][1])) $br['price']['back'][1]['price'] = max(0, $newRate - 1);
+                    if (isset($br['price']['back'][2])) $br['price']['back'][2]['price'] = max(0, $newRate - 2);
+                    if (isset($br['price']['lay'][0])) $br['price']['lay'][0]['price'] = $newRate + 2;
+                    if (isset($br['price']['lay'][1])) $br['price']['lay'][1]['price'] = $newRate + 3;
+                    if (isset($br['price']['lay'][2])) $br['price']['lay'][2]['price'] = $newRate + 4;
+                }
+            }
+            unset($br);
+        }
+
+        // 3. Fancy subtle runs ticks
+        if (!empty($payload['fancyData'])) {
+            foreach ($payload['fancyData'] as $idx => &$f) {
+                if ($isBallRun) {
+                    $f['oddsData']['status'] = 'BALLRUN';
+                    if (!empty($f['oddsData']['runners'][0])) {
+                        $f['oddsData']['runners'][0]['status'] = 'BALLRUN';
+                    }
+                    continue;
+                }
+                $f['oddsData']['status'] = 'ONLINE';
+                if (!empty($f['oddsData']['runners'][0])) {
+                    $f['oddsData']['runners'][0]['status'] = 'ONLINE';
+                    if (($tick + $idx) % 7 === 0) {
+                        $diff = (($tick + $idx) % 2 === 0 ? 1 : -1);
+                        if (!empty($f['oddsData']['runners'][0]['price']['back'][0]['price'])) {
+                            $f['oddsData']['runners'][0]['price']['back'][0]['price'] += $diff;
+                        }
+                        if (!empty($f['oddsData']['runners'][0]['price']['lay'][0]['price'])) {
+                            $f['oddsData']['runners'][0]['price']['lay'][0]['price'] += $diff;
+                        }
+                    }
+                }
+            }
+            unset($f);
+        }
+
+        return $payload;
     }
 
     public function liveMarketDataPost(Request $request)
@@ -943,8 +1033,16 @@ class ExchangeController extends Controller
                     'selectionId' => $selId,
                     'status' => 'ONLINE',
                     'price' => [
-                        'back' => [['price' => $bmRate, 'size' => 500000]],
-                        'lay' => [['price' => $bmRate + 2, 'size' => 500000]],
+                        'back' => [
+                            ['price' => $bmRate, 'size' => '5M'],
+                            ['price' => max(0, $bmRate - 1), 'size' => '5M'],
+                            ['price' => max(0, $bmRate - 2), 'size' => '5M'],
+                        ],
+                        'lay' => [
+                            ['price' => $bmRate + 2, 'size' => '5M'],
+                            ['price' => $bmRate + 3, 'size' => '5M'],
+                            ['price' => $bmRate + 4, 'size' => '5M'],
+                        ],
                     ],
                 ];
             }
@@ -1015,10 +1113,10 @@ class ExchangeController extends Controller
         }
 
         $sbData = [];
-        if ($event?->is_sportsbook && count($runners) >= 2) {
+        if (($event?->is_sportsbook || $sportId === '4') && count($runners) >= 2) {
             $sbData[] = [
-                'marketId' => 'sb_' . ($event->event_id ?? '1'),
-                'exMarketId' => 'sb_' . ($event->event_id ?? '1'),
+                'marketId' => 'sb_' . ($event?->event_id ?? $eventId),
+                'exMarketId' => 'sb_' . ($event?->event_id ?? $eventId),
                 'marketName' => 'To Win The Match',
                 'min' => 10,
                 'max' => 250000,
@@ -1038,28 +1136,93 @@ class ExchangeController extends Controller
             ];
         }
 
-        return [
-            'matchOddsData' => [
-                [
-                    'marketId' => $event?->market_id ?? '1.100',
-                    'exMarketId' => $event?->market_id ?? '1.100',
-                    'exEventId' => $event?->event_id ?? $eventId,
-                    'eventName' => $event?->event_name ?? 'Match',
-                    'sportId' => $sportId,
-                    'sportName' => $event?->sport_name ?? 'Cricket',
-                    'marketName' => $event?->market_name ?? 'Match Odds',
-                    'eventTime' => $event?->event_time ?? now()->toIso8601String(),
-                    'min' => 10,
-                    'max' => 10000,
-                    'runnersData' => $runnersData,
-                    'oddsData' => [
-                        'inPlay' => (bool) ($event?->in_play ?? true),
-                        'status' => ($event?->in_play && ($event?->status ?? '') === 'SUSPENDED') ? 'OPEN' : ($event?->status ?? 'OPEN'),
-                        'totalMatched' => ((float) ($event?->total_matched ?? 0) > 0) ? $event->total_matched : 1850000,
-                        'runners' => $moRunners,
-                    ],
+        $moList = [
+            [
+                'marketId' => $event?->market_id ?? '1.100',
+                'exMarketId' => $event?->market_id ?? '1.100',
+                'exEventId' => $event?->event_id ?? $eventId,
+                'eventName' => $event?->event_name ?? 'Match',
+                'sportId' => $sportId,
+                'sportName' => $event?->sport_name ?? 'Cricket',
+                'marketName' => $event?->market_name ?? 'Match Odds',
+                'marketType' => 'MATCH_ODDS',
+                'eventTime' => $event?->event_time ?? now()->toIso8601String(),
+                'min' => 10,
+                'max' => 10000,
+                'runnersData' => $runnersData,
+                'oddsData' => [
+                    'inPlay' => (bool) ($event?->in_play ?? true),
+                    'status' => ($event?->in_play && ($event?->status ?? '') === 'SUSPENDED') ? 'OPEN' : ($event?->status ?? 'OPEN'),
+                    'totalMatched' => ((float) ($event?->total_matched ?? 0) > 0) ? $event->total_matched : 1850000,
+                    'runners' => $moRunners,
                 ],
             ],
+        ];
+
+        if ($sportId === '4') {
+            $tiedMarketId = 'tm_' . ($event?->event_id ?? $eventId);
+            $moList[] = [
+                'marketId' => $tiedMarketId,
+                'exMarketId' => $tiedMarketId,
+                'exEventId' => $event?->event_id ?? $eventId,
+                'eventName' => $event?->event_name ?? 'Match',
+                'sportId' => '4',
+                'sportName' => 'Cricket',
+                'marketName' => 'Tied Match',
+                'marketType' => 'TIED_MATCH',
+                'eventTime' => $event?->event_time ?? now()->toIso8601String(),
+                'min' => 10,
+                'max' => 50000,
+                'runnersData' => [
+                    '37302' => 'Yes',
+                    '37303' => 'No',
+                ],
+                'oddsData' => [
+                    'inPlay' => (bool) ($event?->in_play ?? true),
+                    'status' => 'OPEN',
+                    'totalMatched' => 250000,
+                    'runners' => [
+                        [
+                            'selectionId' => '37302',
+                            'runnerName' => 'Yes',
+                            'status' => 'ONLINE',
+                            'price' => [
+                                'back' => [
+                                    ['price' => 100, 'size' => 1500],
+                                    ['price' => 95, 'size' => 2200],
+                                    ['price' => 90, 'size' => 4500],
+                                ],
+                                'lay' => [
+                                    ['price' => 120, 'size' => 1500],
+                                    ['price' => 130, 'size' => 2800],
+                                    ['price' => 140, 'size' => 4200],
+                                ],
+                            ],
+                        ],
+                        [
+                            'selectionId' => '37303',
+                            'runnerName' => 'No',
+                            'status' => 'ONLINE',
+                            'price' => [
+                                'back' => [
+                                    ['price' => 1.01, 'size' => 50000],
+                                    ['price' => 1.00, 'size' => 75000],
+                                    ['price' => 0, 'size' => 0],
+                                ],
+                                'lay' => [
+                                    ['price' => 1.02, 'size' => 50000],
+                                    ['price' => 1.03, 'size' => 75000],
+                                    ['price' => 0, 'size' => 0],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return [
+            'matchOddsData' => $moList,
             'bookmakersData' => !empty($bmRunners) ? [
                 [
                     'marketId' => 'bm_' . ($event?->event_id ?? $eventId),
