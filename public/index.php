@@ -45,6 +45,11 @@ if (!file_exists($sqlitePath)) {
     }
 }
 
+// 4. Ensure public/storage symlink exists for media uploads
+if (!file_exists($basePath . '/public/storage') && is_dir($basePath . '/storage/app/public')) {
+    @symlink($basePath . '/storage/app/public', $basePath . '/public/storage');
+}
+
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = $basePath . '/storage/framework/maintenance.php')) {
     require $maintenance;
