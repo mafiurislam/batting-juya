@@ -26,12 +26,14 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register REGEXP function for SQLite connection so regex queries work seamlessly
         try {
-            $pdo = \Illuminate\Support\Facades\DB::connection()->getPdo();
-            if ($pdo && method_exists($pdo, 'sqliteCreateFunction')) {
-                $pdo->sqliteCreateFunction('REGEXP', function ($pattern, $value) {
-                    if ($value === null) return false;
-                    return (bool) @preg_match('/' . str_replace('/', '\/', $pattern) . '/', (string) $value);
-                }, 2);
+            if (config('database.default') === 'sqlite') {
+                $pdo = \Illuminate\Support\Facades\DB::connection()->getPdo();
+                if ($pdo && method_exists($pdo, 'sqliteCreateFunction')) {
+                    $pdo->sqliteCreateFunction('REGEXP', function ($pattern, $value) {
+                        if ($value === null) return false;
+                        return (bool) @preg_match('/' . str_replace('/', '\/', $pattern) . '/', (string) $value);
+                    }, 2);
+                }
             }
         } catch (\Throwable $e) {
             // Ignore if connection not ready
