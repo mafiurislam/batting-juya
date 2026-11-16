@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('phone', 30)->index();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
-            $table->decimal('balance', 16, 2)->default(1000.00);
+            $table->decimal('balance', 16, 2)->default(0.00);
             $table->decimal('exposure', 16, 2)->default(0.00);
             $table->decimal('bonus_balance', 16, 2)->default(0.00);
             $table->string('referral_code', 32)->unique()->nullable();

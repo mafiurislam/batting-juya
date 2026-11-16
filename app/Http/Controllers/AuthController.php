@@ -296,15 +296,12 @@ class AuthController extends Controller
             return response()->json($verify, 422);
         }
 
-        $welcomeBalance = (float) SiteSetting::getValue('welcome_bonus_pti', env('WELCOME_BONUS_PTI', 1000.00));
+        $welcomeBalance = (float) SiteSetting::getValue('welcome_bonus_pti', env('WELCOME_BONUS_PTI', 0.00));
         $referrer = null;
         if (!empty($promoCode)) {
             $referrer = User::where('referral_code', strtoupper($promoCode))
                 ->orWhereRaw('LOWER(username) = ?', [strtolower($promoCode)])
                 ->first();
-            if ($referrer) {
-                $welcomeBalance += 250.00;
-            }
         }
 
         $user = User::create([
@@ -317,7 +314,7 @@ class AuthController extends Controller
             'password' => Hash::make($password),
             'balance' => $welcomeBalance,
             'exposure' => 0.00,
-            'bonus_balance' => $referrer ? 250.00 : 0.00,
+            'bonus_balance' => 0.00,
             'referral_code' => 'WB24' . strtoupper(Str::random(5)),
             'referred_by' => $referrer?->username,
             'promo_code' => $promoCode ?: null,
@@ -353,15 +350,17 @@ class AuthController extends Controller
             ]);
         }
 
-        AccountStatement::create([
-            'user_id' => $user->id,
-            'credit' => $welcomeBalance,
-            'debit' => 0,
-            'balance' => $welcomeBalance,
-            'remark' => 'Signup Welcome Balance PTI (MSG91 Verified)',
-            'from_to' => 'Winbook24 -> ' . $user->username,
-            'ref_type' => 'signup',
-        ]);
+        if ($welcomeBalance > 0) {
+            AccountStatement::create([
+                'user_id' => $user->id,
+                'credit' => $welcomeBalance,
+                'debit' => 0,
+                'balance' => $welcomeBalance,
+                'remark' => 'Signup Welcome Balance PTI (MSG91 Verified)',
+                'from_to' => 'Winbook24 -> ' . $user->username,
+                'ref_type' => 'signup',
+            ]);
+        }
 
         PasswordHistory::create([
             'user_id' => $user->id,

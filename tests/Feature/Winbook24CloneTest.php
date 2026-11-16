@@ -58,6 +58,10 @@ class Winbook24CloneTest extends TestCase
         $verifyRes->assertStatus(200)->assertJson(['status' => true]);
         $this->assertAuthenticated();
         $this->assertDatabaseHas('users', ['username' => $username, 'phone' => $phone]);
+
+        $createdUser = User::where('username', $username)->firstOrFail();
+        $this->assertEquals(0.00, (float) $createdUser->balance);
+        $this->assertDatabaseMissing('account_statements', ['user_id' => $createdUser->id, 'ref_type' => 'signup']);
     }
 
     public function test_exchange_bet_placement_and_cashout(): void

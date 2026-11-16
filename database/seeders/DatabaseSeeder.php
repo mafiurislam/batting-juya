@@ -170,7 +170,7 @@ class DatabaseSeeder extends Seeder
         SiteSetting::setValue('news_marquee', 'Minimum deposit 500 and minimum withdrawal 1000 | Welcome to winbook24.com - Instant Deposit & 24x7 Fast Withdrawal!', 'general');
         SiteSetting::setValue('support_whatsapp', '+919831391470', 'general');
         SiteSetting::setValue('support_telegram', 'https://t.me/winbook24official', 'general');
-        SiteSetting::setValue('welcome_bonus_pti', '1000.00', 'limits');
+        SiteSetting::setValue('welcome_bonus_pti', '0.00', 'limits');
         SiteSetting::setValue('min_deposit', '100', 'banking');
         SiteSetting::setValue('min_withdraw', '1000', 'banking');
         SiteSetting::setValue('deposit_upi_id', 'winbook24.pay@axis', 'banking');

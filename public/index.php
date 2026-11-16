@@ -12,15 +12,23 @@ define('LARAVEL_START', microtime(true));
 $basePath = dirname(__DIR__);
 
 // 1. Self-healing .env check for Hostinger Git Deployment
-if (!file_exists($basePath . '/.env')) {
-    if (file_exists($basePath . '/.env.production')) {
-        @copy($basePath . '/.env.production', $basePath . '/.env');
-    } elseif (file_exists($basePath . '/.env.example')) {
-        @copy($basePath . '/.env.example', $basePath . '/.env');
+$envFile = $basePath . '/.env';
+$needsEnvInit = !file_exists($envFile) || filesize($envFile) === 0;
+if (!$needsEnvInit && file_exists($envFile)) {
+    $envContent = @file_get_contents($envFile);
+    if ($envContent !== false && strpos($envContent, 'Winbook24') === false) {
+        $needsEnvInit = true;
     }
 }
-if (file_exists($basePath . '/.env')) {
-    @chmod($basePath . '/.env', 0666);
+if ($needsEnvInit) {
+    if (file_exists($basePath . '/.env.production')) {
+        @copy($basePath . '/.env.production', $envFile);
+    } elseif (file_exists($basePath . '/.env.example')) {
+        @copy($basePath . '/.env.example', $envFile);
+    }
+}
+if (file_exists($envFile)) {
+    @chmod($envFile, 0666);
 }
 
 // 2. Ensure required writable storage, database & cache directories exist on Hostinger Linux

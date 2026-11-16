@@ -4,14 +4,14 @@ echo "===================================================="
 echo " Winbook24 - Hostinger Deployment & Optimization"
 echo "===================================================="
 
-# 1. Ensure .env exists
-if [ ! -f .env ]; then
+# 1. Ensure .env exists and is for Winbook24
+if [ ! -f .env ] || ! grep -q "Winbook24" .env; then
     if [ -f .env.production ]; then
-        cp .env.production .env || true
+        cp -f .env.production .env || true
     elif [ -f .env.example ]; then
-        cp .env.example .env || true
+        cp -f .env.example .env || true
     fi
-    echo "[OK] Created .env configuration file."
+    echo "[OK] Installed Winbook24 .env configuration file."
 fi
 
 # 2. Ensure writable storage and cache directories exist
