@@ -48,15 +48,8 @@
             "@php artisan config:clear --ansi @no_additional_args",
             "@php artisan test"
         ],
-        "pre-install-cmd": [
-            "@php -r \"file_exists('.env') || (file_exists('.env.production') ? copy('.env.production', '.env') : copy('.env.example', '.env'));\""
-        ],
         "post-autoload-dump": [
-            "@php -r \"file_exists('.env') || (file_exists('.env.production') ? copy('.env.production', '.env') : copy('.env.example', '.env'));\"",
-            "@php -r \"is_dir('storage/app/public') || @mkdir('storage/app/public', 0775, true); is_dir('storage/framework/cache/data') || @mkdir('storage/framework/cache/data', 0775, true); is_dir('storage/framework/cache/locks') || @mkdir('storage/framework/cache/locks', 0775, true); is_dir('storage/framework/sessions') || @mkdir('storage/framework/sessions', 0775, true); is_dir('storage/framework/views') || @mkdir('storage/framework/views', 0775, true); is_dir('storage/logs') || @mkdir('storage/logs', 0775, true); is_dir('bootstrap/cache') || @mkdir('bootstrap/cache', 0775, true);\"",
-            "@php -r \"file_exists('database/database.sqlite') || (file_exists('database/data/initial_database.sqlite') ? @copy('database/data/initial_database.sqlite', 'database/database.sqlite') : @touch('database/database.sqlite'));\"",
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
