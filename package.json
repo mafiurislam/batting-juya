@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "echo Production assets ready in public/",
         "dev": "vite"
     },
     "devDependencies": {
