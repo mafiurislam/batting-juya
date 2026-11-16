@@ -101,5 +101,61 @@
       }
     });
   }
+
+  // Real-time In-Play synchronization with winbook24.com
+  // Automatically removes any match from In-Play as soon as it ends
+  async function syncLiveInplayStatus() {
+    try {
+      const res = await fetch('/api/exchange/live-inplay-events', {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data || !data.inplayIds) return;
+
+      const liveSet = new Set(data.inplayIds.map(String));
+
+      // 1. Process all match rows in In-Play pane
+      const inplayPane = document.getElementById('ipPane_inplay');
+      if (inplayPane) {
+        inplayPane.querySelectorAll('.js-filterable-match-row').forEach(row => {
+          const eId = String(row.getAttribute('data-event-id') || row.getAttribute('data-event-row') || '');
+          if (!eId) return;
+
+          if (!liveSet.has(eId)) {
+            // Match has ENDED! Smoothly fade out and remove from In-Play section
+            row.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(-15px)';
+            setTimeout(() => {
+              row.remove();
+              // Check if sport section is now empty
+              document.querySelectorAll('.js-ip-sport-section-inplay').forEach(sec => {
+                const remaining = sec.querySelectorAll('.js-filterable-match-row').length;
+                if (remaining === 0) {
+                  sec.classList.add('d-none');
+                }
+              });
+            }, 400);
+          }
+        });
+      }
+
+      // 2. Update Live counts
+      if (data.counts && data.counts.inplay !== undefined) {
+        const cnt = data.counts.inplay;
+        document.querySelectorAll('.wb-filter-count').forEach((badge, idx) => {
+          if (idx === 0) badge.textContent = cnt;
+        });
+      }
+    } catch (e) {
+      // Safe fallback
+    }
+  }
+
+  // Poll every 4 seconds for live match status
+  document.addEventListener('DOMContentLoaded', () => {
+    setInterval(syncLiveInplayStatus, 4000);
+  });
 </script>
 @endpush

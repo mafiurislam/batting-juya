@@ -208,6 +208,62 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     applyHomeDayFilter();
+
+    // Real-time In-Play synchronization with winbook24.com
+    // Automatically removes any match from In-Play as soon as it ends
+    async function syncHomeLiveInplay() {
+      try {
+        const res = await fetch('/api/exchange/live-inplay-events', {
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data || !data.inplayIds) return;
+
+        const liveSet = new Set(data.inplayIds.map(String));
+        let changed = false;
+
+        document.querySelectorAll('.js-filterable-match-row').forEach(row => {
+          const eId = String(row.getAttribute('data-event-id') || row.getAttribute('data-event-row') || '');
+          if (!eId) return;
+
+          const isLive = liveSet.has(eId);
+          const wasLive = row.getAttribute('data-is-inplay') === '1';
+
+          if (wasLive && !isLive) {
+            // Match has ENDED!
+            row.setAttribute('data-is-inplay', '0');
+            row.setAttribute('data-is-closed', '1');
+            const badge = row.querySelector('.wb-inplay-tag');
+            if (badge) {
+              badge.classList.remove('wb-inplay-tag');
+              badge.classList.add('badge', 'bg-secondary', 'ms-1');
+              badge.textContent = 'CLOSED';
+            }
+            changed = true;
+          } else if (!wasLive && isLive) {
+            row.setAttribute('data-is-inplay', '1');
+            row.setAttribute('data-is-closed', '0');
+            changed = true;
+          }
+        });
+
+        if (data.counts && data.counts.inplay !== undefined) {
+          document.querySelectorAll('.js-home-count[data-count-for="inplay"]').forEach(badge => {
+            badge.textContent = data.counts.inplay;
+          });
+        }
+
+        if (changed) {
+          applyHomeDayFilter();
+        }
+      } catch (e) {
+        // Safe fallback
+      }
+    }
+
+    // Auto-poll every 4 seconds
+    setInterval(syncHomeLiveInplay, 4000);
   });
 </script>
 @endpush

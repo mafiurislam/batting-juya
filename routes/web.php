@@ -76,6 +76,8 @@ Route::get('/api/exchange/market/live/{sportId}/{eventId}', [ExchangeController:
 Route::post('/api/exchange/markets/getBallByBallMarket', [ExchangeController::class, 'ballByBallState']);
 Route::post('/api/exchange/results/getMarketEventResults', [ExchangeController::class, 'ballByBallResults']);
 Route::post('/api/exchange/markets/getMarketsEventList', [ExchangeController::class, 'liveMarketDataPost']);
+Route::match(['get', 'post'], '/api/exchange/market/matchodds/allEventsList', [ExchangeController::class, 'allEventsListApi'])->name('api.exchange.allEventsList');
+Route::get('/api/exchange/live-inplay-events', [ExchangeController::class, 'liveInplayEventsApi'])->name('api.exchange.liveInplay');
 Route::post('/api/casino/play-round', [CasinoController::class, 'playRoundApi'])->name('api.casino.play');
 
 // Sportmonks Live Score Backend APIs (Token stays strictly in Laravel Backend, never exposed in Frontend JS)

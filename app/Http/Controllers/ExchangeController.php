@@ -288,7 +288,10 @@ class ExchangeController extends Controller
                 continue;
             }
 
-            if ($ev->in_play) {
+            $isClosed = strtoupper((string) ($ev->status ?? '')) === 'CLOSED';
+            $isActiveInPlay = (bool) $ev->in_play && !$isClosed;
+
+            if ($isActiveInPlay) {
                 $inplayCollection->push($ev);
                 $todayCollection->push($ev);
             } elseif ($evDateStr === $todayStr) {
@@ -686,6 +689,114 @@ class ExchangeController extends Controller
         $eventId = (string) $request->input('eventId', '4002026113125357712');
         $sportId = (string) $request->input('sportId', '4');
         return $this->liveMarketData($sportId, $eventId);
+    }
+
+    /**
+     * API for live In-Play events status & quick odds updates.
+     * Used by the frontend real-time auto-sync to immediately remove ended matches.
+     */
+    public function liveInplayEventsApi(Request $request)
+    {
+        if (!app()->runningUnitTests()) {
+            $this->syncLiveEventsFromWinbook24();
+        }
+
+        $liveEvents = ExchangeEvent::where('in_play', true)
+            ->where('status', '!=', 'CLOSED')
+            ->orderBy('sport_id')
+            ->orderBy('id')
+            ->get();
+
+        $inplayIds = $liveEvents->pluck('event_id')->map(fn ($id) => (string) $id)->toArray();
+
+        $counts = [
+            'inplay' => $liveEvents->count(),
+            'cricket' => $liveEvents->where('sport_id', '4')->count(),
+            'tennis' => $liveEvents->where('sport_id', '2')->count(),
+            'soccer' => $liveEvents->where('sport_id', '1')->count(),
+        ];
+
+        $eventsData = $liveEvents->map(function ($ev) {
+            return [
+                'eventId' => (string) $ev->event_id,
+                'sportId' => (string) $ev->sport_id,
+                'eventName' => (string) $ev->event_name,
+                'status' => (string) $ev->status,
+                'inPlay' => (bool) $ev->in_play,
+                'runners' => $ev->runners_json,
+            ];
+        });
+
+        return response()->json([
+            'status' => true,
+            'inplayIds' => $inplayIds,
+            'counts' => $counts,
+            'events' => $eventsData,
+        ]);
+    }
+
+    /**
+     * 1:1 API endpoint for https://winbook24.com/api/exchange/market/matchodds/allEventsList
+     */
+    public function allEventsListApi(Request $request)
+    {
+        if (!app()->runningUnitTests()) {
+            $this->syncLiveEventsFromWinbook24();
+        }
+
+        $all = ExchangeEvent::all();
+        $bySport = [];
+        foreach (['1', '2', '4', '7', '4339', '7522', '66103'] as $sId) {
+            $bySport[$sId] = [];
+        }
+
+        foreach ($all as $ev) {
+            $sId = (string) $ev->sport_id;
+            if (!isset($bySport[$sId])) {
+                $bySport[$sId] = [];
+            }
+            $runners = is_array($ev->runners_json) ? $ev->runners_json : [];
+            $oddsRunners = [];
+            foreach ($runners as $r) {
+                $oddsRunners[] = [
+                    'selectionId' => $r['selectionId'] ?? '',
+                    'status' => $r['status'] ?? 'OPEN',
+                    'price' => [
+                        'back' => $r['back'] ?? [],
+                        'lay' => $r['lay'] ?? [],
+                    ],
+                ];
+            }
+
+            $bySport[$sId][] = [
+                '_id' => (string) $ev->event_id,
+                'exEventId' => (string) $ev->event_id,
+                'marketId' => (string) $ev->market_id,
+                'marketName' => (string) $ev->market_name,
+                'eventName' => (string) $ev->event_name,
+                'sportId' => (string) $ev->sport_id,
+                'sportName' => (string) $ev->sport_name,
+                'tournamentId' => (string) $ev->tournament_id,
+                'tournamentName' => (string) $ev->tournament_name,
+                'eventTime' => (string) $ev->event_time,
+                'isFancy' => (bool) $ev->is_fancy,
+                'isBookmakers' => (bool) $ev->is_bookmakers,
+                'isSportsbook' => (bool) $ev->is_sportsbook,
+                'isStreaming' => (bool) $ev->is_streaming,
+                'isVirtual' => (bool) $ev->is_virtual,
+                'oddsData' => [
+                    'inPlay' => (bool) $ev->in_play,
+                    'status' => (string) $ev->status,
+                    'totalMatched' => (float) $ev->total_matched,
+                    'runners' => $oddsRunners,
+                ],
+            ];
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $bySport,
+        ]);
     }
 
     private function getBallByBallVideoPool(): array
@@ -1685,13 +1796,20 @@ class ExchangeController extends Controller
                 }
             }
 
-            // Sync any live status updates for numeric events not currently in-play
+            // Sync live status: any event not actively in wbInPlayIds must not be in-play
+            ExchangeEvent::where('status', 'CLOSED')->where('in_play', true)->update(['in_play' => false]);
+
             if (!empty($wbInPlayIds)) {
                 ExchangeEvent::whereIn('sport_id', ['4', '1', '2', '7', '4339', '7522'])
                     ->where('in_play', true)
                     ->where('event_id', '!=', '3544687543453')
                     ->whereNotIn('event_id', $wbInPlayIds)
-                    ->whereRaw('event_id REGEXP "^[0-9]+$"')
+                    ->where(function ($q) {
+                        $q->where('event_id', 'not like', 'cb_%')
+                          ->where('event_id', 'not like', 'ls_%')
+                          ->where('event_id', 'not like', 'soc_%')
+                          ->where('event_id', 'not like', 'ucl_%');
+                    })
                     ->update(['in_play' => false]);
             }
             ExchangeEvent::whereIn('sport_id', ['66104', '2378961'])->update(['in_play' => false]);
@@ -1699,8 +1817,66 @@ class ExchangeController extends Controller
             $this->syncCricbuzzLiveMatches(true);
             $this->syncLivescoreTennisMatches(true);
             $this->syncUefaChampionsLeagueMatches(true);
+
+            // Strictly purge any ended / completed matches from In-Play
+            $this->purgeCompletedMatches();
         } catch (\Throwable $e) {
             // Keep existing local events when offline
+        }
+    }
+
+    /**
+     * Strictly purge any match that has ended or is marked complete/closed from In-Play.
+     * When any match ends on Winbook24 or Cricbuzz, it is immediately removed from In-Play.
+     */
+    private function purgeCompletedMatches(): void
+    {
+        // 1. Any match marked CLOSED is NEVER in-play
+        ExchangeEvent::where('status', 'CLOSED')->where('in_play', true)->update(['in_play' => false]);
+
+        // 2. Check Cricket events for Complete status
+        $cricketEvents = ExchangeEvent::where('sport_id', '4')->where('in_play', true)->get();
+        foreach ($cricketEvents as $ev) {
+            if ($ev->event_id === '3544687543453') {
+                continue; // Virtual 24/7 Ball-By-Ball game
+            }
+            $scoreJson = is_array($ev->score_json) ? $ev->score_json : [];
+            $cb = $scoreJson['cricbuzz'] ?? null;
+            if ($cb) {
+                $state = strtolower(trim((string) ($cb['state'] ?? '')));
+                $status = strtolower(trim((string) ($cb['status'] ?? '')));
+                if ($state === 'complete' || str_contains($status, 'won by') || str_contains($status, 'match tied') || str_contains($status, 'no result') || str_contains($status, 'abandoned')) {
+                    $ev->update(['in_play' => false, 'status' => 'CLOSED']);
+                }
+            }
+        }
+
+        // 3. Check Tennis events
+        $tennisEvents = ExchangeEvent::where('sport_id', '2')->where('in_play', true)->get();
+        foreach ($tennisEvents as $ev) {
+            $scoreJson = is_array($ev->score_json) ? $ev->score_json : [];
+            $t = $scoreJson['tennis'] ?? null;
+            if ($t) {
+                $isLive = !empty($t['isLive']);
+                $stageText = strtolower(trim((string) ($t['stageText'] ?? '')));
+                if (!$isLive || $stageText === 'finished' || $stageText === 'ended' || $stageText === 'cancelled' || $stageText === 'retired') {
+                    $ev->update(['in_play' => false, 'status' => 'CLOSED']);
+                }
+            }
+        }
+
+        // 4. Check Soccer events
+        $soccerEvents = ExchangeEvent::where('sport_id', '1')->where('in_play', true)->get();
+        foreach ($soccerEvents as $ev) {
+            $scoreJson = is_array($ev->score_json) ? $ev->score_json : [];
+            $s = $scoreJson['soccer'] ?? null;
+            if ($s) {
+                $isLive = !empty($s['isLive']);
+                $stage = strtolower(trim((string) ($s['stageText'] ?? ($s['status'] ?? ''))));
+                if (!$isLive || str_contains($stage, 'ft') || str_contains($stage, 'finished') || str_contains($stage, 'full time') || str_contains($stage, 'ended')) {
+                    $ev->update(['in_play' => false, 'status' => 'CLOSED']);
+                }
+            }
         }
     }
 
@@ -1956,12 +2132,17 @@ class ExchangeController extends Controller
                 }
 
                 if (!$tm) {
+                    if (!app()->runningUnitTests() && $ev->in_play && str_starts_with((string) $ev->event_id, 'ls_2_')) {
+                        $ev->update(['in_play' => false, 'status' => 'CLOSED']);
+                    }
                     continue;
                 }
 
                 $mId = (string) $tm['matchId'];
                 $matchedIds[$mId] = true;
-                $isLive = !empty($tm['isLive']);
+                $stageText = strtolower(trim((string) ($tm['stageText'] ?? '')));
+                $isFinished = ($tm['statusCode'] ?? '') === '3' || $stageText === 'finished' || $stageText === 'ended';
+                $isLive = !empty($tm['isLive']) && !$isFinished;
 
                 $scoreJson = is_array($ev->score_json) ? $ev->score_json : [];
                 $scoreJson['tennis'] = [
@@ -2143,9 +2324,26 @@ class ExchangeController extends Controller
                     'team2' => $cbMatch['team2'] ?? [],
                 ];
 
-                $inPlay = app()->runningUnitTests()
-                    ? ($ev->in_play || !empty($cbMatch['isLive']))
-                    : (ctype_digit((string) $ev->event_id) ? (bool) $ev->in_play : !empty($cbMatch['isLive']));
+                $cbState = strtolower(trim((string) ($cbMatch['state'] ?? '')));
+                $cbStatus = strtolower(trim((string) ($cbMatch['status'] ?? '')));
+                $isComplete = $cbState === 'complete'
+                    || $cbState === 'stumps'
+                    || str_contains($cbStatus, 'won by')
+                    || str_contains($cbStatus, 'match tied')
+                    || str_contains($cbStatus, 'no result')
+                    || str_contains($cbStatus, 'abandoned');
+
+                $isLive = !empty($cbMatch['isLive']) && !$isComplete;
+
+                // Winbook24 numeric events' in_play status is strictly governed by Winbook24 official feed.
+                // Cricbuzz only enriches score details and must NEVER turn a closed/ended Winbook24 event back into in-play!
+                if (app()->runningUnitTests()) {
+                    $inPlay = $isComplete ? false : ($ev->in_play || $isLive);
+                } elseif (ctype_digit((string) $ev->event_id)) {
+                    $inPlay = $isComplete ? false : (bool) $ev->in_play;
+                } else {
+                    $inPlay = $isLive;
+                }
 
                 $runners = is_array($ev->runners_json) ? $ev->runners_json : [];
                 if ($inPlay && !empty($runners)) {
@@ -2171,6 +2369,7 @@ class ExchangeController extends Controller
 
                 $ev->update([
                     'in_play' => $inPlay,
+                    'status' => $isComplete ? 'CLOSED' : ($inPlay ? 'OPEN' : $ev->status),
                     'event_time' => $inPlay ? now('Asia/Kolkata')->toIso8601String() : ($cbMatch['startDate'] ?? $ev->event_time),
                     'is_streaming' => $inPlay || $ev->is_streaming,
                     'is_bookmakers' => true,

@@ -482,7 +482,6 @@ class CricbuzzService
             'live',
             'innings break',
             'toss',
-            'stumps',
             'lunch',
             'tea',
             'drinks',
@@ -491,7 +490,7 @@ class CricbuzzService
             'wet outfield',
             'bad light',
         ];
-        $isLive = in_array($stateLower, $liveStates, true);
+        $isLive = in_array($stateLower, $liveStates, true) && $stateLower !== 'stumps' && $stateLower !== 'complete';
 
         $t1 = [
             'id' => $matchInfo['team1']['teamId'] ?? 1,

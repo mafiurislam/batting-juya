@@ -28,7 +28,8 @@
       $formattedTime = $ev->event_time;
   }
 
-  $isInPlay = (bool) $ev->in_play;
+  $isClosed = strtoupper((string) ($ev->status ?? '')) === 'CLOSED';
+  $isInPlay = (bool) $ev->in_play && !$isClosed;
   $isToday = $isInPlay || ($evDateStr === $todayDateStr);
   $isTomorrow = !$isInPlay && ($evDateStr > $todayDateStr);
   $isYesterday = !$isInPlay && ($evDateStr < $todayDateStr);
@@ -48,16 +49,19 @@
 @endphp
 
 <div class="wb-match-row js-filterable-match-row {{ $hideInitially ? 'd-none' : '' }}"
+     id="matchRow_{{ $ev->event_id }}"
+     data-event-id="{{ $ev->event_id }}"
      data-event-row="{{ $ev->event_id }}"
      data-sport-id="{{ $ev->sport_id }}"
      data-is-inplay="{{ $isInPlay ? '1' : '0' }}"
      data-is-today="{{ $isToday ? '1' : '0' }}"
      data-is-tomorrow="{{ $isTomorrow ? '1' : '0' }}"
-     data-is-yesterday="{{ $isYesterday ? '1' : '0' }}">
+     data-is-yesterday="{{ $isYesterday ? '1' : '0' }}"
+     data-is-closed="{{ $isClosed ? '1' : '0' }}">
   <div class="wb-match-info" style="cursor:pointer;" onclick="window.location.href='{{ $targetRoute }}'">
     <div class="wb-match-title-wrap">
       <a href="{{ $targetRoute }}" class="wb-match-link" onclick="event.stopPropagation();">{{ $ev->event_name }}</a>
-      @if($ev->in_play)
+      @if($isInPlay)
         <span class="wb-inplay-tag" onclick="event.stopPropagation(); window.location.href='{{ $targetRoute }}'" title="Click to view Live Scoreboard & Markets">In-Play</span>
         @if($cricbuzzShortScore !== '')
           <span class="wb-cricbuzz-score-pill d-none" style="display:none !important;" data-cricbuzz-score="{{ $ev->event_id }}" title="{{ $cricbuzzStatus ?: 'Live Score' }}">
@@ -65,6 +69,8 @@
             <span class="js-cb-short-score">{{ $cricbuzzShortScore }}</span>
           </span>
         @endif
+      @elseif($isClosed)
+        <span class="badge bg-secondary ms-1" style="font-size:10px;">CLOSED</span>
       @else
         @if($preBet)
           <span class="wb-prebet-clock" title="Pre-Bet Open">
