@@ -90,7 +90,7 @@
               <div class="col-md-4 text-center">
                 @if(!empty($settings['deposit_qr_image']))
                   <div class="d-flex flex-column align-items-center gap-1">
-                    <img src="{{ $settings['deposit_qr_image'] }}" alt="Custom QR" style="width:55px;height:55px;object-fit:contain;border:1px solid #ccc;border-radius:4px;background:#fff;">
+                    <img src="{{ $settings['deposit_qr_image'] }}" alt="Custom QR" style="max-width:70px;height:auto;max-height:85px;object-fit:contain;border:1px solid #ccc;border-radius:4px;background:#fff;">
                     <button type="submit" form="delQrForm" class="btn btn-sm btn-outline-danger py-0 px-2 fw-bold" style="font-size:10.5px;">Remove QR</button>
                   </div>
                 @else

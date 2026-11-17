@@ -173,8 +173,9 @@ class DatabaseSeeder extends Seeder
         SiteSetting::setValue('welcome_bonus_pti', '0.00', 'limits');
         SiteSetting::setValue('min_deposit', '100', 'banking');
         SiteSetting::setValue('min_withdraw', '1000', 'banking');
-        SiteSetting::setValue('deposit_upi_id', 'winbook24.pay@axis', 'banking');
-        SiteSetting::setValue('deposit_account_name', 'WINBOOK24 ENTERPRISES', 'banking');
+        SiteSetting::setValue('deposit_upi_id', 's7484819820530667@slc', 'banking');
+        SiteSetting::setValue('deposit_account_name', 'Slice UPI (s7484819820530667@slc)', 'banking');
+        SiteSetting::setValue('deposit_qr_image', '/assets/brand/deposit-qr.jpg', 'banking');
         SiteSetting::setValue('deposit_bank_name', 'HDFC Bank', 'banking');
         SiteSetting::setValue('deposit_account_number', '50200089412580', 'banking');
         SiteSetting::setValue('deposit_ifsc', 'HDFC0001245', 'banking');

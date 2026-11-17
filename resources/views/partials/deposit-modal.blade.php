@@ -1,11 +1,11 @@
 @php
-  $depositUpi = \App\Models\SiteSetting::getValue('deposit_upi_id', 'winbook24.pay@axis');
-  $depositAccountName = \App\Models\SiteSetting::getValue('deposit_account_name', 'WINBOOK24 ENTERPRISES');
+  $depositUpi = \App\Models\SiteSetting::getValue('deposit_upi_id', 's7484819820530667@slc');
+  $depositAccountName = \App\Models\SiteSetting::getValue('deposit_account_name', 'Slice UPI (s7484819820530667@slc)');
   $depositBankName = \App\Models\SiteSetting::getValue('deposit_bank_name', 'HDFC Bank');
   $depositAccountNumber = \App\Models\SiteSetting::getValue('deposit_account_number', '50200089412580');
   $depositIfsc = \App\Models\SiteSetting::getValue('deposit_ifsc', 'HDFC0001245');
   $minDeposit = (int) \App\Models\SiteSetting::getValue('min_deposit', '100');
-  $customQrImage = \App\Models\SiteSetting::getValue('deposit_qr_image', '');
+  $customQrImage = \App\Models\SiteSetting::getValue('deposit_qr_image', '/assets/brand/deposit-qr.jpg');
 @endphp
 
 <!-- Deposit Modal (#DepositModal - Matches 1:1 with User Specification & Image) -->
@@ -85,16 +85,25 @@
               </div>
 
               <!-- QR Code Image (Custom Uploaded QR or Dynamic UPI QR) -->
-              <div class="p-2 d-inline-block bg-white border rounded" style="box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+              <div class="p-2 d-inline-block bg-white border rounded shadow-sm text-center" style="max-width:270px;width:100%;">
                 <img id="dynamicDepositQrImg" 
-                     src="{{ !empty($customQrImage) ? $customQrImage : '' }}" 
+                     src="{{ !empty($customQrImage) ? $customQrImage : '/assets/brand/deposit-qr.jpg' }}" 
                      alt="UPI QR Code" 
-                     data-custom-qr="{{ !empty($customQrImage) ? $customQrImage : '' }}"
-                     style="width:185px;height:185px;display:block;margin:0 auto;object-fit:contain;">
+                     data-custom-qr="{{ !empty($customQrImage) ? $customQrImage : '/assets/brand/deposit-qr.jpg' }}"
+                     style="max-width:250px;width:100%;height:auto;max-height:330px;display:block;margin:0 auto;object-fit:contain;border-radius:6px;">
+                <div class="mt-2 d-flex justify-content-center gap-2">
+                  <a href="{{ !empty($customQrImage) ? $customQrImage : '/assets/brand/deposit-qr.jpg' }}" 
+                     target="_blank" 
+                     download="slice-deposit-qr.jpg" 
+                     class="btn btn-sm btn-outline-primary py-1 px-2" 
+                     style="font-size:11px;font-weight:600;">
+                    <i class="fas fa-download me-1"></i> Download QR Image
+                  </a>
+                </div>
               </div>
 
               <div class="small text-muted mt-2">
-                Scan with Google Pay, PhonePe, Paytm, BHIM or any UPI app
+                Scan with Google Pay, PhonePe, Paytm, BHIM, Slice or any UPI app
               </div>
             </div>
 
@@ -231,7 +240,7 @@
         qrImg.src = customQr;
       } else {
         const upiId = '{{ $depositUpi }}';
-        const upiUri = 'upi://pay?pa=' + encodeURIComponent(upiId) + '&pn=WINBOOK24&am=' + val.toFixed(2) + '&cu=INR&tn=Deposit';
+        const upiUri = 'upi://pay?pa=' + encodeURIComponent(upiId) + '&pn=CRICEXPERTS&am=' + val.toFixed(2) + '&cu=INR&tn=Deposit';
         qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=' + encodeURIComponent(upiUri);
       }
     }

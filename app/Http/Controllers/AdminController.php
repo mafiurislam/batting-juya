@@ -1651,8 +1651,19 @@ class AdminController extends Controller
             $request->validate([
                 'deposit_qr_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             ]);
-            $path = Storage::disk('public')->putFile('qr', $request->file('deposit_qr_image'));
-            SiteSetting::setValue('deposit_qr_image', '/storage/' . $path, 'banking');
+            $file = $request->file('deposit_qr_image');
+            $ext = $file->getClientOriginalExtension() ?: 'jpg';
+            $filename = 'deposit_qr_' . time() . '.' . $ext;
+            
+            // 1. Store in Laravel public storage
+            $file->storeAs('qr', $filename, 'public');
+
+            // 2. Also write directly to public/storage/qr and public/assets/brand/deposit-qr.jpg for 100% fail-safe display
+            @mkdir(public_path('storage/qr'), 0777, true);
+            @copy($file->getRealPath(), public_path('storage/qr/' . $filename));
+            @copy($file->getRealPath(), public_path('assets/brand/deposit-qr.jpg'));
+
+            SiteSetting::setValue('deposit_qr_image', '/storage/qr/' . $filename, 'banking');
         }
 
         return back()->with('success', 'Website, Payment, Banner & MSG91 Settings saved successfully!');
@@ -1677,10 +1688,11 @@ class AdminController extends Controller
         if ($current && str_starts_with($current, '/storage/')) {
             $storagePath = str_replace('/storage/', '', $current);
             Storage::disk('public')->delete($storagePath);
+            @unlink(public_path($current));
         }
-        SiteSetting::setValue('deposit_qr_image', '', 'banking');
+        SiteSetting::setValue('deposit_qr_image', '/assets/brand/deposit-qr.jpg', 'banking');
 
-        return back()->with('success', 'Custom QR Code removed successfully! Default dynamic UPI QR will be used.');
+        return back()->with('success', 'Custom QR Code reset to default Slice deposit QR!');
     }
 
     public function saveQuickSettings(Request $request)
@@ -1700,8 +1712,19 @@ class AdminController extends Controller
         }
 
         if ($request->hasFile('deposit_qr_image')) {
-            $path = Storage::disk('public')->putFile('qr', $request->file('deposit_qr_image'));
-            SiteSetting::setValue('deposit_qr_image', '/storage/' . $path, 'banking');
+            $file = $request->file('deposit_qr_image');
+            $ext = $file->getClientOriginalExtension() ?: 'jpg';
+            $filename = 'deposit_qr_' . time() . '.' . $ext;
+
+            // 1. Store in Laravel public storage
+            $file->storeAs('qr', $filename, 'public');
+
+            // 2. Also write directly to public/storage/qr and public/assets/brand/deposit-qr.jpg for 100% fail-safe display
+            @mkdir(public_path('storage/qr'), 0777, true);
+            @copy($file->getRealPath(), public_path('storage/qr/' . $filename));
+            @copy($file->getRealPath(), public_path('assets/brand/deposit-qr.jpg'));
+
+            SiteSetting::setValue('deposit_qr_image', '/storage/qr/' . $filename, 'banking');
         }
 
         return back()->with('success', 'WhatsApp support number & Deposit QR Code updated successfully!');

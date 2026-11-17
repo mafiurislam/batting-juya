@@ -107,9 +107,9 @@
 
               <div class="p-2 bg-white border rounded d-inline-block shadow-sm mb-2">
                 @if(!empty($depositQrImage))
-                  <img src="{{ $depositQrImage }}" alt="Custom Deposit QR" style="width:130px;height:130px;object-fit:contain;display:block;">
+                  <img src="{{ $depositQrImage }}" alt="Custom Deposit QR" style="max-width:140px;height:auto;max-height:180px;object-fit:contain;display:block;">
                 @else
-                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&margin=4&data={{ urlencode('upi://pay?pa=' . $depositUpi . '&pn=WINBOOK24&cu=INR') }}" alt="Default UPI QR" style="width:130px;height:130px;object-fit:contain;display:block;">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=4&data={{ urlencode('upi://pay?pa=' . $depositUpi . '&pn=CRICEXPERTS&cu=INR') }}" alt="Default UPI QR" style="width:140px;height:140px;object-fit:contain;display:block;">
                 @endif
               </div>
               
