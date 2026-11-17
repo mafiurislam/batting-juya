@@ -526,7 +526,7 @@ class ExchangeController extends Controller
 
         foreach ($openBets as $bet) {
             $sel = strtoupper(trim($bet->selection_name));
-            $won = ($sel === $resultText)
+            $matchedRunner = ($sel === $resultText)
                 || ($resultText === '0' && $sel === '0 RUNS')
                 || ($resultText === '1' && $sel === '1 RUNS')
                 || ($resultText === '2' && $sel === '2 RUNS')
@@ -536,12 +536,14 @@ class ExchangeController extends Controller
                 || (str_starts_with($resultText, 'W') && $sel === 'WICKET')
                 || (str_starts_with($resultText, 'E') && $sel === 'EXTRA RUNS');
 
+            $bt = strtoupper(trim((string) $bet->bet_type));
+            $won = ($bt === 'LAY') ? !$matchedRunner : $matchedRunner;
+
             $pl = $won ? $bet->potential_profit : -$bet->liability;
             $status = $won ? 'WON' : 'LOST';
             $remark = "Ball By Ball ({$marketId}): {$bet->selection_name} -> Result: {$resultText} ({$status})";
 
             DB::transaction(function () use ($user, $bet, $pl, $status, $remark, $resultText) {
-                $user->decrement('exposure', min($user->exposure, $bet->liability));
                 $user->increment('balance', $pl);
 
                 $bet->update([
@@ -567,16 +569,17 @@ class ExchangeController extends Controller
             $totalNetPl += $pl;
         }
 
-        $fresh = $user->fresh();
+        $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
         return response()->json([
             'status' => true,
             'winner_name' => $resultText,
             'settledCount' => $settledCount,
             'netPl' => round($totalNetPl, 2),
             'wallet' => [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'locked_profit' => $walletState['locked_profit'],
+                'available' => $walletState['available'],
             ],
         ]);
     }
@@ -1396,6 +1399,10 @@ class ExchangeController extends Controller
 
     /**
      * Place an Exchange, Bookmaker, Fancy, Sportsbook, or Lottery Bet.
+     * Supports full Exchange Market Book netting:
+     * - Opposite / hedge bets use existing runner profit first ("লাভের টাকা দিয়ে আবার বেট ধরা যাবে")
+     * - Original staked principal returns to the wallet when hedged ("আমি যাতে টাকা মেরেছি সেই টাকাটা ব্যাকে ওয়ালেটে চলে যাবে")
+     * - Locked-in green-book profit is immediately reflected in available wallet balance
      */
     public function placeBet(Request $request)
     {
@@ -1411,11 +1418,14 @@ class ExchangeController extends Controller
         $request->merge([
             'event_id' => $request->input('event_id', $request->input('eventId')),
             'event_name' => $request->input('event_name', $request->input('eventName')),
+            'market_id' => $request->input('market_id', $request->input('marketId')),
             'market_name' => $request->input('market_name', $request->input('marketName')),
             'selection_id' => $request->input('selection_id', $request->input('selectionId')),
             'selection_name' => $request->input('selection_name', $request->input('selectionName')),
             'bet_type' => $request->input('bet_type', $request->input('betType')),
         ]);
+
+        $minStake = $request->boolean('is_cashout') ? 0.01 : 10;
 
         $request->validate([
             'event_id' => 'required|string',
@@ -1423,7 +1433,7 @@ class ExchangeController extends Controller
             'selection_name' => 'required|string|max:150',
             'bet_type' => 'required|string|in:BACK,LAY,YES,NO',
             'odds' => 'required|numeric|min:1.01|max:5000',
-            'stake' => 'required|numeric|min:10|max:1000000',
+            'stake' => "required|numeric|min:{$minStake}|max:1000000",
             'category' => 'nullable|string|max:30',
             'run_line' => 'nullable|numeric',
         ]);
@@ -1432,78 +1442,99 @@ class ExchangeController extends Controller
         $stake = round((float) $request->input('stake'), 2);
         $odds = round((float) $request->input('odds'), 2);
         $betType = strtoupper($request->input('bet_type'));
-        $category = $request->input('category', 'exchange');
+        $rawCategory = strtolower(trim((string) $request->input('category', 'exchange')));
+        $category = $rawCategory === 'sports' ? 'exchange' : ($rawCategory ?: 'exchange');
 
-        // Calculate Profit & Liability according to market type
-        if ($category === 'bookmaker') {
-            $decimalOdds = 1 + ($odds / 100);
-            $profit = $betType === 'BACK' ? round($stake * ($odds / 100), 2) : $stake;
-            $liability = $betType === 'BACK' ? $stake : round($stake * ($odds / 100), 2);
-        } elseif ($category === 'fancy' || in_array($betType, ['YES', 'NO'])) {
-            $rate = $odds / 100;
-            $profit = $betType === 'YES' ? round($stake * $rate, 2) : $stake;
-            $liability = $betType === 'YES' ? $stake : round($stake * $rate, 2);
-        } else {
-            $profit = $betType === 'BACK' ? round($stake * ($odds - 1), 2) : $stake;
-            $liability = $betType === 'BACK' ? $stake : round($stake * ($odds - 1), 2);
-        }
+        $bookService = app(\App\Services\ExchangeBookService::class);
+        $calc = $bookService->calculateProfitAndLiability($category, $betType, $odds, $stake);
+        $profit = $calc['profit'];
+        $liability = $calc['liability'];
 
-        if ($user->available_balance < $liability) {
+        $event = ExchangeEvent::where('event_id', $request->input('event_id'))->first();
+        $resolvedEventId = (string) ($event?->event_id ?? $request->input('event_id'));
+
+        $candidateBet = [
+            'user_id' => $user->id,
+            'category' => $category,
+            'sport_id' => $event?->sport_id ?? '4',
+            'sport_name' => $event?->sport_name ?? 'Cricket',
+            'event_id' => $resolvedEventId,
+            'event_name' => $event?->event_name ?? $request->input('event_name', 'Live Match'),
+            'market_id' => (string) ($request->input('market_id') ?: ($event?->market_id ?? '1.100')),
+            'market_name' => $request->input('market_name'),
+            'selection_id' => (string) $request->input('selection_id', '1'),
+            'selection_name' => $request->input('selection_name'),
+            'bet_type' => $betType,
+            'odds' => $odds,
+            'run_line' => $request->input('run_line'),
+            'stake' => $stake,
+            'potential_profit' => $profit,
+            'liability' => $liability,
+            'status' => 'MATCHED',
+        ];
+
+        $impact = $bookService->previewBetImpact($user, $candidateBet);
+
+        if (!$impact['allowed']) {
             return response()->json([
                 'status' => false,
                 'message' => sprintf(
                     'Insufficient available balance! Required Liability: %.2f PTI, Available: %.2f PTI',
-                    $liability,
-                    $user->available_balance
+                    $impact['net_wallet_requirement'],
+                    $impact['available_before']
                 ),
             ], 422);
         }
 
-        $event = ExchangeEvent::where('event_id', $request->input('event_id'))->first();
-
-        $bet = DB::transaction(function () use ($user, $event, $request, $stake, $odds, $betType, $category, $profit, $liability) {
-            $user->increment('exposure', $liability);
-
-            return Bet::create([
+        $bet = DB::transaction(function () use ($candidateBet, $request) {
+            return Bet::create(array_merge($candidateBet, [
                 'bet_ref' => 'WB' . strtoupper(Str::random(8)),
-                'user_id' => $user->id,
-                'category' => $category,
-                'sport_id' => $event?->sport_id ?? '4',
-                'sport_name' => $event?->sport_name ?? 'Cricket',
-                'event_id' => $event?->event_id ?? $request->input('event_id'),
-                'event_name' => $event?->event_name ?? $request->input('event_name', 'Live Match'),
-                'market_id' => $event?->market_id ?? '1.100',
-                'market_name' => $request->input('market_name'),
-                'selection_id' => (string) $request->input('selection_id', '1'),
-                'selection_name' => $request->input('selection_name'),
-                'bet_type' => $betType,
-                'odds' => $odds,
-                'run_line' => $request->input('run_line'),
-                'stake' => $stake,
-                'potential_profit' => $profit,
-                'liability' => $liability,
                 'profit_loss' => 0,
-                'status' => 'MATCHED',
                 'ip_address' => $request->ip() ?? '127.0.0.1',
-            ]);
+            ]));
         });
 
-        $freshUser = $user->fresh();
+        $walletState = $bookService->syncUserWallet($user->fresh());
+        $marketBook = $walletState['markets'][$impact['market_key']] ?? $impact['market_after'];
+
+        $extraNotes = [];
+        if ($impact['stake_returned_to_wallet'] > 0) {
+            $extraNotes[] = sprintf('Stake Returned to Wallet: +%.2f PTI', $impact['stake_returned_to_wallet']);
+        }
+        if ($impact['used_profit_amount'] > 0) {
+            $extraNotes[] = sprintf('Funded from Market Profit: %.2f PTI', $impact['used_profit_amount']);
+        }
+        if (($marketBook['locked_profit'] ?? 0) > 0) {
+            $extraNotes[] = sprintf('Locked Green Profit: +%.2f PTI', (float) $marketBook['locked_profit']);
+        }
+
+        $msg = "Bet Matched! {$bet->selection_name} ({$bet->bet_type} @ {$bet->odds}) for {$bet->stake} PTI";
+        if (!empty($extraNotes)) {
+            $msg .= ' | ' . implode(' | ', $extraNotes);
+        }
 
         return response()->json([
             'status' => true,
-            'message' => "Bet Matched! {$bet->selection_name} ({$bet->bet_type} @ {$bet->odds}) for {$bet->stake} PTI",
+            'message' => $msg,
             'bet' => $bet,
+            'market_book' => $marketBook,
+            'impact' => [
+                'stake_returned_to_wallet' => $impact['stake_returned_to_wallet'],
+                'used_profit_amount' => $impact['used_profit_amount'],
+                'locked_profit' => $walletState['locked_profit'],
+            ],
             'wallet' => [
-                'balance' => round($freshUser->balance, 2),
-                'exposure' => round($freshUser->exposure, 2),
-                'available' => round($freshUser->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'locked_profit' => $walletState['locked_profit'],
+                'available' => $walletState['available'],
             ],
         ]);
     }
 
     /**
-     * Instant Cashout / Settle an open Exchange Bet so user can test full bet lifecycle immediately!
+     * Instant Cashout / Settle an open Exchange Bet or Market Book.
+     * Returns staked money back to wallet and credits profit to balance.
      */
     public function cashoutBet(Request $request)
     {
@@ -1517,23 +1548,44 @@ class ExchangeController extends Controller
             ->firstOrFail();
 
         $user = Auth::user();
-        // Simulate realistic cashout / instant settlement outcome
+        $bookService = app(\App\Services\ExchangeBookService::class);
         $mode = $request->input('mode', 'cashout'); // cashout or instant_settle
+
+        $marketKey = $bookService->getMarketKey($bet);
+        $allOpenBets = Bet::where('user_id', $user->id)
+            ->where('status', 'MATCHED')
+            ->orderBy('id')
+            ->get();
+
+        $marketBets = $allOpenBets->filter(fn (Bet $b) => $bookService->getMarketKey($b) === $marketKey)->values();
+        $portfolioBefore = $bookService->computePortfolio($user->id, null, $allOpenBets);
+        $marketBook = $portfolioBefore['markets'][$marketKey] ?? null;
+
+        // If mode is cashout and there are multiple bets in this market (hedged/traded market),
+        // cash out the entire market book cleanly so all staked money returns to wallet and profit is credited.
+        if ($mode === 'cashout' && $marketBets->count() > 1 && $marketBook) {
+            return $this->executeMarketBookCashout($user, $marketBets, $marketBook, $bookService);
+        }
+
         if ($mode === 'instant_settle') {
-            $won = random_int(1, 100) <= 55;
-            $pl = $won ? $bet->potential_profit : -$bet->liability;
-            $status = $won ? 'WON' : 'LOST';
+            // Settle this market with $bet->selection_name as winner (or YES for fancy YES / NO for fancy NO)
+            if ($marketBets->count() > 1) {
+                return $this->settleMarketBetsByWinner($user, $marketBets, $bet, $bookService);
+            }
+            $pl = round((float) $bet->potential_profit, 2);
+            $status = 'WON';
             $remark = "Exchange Settlement: {$bet->event_name} - {$bet->selection_name} ({$status})";
         } else {
-            // Cashout gives small dynamic profit/loss (-15% to +35% of stake)
-            $factor = random_int(-15, 35) / 100;
-            $pl = round($bet->stake * $factor, 2);
+            // Single-bet cashout: return full stake to wallet + positive trade-out profit
+            $fairVal = $marketBook ? (float) ($marketBook['cashout_value'] ?? 0) : 0.0;
+            $pl = $fairVal > 0
+                ? round($fairVal, 2)
+                : round(max($bet->stake * 0.15, min($bet->potential_profit * 0.25, $bet->stake * 0.35)), 2);
             $status = 'CASHOUT';
             $remark = "Cashout: {$bet->event_name} - {$bet->selection_name}";
         }
 
         DB::transaction(function () use ($user, $bet, $pl, $status, $remark) {
-            $user->decrement('exposure', min($user->exposure, $bet->liability));
             $user->increment('balance', $pl);
 
             $bet->update([
@@ -1550,21 +1602,206 @@ class ExchangeController extends Controller
                 'balance' => $user->fresh()->balance,
                 'remark' => $remark,
                 'from_to' => $pl >= 0 ? "Exchange -> {$user->username}" : "{$user->username} -> Exchange",
-                'ref_type' => 'bet_settle',
+                'ref_type' => $status === 'CASHOUT' ? 'cashout' : 'bet_settle',
                 'ref_id' => $bet->bet_ref,
             ]);
         });
 
-        $fresh = $user->fresh();
+        $walletState = $bookService->syncUserWallet($user->fresh());
 
         return response()->json([
             'status' => true,
-            'message' => "{$status}! Net P/L: " . ($pl >= 0 ? '+' : '') . number_format($pl, 2) . ' PTI',
+            'message' => "{$status}! Stake Returned to Wallet & Net P/L: " . ($pl >= 0 ? '+' : '') . number_format($pl, 2) . ' PTI',
             'bet' => $bet->fresh(),
+            'settled_bet_ids' => [$bet->id],
             'wallet' => [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'locked_profit' => $walletState['locked_profit'],
+                'available' => $walletState['available'],
+            ],
+        ]);
+    }
+
+    /**
+     * POST /api/exchange/cashout-market
+     * Cash out all open bets in a specific market (e.g. from the "● Cash Out" button on Match Odds / Bookmaker).
+     */
+    public function cashoutMarket(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => false, 'message' => 'Please login first.'], 401);
+        }
+
+        $eventId = trim((string) $request->input('event_id', $request->input('eventId', '')));
+        $marketName = trim((string) $request->input('market_name', $request->input('marketName', 'Match Odds')));
+        $user = Auth::user();
+        $bookService = app(\App\Services\ExchangeBookService::class);
+
+        $allOpenBets = Bet::where('user_id', $user->id)
+            ->where('status', 'MATCHED')
+            ->orderBy('id')
+            ->get();
+
+        $targetNorm = $bookService->normalizeRunnerName($marketName);
+        $marketBets = $allOpenBets->filter(function (Bet $b) use ($eventId, $targetNorm, $bookService) {
+            if ((string) $b->event_id !== $eventId) {
+                return false;
+            }
+            return $bookService->normalizeRunnerName($b->market_name) === $targetNorm;
+        })->values();
+
+        if ($marketBets->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => "No open bets found in {$marketName} to cash out.",
+            ], 422);
+        }
+
+        $marketKey = $bookService->getMarketKey($marketBets->first());
+        $portfolio = $bookService->computePortfolio($user->id, null, $allOpenBets);
+        $marketBook = $portfolio['markets'][$marketKey] ?? null;
+
+        return $this->executeMarketBookCashout($user, $marketBets, $marketBook, $bookService);
+    }
+
+    /**
+     * Execute a full market-book Cash Out across all open bets in a market.
+     */
+    private function executeMarketBookCashout(
+        \App\Models\User $user,
+        \Illuminate\Support\Collection $marketBets,
+        ?array $marketBook,
+        \App\Services\ExchangeBookService $bookService
+    ) {
+        $firstBet = $marketBets->first();
+        $minPl = (float) ($marketBook['min_pl'] ?? 0.0);
+        $maxPl = (float) ($marketBook['max_pl'] ?? 0.0);
+        $fairCashout = (float) ($marketBook['cashout_value'] ?? 0.0);
+
+        if ($minPl > 0) {
+            // Locked-in green book! Guarantee at least minPl (or fair odds-weighted cashout if higher)
+            $netPl = round(max($minPl, $fairCashout), 2);
+        } elseif ($fairCashout > 0) {
+            $netPl = round($fairCashout, 2);
+        } elseif ($marketBets->count() === 1) {
+            $netPl = round(max($firstBet->stake * 0.15, min($firstBet->potential_profit * 0.25, $firstBet->stake * 0.35)), 2);
+        } else {
+            // Partially hedged position
+            $netPl = round(max($minPl, ($minPl + $maxPl) / 2), 2);
+        }
+
+        $settledIds = [];
+        DB::transaction(function () use ($user, $marketBets, $firstBet, $netPl, &$settledIds) {
+            $user->increment('balance', $netPl);
+
+            foreach ($marketBets as $idx => $b) {
+                $legPl = ($idx === 0) ? $netPl : 0.0;
+                $b->update([
+                    'profit_loss' => $legPl,
+                    'status' => 'CASHOUT',
+                    'result_summary' => $idx === 0
+                        ? 'MARKET CASHOUT (' . ($netPl >= 0 ? '+' : '') . number_format($netPl, 2) . ' PTI)'
+                        : "Market Cashout Offset (Ref: {$firstBet->bet_ref})",
+                    'settled_at' => now(),
+                ]);
+                $settledIds[] = $b->id;
+            }
+
+            AccountStatement::create([
+                'user_id' => $user->id,
+                'credit' => $netPl > 0 ? $netPl : 0,
+                'debit' => $netPl < 0 ? abs($netPl) : 0,
+                'balance' => $user->fresh()->balance,
+                'remark' => "Market Cashout: {$firstBet->event_name} ({$firstBet->market_name})",
+                'from_to' => $netPl >= 0 ? "CashOut/Exchange -> {$user->username}" : "{$user->username} -> CashOut/Exchange",
+                'ref_type' => 'cashout',
+                'ref_id' => $firstBet->bet_ref,
+            ]);
+        });
+
+        $walletState = $bookService->syncUserWallet($user->fresh());
+
+        return response()->json([
+            'status' => true,
+            'message' => "Market Cashed Out! Staked Principal Returned to Wallet & Net Profit: " . ($netPl >= 0 ? '+' : '') . number_format($netPl, 2) . ' PTI',
+            'bet' => $firstBet->fresh(),
+            'settled_bet_ids' => $settledIds,
+            'net_pl' => $netPl,
+            'wallet' => [
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'locked_profit' => $walletState['locked_profit'],
+                'available' => $walletState['available'],
+            ],
+        ]);
+    }
+
+    /**
+     * Settle all open bets in a market when the user clicks "Settle" (instant_settle) on a specific runner's bet.
+     */
+    private function settleMarketBetsByWinner(
+        \App\Models\User $user,
+        \Illuminate\Support\Collection $marketBets,
+        Bet $triggerBet,
+        \App\Services\ExchangeBookService $bookService
+    ) {
+        $winnerNorm = $bookService->normalizeRunnerName($triggerBet->selection_name);
+        $totalNetPl = 0.0;
+        $settledIds = [];
+
+        DB::transaction(function () use ($user, $marketBets, $triggerBet, $winnerNorm, $bookService, &$totalNetPl, &$settledIds) {
+            foreach ($marketBets as $b) {
+                $selNorm = $bookService->normalizeRunnerName($b->selection_name);
+                $matchesWinner = ($selNorm === $winnerNorm);
+                $bt = strtoupper(trim($b->bet_type));
+
+                if (in_array($bt, ['YES', 'NO'], true)) {
+                    $won = ($bt === strtoupper(trim($triggerBet->bet_type)));
+                } else {
+                    $won = ($bt === 'BACK' && $matchesWinner) || ($bt === 'LAY' && !$matchesWinner);
+                }
+
+                $legPl = $won ? round((float) $b->potential_profit, 2) : -round((float) $b->liability, 2);
+                $legStatus = $won ? 'WON' : 'LOST';
+                $totalNetPl = round($totalNetPl + $legPl, 2);
+
+                $b->update([
+                    'profit_loss' => $legPl,
+                    'status' => $legStatus,
+                    'result_summary' => "Settled Winner: {$triggerBet->selection_name} (" . ($legPl >= 0 ? '+' : '') . number_format($legPl, 2) . ' PTI)',
+                    'settled_at' => now(),
+                ]);
+                $settledIds[] = $b->id;
+            }
+
+            $user->increment('balance', $totalNetPl);
+
+            AccountStatement::create([
+                'user_id' => $user->id,
+                'credit' => $totalNetPl > 0 ? $totalNetPl : 0,
+                'debit' => $totalNetPl < 0 ? abs($totalNetPl) : 0,
+                'balance' => $user->fresh()->balance,
+                'remark' => "Exchange Market Settlement: {$triggerBet->event_name} ({$triggerBet->market_name}) - Winner: {$triggerBet->selection_name}",
+                'from_to' => $totalNetPl >= 0 ? "Exchange -> {$user->username}" : "{$user->username} -> Exchange",
+                'ref_type' => 'bet_settle',
+                'ref_id' => $triggerBet->bet_ref,
+            ]);
+        });
+
+        $walletState = $bookService->syncUserWallet($user->fresh());
+
+        return response()->json([
+            'status' => true,
+            'message' => "Market Settled ({$triggerBet->selection_name})! Net P/L: " . ($totalNetPl >= 0 ? '+' : '') . number_format($totalNetPl, 2) . ' PTI',
+            'bet' => $triggerBet->fresh(),
+            'settled_bet_ids' => $settledIds,
+            'net_pl' => $totalNetPl,
+            'wallet' => [
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'locked_profit' => $walletState['locked_profit'],
+                'available' => $walletState['available'],
             ],
         ]);
     }
@@ -1659,10 +1896,12 @@ class ExchangeController extends Controller
         $exposureList = [];
         if (Auth::check()) {
             $u = Auth::user()->fresh();
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($u);
             $wallet = [
-                'balance' => round($u->balance, 2),
-                'exposure' => round($u->exposure, 2),
-                'available' => round($u->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'locked_profit' => $walletState['locked_profit'],
+                'available' => $walletState['available'],
             ];
             $exposureList = Bet::where('user_id', $u->id)
                 ->where('status', 'MATCHED')

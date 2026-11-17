@@ -806,7 +806,6 @@ class AdminController extends Controller
 
         DB::transaction(function () use ($bet, $user, $newStatus, $cashoutPl, $remarkNote) {
             if ($user && $bet->status === 'MATCHED') {
-                $user->decrement('exposure', min((float) $user->exposure, (float) $bet->liability));
                 $newBal = max(0, round((float) $user->balance + $cashoutPl, 2));
                 $user->update(['balance' => $newBal]);
 
@@ -829,6 +828,10 @@ class AdminController extends Controller
                 'settled_at' => now(),
             ]);
         });
+
+        if ($user) {
+            app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
+        }
 
         return back()->with('success', "Bet {$bet->bet_ref} settled as {$newStatus} (P/L: " . ($cashoutPl >= 0 ? '+' : '') . number_format($cashoutPl, 2) . " PTI)!");
     }
@@ -882,6 +885,8 @@ class AdminController extends Controller
             'settled_at' => $status !== 'MATCHED' ? now() : null,
         ]);
 
+        app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
+
         return back()->with('success', "Bet record created for {$user->username}!");
     }
 
@@ -907,7 +912,6 @@ class AdminController extends Controller
             if ($prevStatus === 'MATCHED' && $newStatus !== 'MATCHED' && $request->boolean('settle_wallet', true)) {
                 $user = User::find($bet->user_id);
                 if ($user) {
-                    $user->decrement('exposure', min($user->exposure, $bet->liability));
                     $user->increment('balance', $newPl);
 
                     AccountStatement::create([
@@ -937,14 +941,23 @@ class AdminController extends Controller
             ]);
         });
 
+        if ($u = User::find($bet->user_id)) {
+            app(\App\Services\ExchangeBookService::class)->syncUserWallet($u);
+        }
+
         return back()->with('success', "Updated Bet {$bet->bet_ref}!");
     }
 
     public function deleteBet(int $id)
     {
         $bet = Bet::findOrFail($id);
+        $userId = $bet->user_id;
         $ref = $bet->bet_ref;
         $bet->delete();
+
+        if ($u = User::find($userId)) {
+            app(\App\Services\ExchangeBookService::class)->syncUserWallet($u);
+        }
 
         return back()->with('success', "Bet {$ref} deleted.");
     }
@@ -1400,18 +1413,19 @@ class AdminController extends Controller
         $winner = trim($request->input('winner_selection'));
         $openBets = Bet::where('event_id', $ev->event_id)->where('status', 'MATCHED')->get();
 
-        DB::transaction(function () use ($ev, $winner, $openBets) {
+        $affectedUserIds = [];
+        DB::transaction(function () use ($ev, $winner, $openBets, &$affectedUserIds) {
             $ev->update(['winner_selection' => $winner]);
 
             foreach ($openBets as $bet) {
                 $user = User::find($bet->user_id);
                 if (!$user) continue;
+                $affectedUserIds[$user->id] = true;
 
                 $matchedRunner = strcasecmp(trim($bet->selection_name), $winner) === 0;
                 $won = ($bet->bet_type === 'BACK' && $matchedRunner) || ($bet->bet_type === 'LAY' && !$matchedRunner);
                 $pl = $won ? $bet->potential_profit : -$bet->liability;
 
-                $user->decrement('exposure', min($user->exposure, $bet->liability));
                 $user->increment('balance', $pl);
 
                 $bet->update([
@@ -1433,6 +1447,13 @@ class AdminController extends Controller
                 ]);
             }
         });
+
+        $bookSvc = app(\App\Services\ExchangeBookService::class);
+        foreach (array_keys($affectedUserIds) as $uid) {
+            if ($u = User::find($uid)) {
+                $bookSvc->syncUserWallet($u);
+            }
+        }
 
         return back()->with('success', "Settled {$openBets->count()} open bets for {$ev->event_name} (Winner: {$winner})!");
     }

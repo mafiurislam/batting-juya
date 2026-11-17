@@ -409,14 +409,50 @@ window.WB24 = {
       if (data.status) {
         this.toast(data.message, 'success');
         this.updateWalletDisplay(data.wallet);
-        document.getElementById(`openBetRow_${betId}`)?.remove();
-        if (window.FullMkt && typeof window.FullMkt.onBetRemoved === 'function') {
-          window.FullMkt.onBetRemoved(betId);
-        }
+        const idsToRemove = Array.isArray(data.settled_bet_ids) && data.settled_bet_ids.length
+          ? data.settled_bet_ids
+          : [betId];
+        idsToRemove.forEach((id) => {
+          document.getElementById(`openBetRow_${id}`)?.remove();
+          if (window.FullMkt && typeof window.FullMkt.onBetRemoved === 'function') {
+            window.FullMkt.onBetRemoved(id);
+          }
+        });
       } else {
         this.toast(data.message || 'Cashout failed', 'danger');
       }
     } catch (e) {}
+  },
+
+  async cashoutMarket(eventId, marketName = 'Match Odds') {
+    try {
+      const res = await fetch('/api/exchange/cashout-market', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': this.csrfToken,
+        },
+        body: JSON.stringify({ event_id: eventId, market_name: marketName }),
+      });
+      const data = await res.json();
+      if (data.status) {
+        this.toast(data.message, 'success');
+        this.updateWalletDisplay(data.wallet);
+        (data.settled_bet_ids || []).forEach((id) => {
+          document.getElementById(`openBetRow_${id}`)?.remove();
+          if (window.FullMkt && typeof window.FullMkt.onBetRemoved === 'function') {
+            window.FullMkt.onBetRemoved(id);
+          }
+        });
+      } else {
+        this.toast(data.message || 'No open bets in this market to cash out.', 'danger');
+      }
+      return data;
+    } catch (e) {
+      this.toast('Unable to cash out market.', 'danger');
+      return { status: false };
+    }
   },
 
   async togglePin(btn, eventId, sportId = '4') {
@@ -444,8 +480,16 @@ window.WB24 = {
       el.textContent = parseFloat(wallet.available ?? wallet.balance).toFixed(2);
     });
     document.querySelectorAll('.js-user-exposure').forEach(el => {
-      el.textContent = parseFloat(wallet.exposure).toFixed(2);
+      el.textContent = parseFloat(wallet.exposure ?? 0).toFixed(2);
     });
+  },
+
+  syncHeaderWallet(wallet) {
+    this.updateWalletDisplay(wallet);
+  },
+
+  showToast(message, type = 'info') {
+    this.toast(message, type);
   },
 
   prependOpenBet(bet) {

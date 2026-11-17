@@ -1109,4 +1109,143 @@ class Winbook24CloneTest extends TestCase
         $fmRes->assertSee('selected-odd-back');
         $fmRes->assertSee('selected-odd-lay');
     }
+
+    public function test_exchange_hedge_returns_stake_to_wallet_and_allows_betting_with_profit(): void
+    {
+        $user = User::where('username', 'player1')->firstOrFail();
+        \App\Models\Bet::where('user_id', $user->id)->delete();
+        $user->update(['balance' => 1000.00, 'exposure' => 0.00]);
+
+        // 1. Place BACK New Zealand @ 1.42 for 200 PTI (Profit: +84, Liability: 200)
+        $res1 = $this->actingAs($user)->postJson('/api/exchange/place-bet', [
+            'event_id' => '4002026111085029363',
+            'event_name' => 'New Zealand v India',
+            'market_name' => 'Match Odds',
+            'selection_name' => 'New Zealand',
+            'bet_type' => 'BACK',
+            'odds' => 1.42,
+            'stake' => 200,
+            'category' => 'exchange',
+        ]);
+        $res1->assertStatus(200)->assertJsonPath('status', true);
+        $this->assertEquals(200.00, (float) $res1->json('wallet.exposure'));
+        $this->assertEquals(800.00, (float) $res1->json('wallet.available'));
+
+        // 2. Place BACK New Zealand @ 1.44 for 100 PTI (Profit: +44, Liability: 100)
+        // Total staked on New Zealand = 300 PTI, Total profit on New Zealand = +128 PTI
+        $res2 = $this->actingAs($user)->postJson('/api/exchange/place-bet', [
+            'event_id' => '4002026111085029363',
+            'event_name' => 'New Zealand v India',
+            'market_name' => 'Match Odds',
+            'selection_name' => 'New Zealand',
+            'bet_type' => 'BACK',
+            'odds' => 1.44,
+            'stake' => 100,
+            'category' => 'exchange',
+        ]);
+        $res2->assertStatus(200)->assertJsonPath('status', true);
+        $this->assertEquals(300.00, (float) $res2->json('wallet.exposure'));
+        $this->assertEquals(700.00, (float) $res2->json('wallet.available'));
+
+        // 3. Place BACK India @ 7.60 for 100 PTI using New Zealand's +128 profit:
+        // - New Zealand outcome: +128 - 100 = +28.00
+        // - India outcome: -300 + 660 = +360.00
+        // - All 300 PTI principal stake on New Zealand returns to wallet (exposure -> 0.00)
+        // - Locked green profit (+28.00) is immediately available in wallet (available -> 1028.00)
+        $res3 = $this->actingAs($user)->postJson('/api/exchange/place-bet', [
+            'event_id' => '4002026111085029363',
+            'event_name' => 'New Zealand v India',
+            'market_name' => 'Match Odds',
+            'selection_name' => 'India',
+            'bet_type' => 'BACK',
+            'odds' => 7.60,
+            'stake' => 100,
+            'category' => 'exchange',
+        ]);
+        $res3->assertStatus(200)->assertJsonPath('status', true);
+        $this->assertEquals(0.00, (float) $res3->json('wallet.exposure'));
+        $this->assertEquals(28.00, (float) $res3->json('wallet.locked_profit'));
+        $this->assertEquals(1028.00, (float) $res3->json('wallet.available'));
+        $this->assertEquals(300.00, (float) $res3->json('impact.stake_returned_to_wallet'));
+
+        // 4. Test betting with profit when wallet available balance is 0.00:
+        // Set user balance to 300 on a fresh event (Pakistan v Sri Lanka) and stake all 300 on Pakistan @ 1.50 (+150 profit)
+        \App\Models\Bet::where('user_id', $user->id)->delete();
+        $user->update(['balance' => 300.00, 'exposure' => 0.00]);
+
+        $res4 = $this->actingAs($user)->postJson('/api/exchange/place-bet', [
+            'event_id' => '4002026113125357712',
+            'event_name' => 'Pakistan v Sri Lanka',
+            'market_name' => 'Match Odds',
+            'selection_name' => 'Pakistan',
+            'bet_type' => 'BACK',
+            'odds' => 1.50,
+            'stake' => 300,
+            'category' => 'exchange',
+        ]);
+        $res4->assertStatus(200);
+        $this->assertEquals(300.00, (float) $res4->json('wallet.exposure'));
+        $this->assertEquals(0.00, (float) $res4->json('wallet.available'));
+
+        // Now with 0.00 available in wallet, place a 150 PTI bet on Sri Lanka @ 4.00 using Pakistan's +150 profit!
+        $res5 = $this->actingAs($user)->postJson('/api/exchange/place-bet', [
+            'event_id' => '4002026113125357712',
+            'event_name' => 'Pakistan v Sri Lanka',
+            'market_name' => 'Match Odds',
+            'selection_name' => 'Sri Lanka',
+            'bet_type' => 'BACK',
+            'odds' => 4.00,
+            'stake' => 150,
+            'category' => 'exchange',
+        ]);
+        $res5->assertStatus(200)->assertJsonPath('status', true);
+        // Principal 300 PTI returns to wallet (exposure = 0, available = 300)
+        $this->assertEquals(0.00, (float) $res5->json('wallet.exposure'));
+        $this->assertEquals(300.00, (float) $res5->json('wallet.available'));
+
+        // And now Sri Lanka has +150 net profit (-300 + 450 = +150), so user can bet AGAIN on Pakistan using Sri Lanka's profit!
+        $res6 = $this->actingAs($user)->postJson('/api/exchange/place-bet', [
+            'event_id' => '4002026113125357712',
+            'event_name' => 'Pakistan v Sri Lanka',
+            'market_name' => 'Match Odds',
+            'selection_name' => 'Pakistan',
+            'bet_type' => 'BACK',
+            'odds' => 2.00,
+            'stake' => 50,
+            'category' => 'exchange',
+        ]);
+        $res6->assertStatus(200)->assertJsonPath('status', true);
+        $this->assertEquals(0.00, (float) $res6->json('wallet.exposure'));
+        $this->assertEquals(50.00, (float) $res6->json('wallet.locked_profit'));
+        $this->assertEquals(350.00, (float) $res6->json('wallet.available'));
+
+        // 5. Cash out the market and verify profit is permanently credited to balance
+        $cashoutMkt = $this->actingAs($user)->postJson('/api/exchange/cashout-market', [
+            'event_id' => '4002026113125357712',
+            'market_name' => 'Match Odds',
+        ]);
+        $cashoutMkt->assertStatus(200)->assertJsonPath('status', true);
+        $this->assertEquals(0.00, (float) $cashoutMkt->json('wallet.exposure'));
+        $this->assertGreaterThanOrEqual(350.00, (float) $cashoutMkt->json('wallet.balance'));
+
+        // 6. Verify exact Winbook24 screenshot Cash Out formula (UAE Bulls -2500.00 @ 2.8/2.84 vs Royal Champs +3100.00 @ 1.54/1.55 => 1112.00)
+        $bookSvc = app(\App\Services\ExchangeBookService::class);
+        $wbOffer = $bookSvc->calculateWinbookCashout(
+            [
+                ['name' => 'UAE Bulls', 'norm' => 'uae bulls', 'id' => '101', 'back_odds' => 2.80, 'raw_back' => 2.80, 'raw_lay' => 2.84],
+                ['name' => 'Royal Champs', 'norm' => 'royal champs', 'id' => '102', 'back_odds' => 1.54, 'raw_back' => 1.54, 'raw_lay' => 1.55],
+            ],
+            [
+                'UAE Bulls' => -2500.00,
+                'Royal Champs' => 3100.00,
+            ],
+            'exchange'
+        );
+        $this->assertNotNull($wbOffer);
+        $this->assertEquals(1112.00, (float) $wbOffer['cashout_value']);
+        $this->assertEquals('Royal Champs', $wbOffer['selection_name']);
+        $this->assertEquals('LAY', $wbOffer['bet_type']);
+        $this->assertEquals(1.55, (float) $wbOffer['odds']);
+        $this->assertEquals(3612.90, (float) $wbOffer['stake']);
+    }
 }

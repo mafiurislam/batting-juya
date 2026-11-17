@@ -127,8 +127,8 @@
           </div>
           <div class="exp-line">
             Exposure
-            <span class="exp-val" data-bs-toggle="modal" data-bs-target="#exposureModal">
-              (<span class="js-user-exposure">{{ number_format(auth()->user()->exposure, 2) }}</span>)
+            <span class="exp-val" data-bs-toggle="modal" data-bs-target="#exposureModal" style="color:#ffffff;">
+              (<span class="js-user-exposure" style="color:#ff3333;font-weight:700;">{{ number_format(auth()->user()->exposure, 2) }}</span>)
             </span>
           </div>
         </div>

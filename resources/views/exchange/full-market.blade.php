@@ -176,25 +176,54 @@
     gap: 10px;
   }
   .fm-cashout-btn {
-    background: #e9ecef;
-    border: 1px solid #adb5bd;
-    color: #212529;
+    background: transparent;
+    border: none;
+    color: #000000;
     font-weight: 700;
-    font-size: 11px;
-    padding: 2px 9px;
+    font-size: 12px;
+    padding: 3px 8px 3px 4px;
     border-radius: 4px;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     cursor: pointer;
+    line-height: 18px;
+    transition: background-color 0.15s ease;
+  }
+  .fm-cashout-btn.has-cashout-val {
+    background: #cccccc !important;
+    padding: 3px 12px 3px 4px;
+    min-width: 96px;
+  }
+  .fm-cashout-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+    background-color: #FFB900;
+    color: #000000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8.5px;
+    flex-shrink: 0;
+  }
+  .fm-cashout-btn.has-cashout-val .fm-cashout-icon {
+    font-size: 10.5px;
   }
   .fm-cashout-dot {
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #2bd13f;
+    background: #000000;
     display: inline-block;
-    box-shadow: 0 0 4px #2bd13f;
+  }
+  .fm-cashout-val-pos {
+    color: #228b22 !important;
+    font-weight: 700 !important;
+  }
+  .fm-cashout-val-neg {
+    color: #d0021b !important;
+    font-weight: 700 !important;
   }
   .fm-matched-txt {
     font-size: 12px;
@@ -213,9 +242,9 @@
   .fm-subhead .wb-minmax-pill {
     white-space: nowrap;
     display: inline-block;
-    background: #beddf4;
-    color: #24577a;
-    padding: 2px 6px;
+    background: #bed5d8;
+    color: #315195;
+    padding: 2px 8px;
     border-radius: 3px;
     font-size: 10.5px;
     font-weight: 700;
@@ -225,7 +254,7 @@
     align-items: center;
     border-bottom: 1px solid #7e97a7;
     position: relative;
-    min-height: 42px;
+    min-height: 44px;
     background: #fff;
   }
   .fm-runner-name {
@@ -240,20 +269,29 @@
     line-height: 1.25;
   }
   .fm-runner-title {
-    color: #1e1e1e;
+    color: #23282c;
     font-weight: 700;
     font-size: 13px;
   }
   .fm-runner-pl {
     font-size: 12px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.25;
     margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
   }
-  .fm-runner-pl.pl-pos {
-    color: #1b8c00 !important;
+  .fm-runner-pl .fm-pl-arrow {
+    font-size: 11px;
+    margin-right: 2px;
   }
-  .fm-runner-pl.pl-neg {
+  .fm-runner-pl.pl-pos,
+  .fm-runner-pl .pl-pos {
+    color: #228b22 !important;
+  }
+  .fm-runner-pl.pl-neg,
+  .fm-runner-pl .pl-neg {
     color: #d0021b !important;
   }
   .fm-odds-6 {
@@ -434,40 +472,53 @@
     font-weight: 700;
   }
 
-  /* To Win The Match Green Sportsbook Box */
+  /* To Win The Match Green Sportsbook Box (1:1 Winbook24 winMarket / sportbook-back) */
   .fm-sb-green-body {
     background-image: linear-gradient(90deg, #82dda6cc, #82ddb059 49%, #82dda6cc) !important;
-    padding: 8px 12px;
+    padding: 8px 10px;
   }
-  .fm-sb-pill {
-    width: 100%;
-    max-width: 310px;
-    min-height: 56px;
-    background: linear-gradient(to bottom, #c9bf34, #f7eb4c, #c9bf34) !important;
-    border-radius: 10px;
+  .fm-win-market-col {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    cursor: pointer;
-    color: #000 !important;
-    text-decoration: none !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.14);
+    padding: 4px;
   }
-  .fm-sb-pill-left {
-    width: 40%;
+  .fm-win-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1e1e1e;
+    text-align: center;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .fm-sportbook-back {
+    background: #52c683;
+    width: 125px;
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+    position: relative;
+    padding: 3px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    color: #000000 !important;
+    text-decoration: none !important;
+    line-height: 1.2;
   }
-  .fm-sb-pill-right {
-    width: 60%;
-    min-height: 56px;
-    border-left: 3px dashed #000;
-    display: flex;
-    align-items: center;
-    padding-left: 12px;
-    font-weight: 800;
+  .fm-sportbook-back.selected-odd-back {
+    background: #1a8ee9 !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+  }
+  .fm-sportbook-back strong {
     font-size: 13px;
+    font-weight: 700;
+  }
+  .fm-sportbook-back small {
+    font-size: 10.5px;
+    font-weight: 400;
   }
 
   .fm-subhead-right {
@@ -501,31 +552,33 @@
     }
     .fm-card-head {
       padding-right: 6px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 4px;
     }
     .fm-head-tab {
       font-size: 12px;
       padding: 4px 10px;
-      min-width: 120px;
+      min-width: 115px;
     }
     .fm-matched-txt {
       font-size: 11px;
+      white-space: nowrap;
     }
-    /* Match Odds & Bookmaker Subheader on Mobile: Min/Max on left, Back (3 cols) & Lay (3 cols) on right */
+    /* Match Odds & Bookmaker Subheader on Mobile: Min/Max pill on left, Back (1 col) & Lay (1 col) on right */
     .fm-subhead {
-      padding: 3px 4px;
+      padding: 2px 0 2px 6px;
       justify-content: space-between;
     }
     .fm-mbl-minmax {
       display: inline-block;
-      padding-left: 4px;
+      padding: 3px 10px;
     }
     .fm-subhead-right {
-      width: 100%;
+      width: 132px;
+      flex-shrink: 0;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2px;
+      gap: 1px;
     }
     .fm-subhead-right .box-hide-mbl {
       display: none !important;
@@ -533,65 +586,61 @@
     .fm-subhead-right .fm-subhead-back,
     .fm-subhead-right .fm-subhead-lay {
       width: 100% !important;
-      border-radius: 4px !important;
+      border-radius: 0 !important;
       font-size: 11.5px;
-      padding: 3px 0 !important;
+      padding: 4px 0 !important;
     }
 
-    /* Runner Row on Mobile: Full-width Team Name + P/L on top, all 6 Back/Lay odds in a 6-column grid below */
+    /* Runner Row on Mobile: Team Name + P/L on left (65%), Back 1 & Lay 1 on right (132px) */
     .fm-runner-row {
-      flex-wrap: wrap;
-      padding-bottom: 3px;
+      flex-wrap: nowrap;
+      min-height: 44px;
     }
     .fm-runner-name {
-      width: 100%;
-      flex: 0 0 100%;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 8px 3px 8px;
-      background: rgba(248, 250, 252, 0.7);
+      flex: 1;
+      min-width: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 4px 8px;
     }
     .fm-runner-title {
       font-size: 12.5px;
     }
     .fm-runner-pl {
-      margin-top: 0;
-      font-size: 12px;
+      margin-top: 2px;
+      font-size: 11.5px;
     }
     .fm-odds-6 {
-      width: 100%;
+      width: 132px;
+      flex-shrink: 0;
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 2px;
-      padding: 2px 4px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      padding: 0;
     }
     .fm-odds-6 .box-hide-mbl {
-      display: flex !important;
+      display: none !important;
     }
     .fm-odd-cell {
       width: 100%;
-      height: 39px;
-      border-radius: 3px;
+      height: 42px;
+      border-radius: 0;
     }
     .fm-odd-cell strong {
-      font-size: 11.5px;
+      font-size: 12px;
     }
     .fm-odd-cell small {
-      font-size: 9px;
+      font-size: 9.5px;
     }
 
     /* To Win The Match Pills on Mobile */
     .fm-sb-green-body {
       padding: 6px;
     }
-    .fm-sb-pill {
-      min-height: 48px;
-    }
-    .fm-sb-pill-right {
-      min-height: 48px;
-      padding-left: 8px;
-      font-size: 11.5px;
+    .fm-sportbook-back {
+      width: 68% !important;
+      min-width: 110px;
     }
 
     /* Fancy Bet & Sportsbook Tabs on Mobile */
@@ -1337,9 +1386,10 @@
           </span>
         </div>
 
-        @if(count($moRunners) === 2 && stripos($moTitle, 'Tied') === false)
-          <button type="button" class="fm-cashout-btn">
-            <span class="fm-cashout-dot"></span> Cash Out
+        @if(stripos($moTitle, 'Tied') === false)
+          <button type="button" class="fm-cashout-btn js-market-cashout-btn" data-cashout-market="{{ $moTitle }}" data-market-key="{{ $moKey }}" onclick="FullMkt.cashoutMarket('{{ addslashes($moTitle) }}', this, '{{ $moKey }}')">
+            <span class="fm-cashout-icon"><i class="fas fa-circle js-cashout-icon"></i></span>
+            <span class="js-cashout-label">Cash Out</span>
           </button>
         @endif
 
@@ -1445,11 +1495,10 @@
           </span>
         </div>
 
-        @if(count($bmRunners) === 2)
-          <button type="button" class="fm-cashout-btn">
-            <span class="fm-cashout-dot"></span> Cash Out
-          </button>
-        @endif
+        <button type="button" class="fm-cashout-btn js-market-cashout-btn" data-cashout-market="{{ $bmTitle }}" data-market-key="{{ $bmKey }}" onclick="FullMkt.cashoutMarket('{{ addslashes($bmTitle) }}', this, '{{ $bmKey }}')">
+          <span class="fm-cashout-icon"><i class="fas fa-circle js-cashout-icon"></i></span>
+          <span class="js-cashout-label">Cash Out</span>
+        </button>
 
         <span class="fm-matched-txt">Matched <strong>€ {{ $bmMatchedStr }}</strong></span>
       </div>
@@ -1533,19 +1582,26 @@
       $sbTitle = $sb['marketName'] ?? 'To Win The Match';
       $sbMin = $sb['min'] ?? 10;
       $sbMax = $sb['max'] ?? 250000;
+      $sbMatched = (float) ($sb['oddsData']['totalMatched'] ?? 196800);
+      $sbMatchedStr = $sbMatched >= 1000000
+          ? number_format($sbMatched / 1000000, 1) . 'M'
+          : ($sbMatched >= 1000 ? number_format($sbMatched / 1000, 1) . 'K' : number_format($sbMatched, 0));
       $sbRunners = $sb['oddsData']['runners'] ?? [];
       $sbRunnersMap = $sb['runnersData'] ?? [];
       $sbSlipId = 'sbBoxSlip_' . $sbIdx;
       $sbKey = 'sb_box_' . $sbIdx;
     @endphp
     <div class="fm-card js-market-pos-scope" data-market-key="{{ $sbKey }}" data-market-name="{{ $sbTitle }}" data-market-category="sportsbook">
-      <div class="d-flex justify-content-between align-items-center px-3 py-1 text-white fw-bold" style="background:linear-gradient(-180deg, #2E4B5E 0%, #243A48 82%);font-size:13px;">
-        <span>{{ $sbTitle }}</span>
-        <span>Min/Max: {{ $sbMin }} - {{ $sbMax }}</span>
-      </div>
-      <div class="d-flex border-bottom text-center fw-bold py-1 bg-white">
-        <div class="w-50 border-end">Back</div>
-        <div class="w-50">Back</div>
+      <div class="fm-card-head">
+        <div class="fm-head-tab">
+          <span>{{ $sbTitle }}</span>
+          <span style="cursor:pointer;" onclick="showFooterPolicy('{{ addslashes($sbTitle) }} Rules')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+              <path fill="currentColor" fill-rule="evenodd" d="M6.76 5.246V3.732h1.48v1.514H6.76zm.74 8.276a5.86 5.86 0 0 0 3.029-.83 5.839 5.839 0 0 0 2.163-2.163 5.86 5.86 0 0 0 .83-3.029 5.86 5.86 0 0 0-.83-3.029 5.839 5.839 0 0 0-2.163-2.163 5.86 5.86 0 0 0-3.029-.83 5.86 5.86 0 0 0-3.029.83A5.839 5.839 0 0 0 2.308 4.47a5.86 5.86 0 0 0-.83 3.029 5.86 5.86 0 0 0 .83 3.029 5.839 5.839 0 0 0 2.163 2.163 5.86 5.86 0 0 0 3.029.83zM7.5 0c1.37 0 2.638.343 3.804 1.028a7.108 7.108 0 0 1 2.668 2.668A7.376 7.376 0 0 1 15 7.5c0 1.37-.343 2.638-1.028 3.804a7.108 7.108 0 0 1-2.668 2.668A7.376 7.376 0 0 1 7.5 15a7.376 7.376 0 0 1-3.804-1.028 7.243 7.243 0 0 1-2.668-2.686A7.343 7.343 0 0 1 0 7.5c0-1.358.343-2.62 1.028-3.786a7.381 7.381 0 0 1 2.686-2.686A7.343 7.343 0 0 1 7.5 0zm-.74 11.268V6.761h1.48v4.507H6.76z"/>
+            </svg>
+          </span>
+        </div>
+        <span class="fm-matched-txt">Matched <strong>€ {{ $sbMatchedStr }}</strong></span>
       </div>
       <div class="fm-sb-green-body">
         <div class="row g-2">
@@ -1554,24 +1610,23 @@
               $selId = (string) ($sbr['selectionId'] ?? ($rIdx + 1));
               $rName = $sbRunnersMap[$selId] ?? ($sbr['runnerName'] ?? ('Team ' . ($rIdx + 1)));
               $oddsVal = $sbr['price']['back'][0]['price'] ?? ($sbr['odds'] ?? 1.90);
-              $volVal = $sbr['price']['back'][0]['size'] ?? $sbMax;
+              $volVal = $sbr['price']['back'][0]['size'] ?? 100000;
+              $volStr = is_numeric($volVal) ? $formatVolume($volVal) : $volVal;
             @endphp
-            <div class="col-6 d-flex justify-content-center">
-              <a href="javascript:void(0)" class="fm-sb-pill"
-                 onclick="FullMkt.openInlineSlip('{{ $sbSlipId }}', '{{ addslashes($sbTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $oddsVal }}, 'sportsbook', null, '{{ $sbKey }}', this)">
-                <div class="fm-sb-pill-left">
-                  <strong style="font-size:13px;">{{ $oddsVal }}</strong>
-                  <small style="font-size:10px;">{{ $volVal }}</small>
-                </div>
-                <div class="fm-sb-pill-right flex-column">
-                  <span>{{ $rName }}</span>
-                  <span class="fm-runner-pl js-runner-pl d-none"
-                        data-market-key="{{ $sbKey }}"
-                        data-market-name="{{ $sbTitle }}"
-                        data-selection-id="{{ $selId }}"
-                        data-runner-name="{{ $rName }}"></span>
-                </div>
-              </a>
+            <div class="col-6 ps-1 pe-1">
+              <div class="fm-win-market-col">
+                <span class="fm-win-title">{{ $rName }}</span>
+                <a href="javascript:void(0)" class="fm-sportbook-back fm-odd-cell"
+                   onclick="FullMkt.openInlineSlip('{{ $sbSlipId }}', '{{ addslashes($sbTitle) }}', '{{ $selId }}', '{{ addslashes($rName) }}', 'BACK', {{ $oddsVal }}, 'sportsbook', null, '{{ $sbKey }}', this)">
+                  <strong>{{ $oddsVal }}</strong>
+                  <small>{{ $volStr }}</small>
+                </a>
+                <span class="fm-runner-pl js-runner-pl d-none mt-1"
+                      data-market-key="{{ $sbKey }}"
+                      data-market-name="{{ $sbTitle }}"
+                      data-selection-id="{{ $selId }}"
+                      data-runner-name="{{ $rName }}"></span>
+              </div>
             </div>
           @endforeach
         </div>
@@ -2058,9 +2113,11 @@
       return n > 0 ? Math.round(n) : '0';
     },
 
+    cashoutOffers: {},
+
     formatBookPl: function (val) {
-      const abs = Math.abs(parseFloat(val) || 0);
-      return '(' + abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ')';
+      const n = parseFloat(val) || 0;
+      return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     },
 
     computeSingleBetOutcome: function (bet, runnerSelId, runnerName) {
@@ -2073,8 +2130,9 @@
       const rSelId = String(runnerSelId || '').trim();
       const rName = String(runnerName || '').trim().toLowerCase();
 
-      const isTargetRunner = (betSelId !== '' && rSelId !== '' && betSelId === rSelId) ||
-                             (betSelName !== '' && rName !== '' && (betSelName === rName || betSelName.startsWith(rName + ' (')));
+      const nameMatches = (betSelName !== '' && rName !== '' && (betSelName === rName || betSelName.startsWith(rName + ' (')));
+      const idMatches = (betSelName === '' || rName === '') && (betSelId !== '' && betSelId !== '1' && rSelId !== '' && betSelId === rSelId);
+      const isTargetRunner = nameMatches || idMatches;
 
       const betType = String(bet.bet_type ?? bet.betType ?? 'BACK').toUpperCase();
       const cat = String(bet.category || 'exchange').toLowerCase();
@@ -2092,7 +2150,6 @@
       if (cat === 'fancy' || betType === 'YES' || betType === 'NO') {
         if (!isTargetRunner) return 0;
         const rate = odds / 100;
-        // In Fancy markets, show net exposure / liability on that session line
         return betType === 'YES' ? -stake : -(stake * rate);
       }
 
@@ -2105,11 +2162,118 @@
       }
     },
 
+    /**
+     * Exact 1:1 Winbook24 Cash Out calculation (matching `cashOutOnInterval` & `cashOutOnIntervalBookmaker2` in chunk933.js)
+     */
+    computeWinbookCashoutForScope: function (scope, mktName, mktCategory, activePlList) {
+      if (!activePlList || activePlList.length !== 2) return null;
+
+      const isBookmaker = (String(mktCategory || '').toLowerCase() === 'bookmaker');
+      const runnersWithOdds = activePlList.map((item) => {
+        let row = scope.querySelector(`.fm-runner-row[data-runner-name="${CSS.escape(item.name)}"]`);
+        if (!row && item.selId) {
+          row = scope.querySelector(`.fm-runner-row[data-selection-id="${CSS.escape(item.selId)}"]`);
+        }
+        let backOdds = 0;
+        let layOdds = 0;
+        if (row) {
+          const bCell = isBookmaker
+            ? row.querySelector('.js-bm-cell[data-bm-type="back"][data-bm-level="0"] strong')
+            : row.querySelector('.js-mo-cell[data-mo-type="back"][data-mo-level="0"] strong');
+          const lCell = isBookmaker
+            ? row.querySelector('.js-bm-cell[data-bm-type="lay"][data-bm-level="0"] strong')
+            : row.querySelector('.js-mo-cell[data-mo-type="lay"][data-mo-level="0"] strong');
+          if (bCell) backOdds = parseFloat(bCell.textContent.replace(/,/g, '')) || 0;
+          if (lCell) layOdds = parseFloat(lCell.textContent.replace(/,/g, '')) || 0;
+        }
+        return {
+          selectionId: item.selId || '1',
+          runnerName: item.name,
+          pl: item.pl,
+          backOdds,
+          layOdds
+        };
+      });
+
+      if (runnersWithOdds[0].backOdds <= 0 || runnersWithOdds[1].backOdds <= 0) {
+        return null;
+      }
+
+      // c = minBy(r, "backOdds") (the favorite runner)
+      const c = (runnersWithOdds[0].backOdds <= runnersWithOdds[1].backOdds) ? runnersWithOdds[0] : runnersWithOdds[1];
+      const v = (runnersWithOdds[0].backOdds <= runnersWithOdds[1].backOdds) ? runnersWithOdds[1] : runnersWithOdds[0];
+
+      if (c.backOdds <= 0 || c.layOdds <= 0) {
+        return null;
+      }
+
+      const f = c.pl;
+      const sV = v.pl;
+      const negCount = (f < 0 ? 1 : 0) + (sV < 0 ? 1 : 0);
+
+      let m = 0;
+      let price = 0;
+      let side = 'LAY';
+
+      if (negCount === 2 || negCount === 0) {
+        const O = Math.abs(f - sV);
+        if (f > sV) {
+          const div = isBookmaker ? ((c.layOdds / 100) + 1) : c.layOdds;
+          m = parseFloat(Number(O / div).toFixed(2));
+          price = c.layOdds;
+          side = 'LAY';
+        } else {
+          const div = isBookmaker ? ((c.backOdds / 100) + 1) : c.backOdds;
+          m = parseFloat(Number(O / div).toFixed(2));
+          price = c.backOdds;
+          side = 'BACK';
+        }
+      } else {
+        const p = Math.abs(f) + Math.abs(sV);
+        if (f > 0) {
+          const div = isBookmaker ? ((c.layOdds / 100) + 1) : c.layOdds;
+          m = parseFloat(Number(p / div).toFixed(2));
+          price = c.layOdds;
+          side = 'LAY';
+        } else {
+          const div = isBookmaker ? ((c.backOdds / 100) + 1) : c.backOdds;
+          m = parseFloat(Number(p / div).toFixed(2));
+          price = c.backOdds;
+          side = 'BACK';
+        }
+      }
+
+      let M = '0.00';
+      if (isBookmaker) {
+        M = (side === 'BACK')
+          ? (f + price * (m / 100)).toFixed(2)
+          : (f - price * (m / 100)).toFixed(2);
+      } else {
+        const delta = Math.ceil(((100 * price - 100) / 100) * m);
+        M = (side === 'BACK')
+          ? (f + delta).toFixed(2)
+          : (f - delta).toFixed(2);
+      }
+
+      return {
+        marketName: mktName,
+        selectionId: c.selectionId,
+        selectionName: c.runnerName,
+        betType: side,
+        odds: price,
+        stake: m,
+        category: isBookmaker ? 'bookmaker' : 'exchange',
+        cashoutValue: parseFloat(M),
+        cashoutStr: M
+      };
+    },
+
     recalcAllPositions: function () {
       const scopes = document.querySelectorAll('.js-market-pos-scope');
       scopes.forEach((scope) => {
         const mktKey = scope.dataset.marketKey || '';
         const mktName = scope.dataset.marketName || '';
+        const mktCategory = scope.dataset.marketCategory || 'exchange';
         const runnerEls = scope.querySelectorAll('.js-runner-pl');
         if (!runnerEls.length) return;
 
@@ -2128,26 +2292,41 @@
         const previewStake = slipActiveHere ? (parseFloat(this.stake) || 0) : 0;
         const previewOdds = slipActiveHere ? (parseFloat(this.activeSlip.odds) || 0) : 0;
         const hasPreview = slipActiveHere && previewStake > 0 && previewOdds > 0;
-        const hasActivity = mktPlacedBets.length > 0 || hasPreview;
+        const hasPlaced = mktPlacedBets.length > 0;
+        const hasActivity = hasPlaced || hasPreview;
+
+        const currentPlList = [];
+        const nonDrawPlList = [];
+        const userBetOnDraw = mktPlacedBets.some(b => {
+          const nm = String(b.selection_name || '').trim().toLowerCase();
+          return nm === 'the draw' || nm === 'draw';
+        });
 
         runnerEls.forEach((el) => {
           if (!hasActivity) {
             el.classList.add('d-none');
             el.classList.remove('pl-pos', 'pl-neg');
-            el.textContent = '';
+            el.innerHTML = '';
             return;
           }
 
           const rSelId = el.dataset.selectionId || '';
           const rName = el.dataset.runnerName || '';
-          let net = 0;
+          const rNorm = rName.trim().toLowerCase();
+          let currentNet = 0;
 
           mktPlacedBets.forEach((b) => {
-            net += this.computeSingleBetOutcome(b, rSelId, rName);
+            currentNet += this.computeSingleBetOutcome(b, rSelId, rName);
           });
 
+          currentPlList.push({ selId: rSelId, name: rName, norm: rNorm, pl: currentNet });
+          if (userBetOnDraw || (rNorm !== 'the draw' && rNorm !== 'draw')) {
+            nonDrawPlList.push({ selId: rSelId, name: rName, norm: rNorm, pl: currentNet });
+          }
+
+          let previewNet = currentNet;
           if (hasPreview) {
-            net += this.computeSingleBetOutcome({
+            previewNet += this.computeSingleBetOutcome({
               selection_id: this.activeSlip.selectionId,
               selection_name: this.activeSlip.selectionName,
               bet_type: this.activeSlip.betType,
@@ -2158,10 +2337,199 @@
           }
 
           el.classList.remove('d-none', 'pl-pos', 'pl-neg');
-          el.classList.add(net >= 0 ? 'pl-pos' : 'pl-neg');
-          el.textContent = this.formatBookPl(net);
+
+          if (hasPlaced) {
+            const curCls = currentNet >= 0 ? 'pl-pos' : 'pl-neg';
+            let html = `<span class="${curCls}"><i class="fas fa-arrow-right fm-pl-arrow"></i>${this.formatBookPl(currentNet)}</span>`;
+            if (hasPreview) {
+              const prevCls = previewNet >= 0 ? 'pl-pos' : 'pl-neg';
+              html += `<span class="${prevCls} ms-1">( ${this.formatBookPl(previewNet)} )</span>`;
+            }
+            el.classList.add(currentNet >= 0 ? 'pl-pos' : 'pl-neg');
+            el.innerHTML = html;
+          } else if (hasPreview) {
+            const prevCls = previewNet >= 0 ? 'pl-pos' : 'pl-neg';
+            el.classList.add(prevCls);
+            el.innerHTML = `<span class="${prevCls}">( ${this.formatBookPl(previewNet)} )</span>`;
+          }
         });
+
+        // Update Market Cash Out button (1:1 with Winbook24 screenshot: [ ☑ 1112.00 ] when active, [ ● Cash Out ] when idle)
+        const cashoutBtn = scope.querySelector('.js-market-cashout-btn');
+        if (cashoutBtn) {
+          const lbl = cashoutBtn.querySelector('.js-cashout-label') || cashoutBtn;
+          const icon = cashoutBtn.querySelector('.js-cashout-icon');
+          const activeList = nonDrawPlList.length >= 2 ? nonDrawPlList : currentPlList;
+
+          if (hasPlaced && activeList.length === 2) {
+            const offer = this.computeWinbookCashoutForScope(scope, mktName, mktCategory, activeList);
+            if (offer) {
+              this.cashoutOffers[mktKey] = offer;
+              cashoutBtn.classList.add('has-cashout-val');
+              if (icon) {
+                icon.classList.remove('fa-circle');
+                icon.classList.add('fa-check');
+              }
+              lbl.classList.remove('fm-cashout-val-pos', 'fm-cashout-val-neg');
+              lbl.classList.add(offer.cashoutValue >= 0 ? 'fm-cashout-val-pos' : 'fm-cashout-val-neg');
+              lbl.textContent = offer.cashoutStr;
+            } else {
+              delete this.cashoutOffers[mktKey];
+              cashoutBtn.classList.remove('has-cashout-val');
+              if (icon) {
+                icon.classList.remove('fa-check');
+                icon.classList.add('fa-circle');
+              }
+              lbl.classList.remove('fm-cashout-val-pos', 'fm-cashout-val-neg');
+              lbl.textContent = 'Cash Out';
+            }
+          } else {
+            delete this.cashoutOffers[mktKey];
+            cashoutBtn.classList.remove('has-cashout-val');
+            if (icon) {
+              icon.classList.remove('fa-check');
+              icon.classList.add('fa-circle');
+            }
+            lbl.classList.remove('fm-cashout-val-pos', 'fm-cashout-val-neg');
+            lbl.textContent = 'Cash Out';
+          }
+        }
+
+        // Update inline slip live profit-betting & stake-return summary if active in this market
+        if (slipActiveHere) {
+          this.updateInlineBookSummary(mktPlacedBets, nonDrawPlList.length >= 2 ? nonDrawPlList : currentPlList);
+        }
       });
+    },
+
+    updateInlineBookSummary: function (mktPlacedBets, activeRunnerPl) {
+      const summaryEl = document.getElementById('fmInlineBookPreview');
+      if (!summaryEl || !this.activeSlip) return;
+
+      if (!mktPlacedBets || mktPlacedBets.length === 0 || !activeRunnerPl || activeRunnerPl.length === 0) {
+        summaryEl.classList.add('d-none');
+        summaryEl.innerHTML = '';
+        return;
+      }
+
+      const selNorm = String(this.activeSlip.selectionName || '').trim().toLowerCase();
+      const betType = String(this.activeSlip.betType || 'BACK').toUpperCase();
+      const previewStake = parseFloat(this.stake) || 0;
+      const previewOdds = parseFloat(this.activeSlip.odds) || 0;
+
+      // Current exposure before this slip bet
+      const minBefore = Math.min(...activeRunnerPl.map(r => r.pl));
+      const expBefore = Math.max(0, -minBefore);
+
+      // Available profit on opposing outcome(s) that can fund this bet
+      let availableProfitToBet = 0;
+      activeRunnerPl.forEach(r => {
+        const isSame = (r.norm === selNorm);
+        if ((betType === 'BACK' && !isSame && r.pl > 0) || (betType === 'LAY' && isSame && r.pl > 0)) {
+          if (r.pl > availableProfitToBet) availableProfitToBet = r.pl;
+        }
+      });
+
+      // Projected outcomes after this slip bet
+      const afterPl = activeRunnerPl.map(r => {
+        const delta = this.computeSingleBetOutcome({
+          selection_id: this.activeSlip.selectionId,
+          selection_name: this.activeSlip.selectionName,
+          bet_type: betType,
+          odds: previewOdds,
+          stake: previewStake,
+          category: this.activeSlip.category
+        }, '', r.name);
+        return { name: r.name, pl: r.pl + delta };
+      });
+
+      const minAfter = Math.min(...afterPl.map(r => r.pl));
+      const expAfter = Math.max(0, -minAfter);
+      const stakeReturned = Math.max(0, expBefore - expAfter);
+      const lockedGreenProfit = Math.max(0, minAfter);
+
+      const badges = [];
+      if (availableProfitToBet > 0) {
+        const maxProfitStake = Math.floor(availableProfitToBet);
+        badges.push(`<span class="badge bg-success-subtle text-success border border-success-subtle">Available Profit: +${availableProfitToBet.toFixed(2)} PTI</span>`);
+        if (maxProfitStake >= 10) {
+          badges.push(`<button type="button" class="btn btn-success btn-sm py-0 px-2 fw-bold" style="font-size:11px;" onclick="FullMkt.setStake(${maxProfitStake})">Use Profit (${maxProfitStake})</button>`);
+        }
+      }
+      if (stakeReturned > 0) {
+        badges.push(`<span class="badge bg-primary-subtle text-primary border border-primary-subtle">Stake Back to Wallet: +${stakeReturned.toFixed(2)} PTI</span>`);
+      }
+      if (lockedGreenProfit > 0) {
+        badges.push(`<span class="badge bg-warning-subtle text-dark border border-warning">Guaranteed Green Profit: +${lockedGreenProfit.toFixed(2)} PTI</span>`);
+      }
+
+      if (badges.length === 0) {
+        summaryEl.classList.add('d-none');
+        summaryEl.innerHTML = '';
+        return;
+      }
+
+      summaryEl.classList.remove('d-none');
+      summaryEl.innerHTML = `<div class="d-flex flex-wrap align-items-center gap-1 pt-1 pb-1">${badges.join('')}</div>`;
+    },
+
+    /**
+     * Execute Cash Out on a market (1:1 with Winbook24 `onCashOutConfirm` in chunk933.js):
+     * - If an active hedge trade offer (`cashOutAPIData`) exists with stake >= 0.5, places the exact
+     *   offsetting BACK/LAY bet on the favorite runner so both runners equalize (green book),
+     *   returning staked money to wallet and releasing exposure to 0.
+     * - If runners are already equalized (stake < 0.5), settles/cashes out the market into permanent balance.
+     */
+    cashoutMarket: async function (marketName, btnEl, mktKey) {
+      if (!window.WB24) return;
+      const resolvedKey = mktKey || btnEl?.dataset?.marketKey || '';
+      const offer = resolvedKey ? this.cashoutOffers[resolvedKey] : null;
+
+      if (btnEl) btnEl.disabled = true;
+      try {
+        if (offer && offer.stake >= 0.5) {
+          const csrf = document.querySelector('meta[name="csrf-token"]')?.content || WB24.csrfToken || '';
+          const res = await fetch('/api/exchange/place-bet', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-CSRF-TOKEN': csrf
+            },
+            body: JSON.stringify({
+              event_id: this.eventId,
+              event_name: this.eventName,
+              market_name: offer.marketName || marketName || 'Match Odds',
+              selection_id: String(offer.selectionId || '1'),
+              selection_name: offer.selectionName,
+              bet_type: offer.betType,
+              odds: offer.odds,
+              stake: offer.stake,
+              category: offer.category || 'exchange',
+              is_cashout: true
+            })
+          });
+          const data = await res.json();
+          if (res.ok && data.status) {
+            WB24.toast(`Cash Out Matched (${offer.cashoutStr} PTI)! ${data.message}`, 'success');
+            WB24.updateWalletDisplay(data.wallet);
+            WB24.prependOpenBet(data.bet);
+            this.onBetPlaced(data.bet);
+            return;
+          } else {
+            WB24.toast(data.message || 'Cash Out not possible on this price.', 'danger');
+            return;
+          }
+        }
+
+        if (typeof WB24.cashoutMarket === 'function') {
+          await WB24.cashoutMarket(this.eventId, marketName || 'Match Odds');
+        }
+      } catch (e) {
+        WB24.toast('Cash Out not possible right now.', 'danger');
+      } finally {
+        if (btnEl) btnEl.disabled = false;
+      }
     },
 
     onBetPlaced: function (bet) {
@@ -2309,6 +2677,7 @@
           });
         });
       });
+      this.recalcAllPositions();
     },
 
     updateBookmakersDom: function (bmList) {
@@ -2391,6 +2760,7 @@
           });
         });
       });
+      this.recalcAllPositions();
     },
 
     updateFancyDom: function (fancyList) {
@@ -2714,6 +3084,7 @@
               <button type="button" class="fm-slip-btn-place" onclick="FullMkt.submitInlineBet()">Place Bet</button>
             </div>
           </div>
+          <div id="fmInlineBookPreview" class="d-none mb-1"></div>
           <div class="row g-1">
             ${stakes.map(s => `<div class="col-3 col-md"><a href="javascript:void(0)" class="fm-stake-chip ${Number(this.stake) === s ? 'active-stake' : ''}" data-stake-val="${s}" onclick="FullMkt.setStake(${s})">${s}</a></div>`).join('')}
           </div>

@@ -1601,7 +1601,9 @@
           body: JSON.stringify({
             event_id: this.eventId,
             event_name: 'Ball By Ball',
+            market_id: this.currentMarketId,
             market_name: 'Runs',
+            selection_id: this.selectedSelectionId,
             selection_name: this.selectedRunnerName,
             bet_type: 'BACK',
             odds: this.selectedOdds,

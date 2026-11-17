@@ -973,10 +973,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateWalletDOM(wallet) {
         if (!wallet) return;
-        const balEl = document.getElementById('headerAvailableBalance');
-        const expEl = document.getElementById('headerExposure');
-        if (balEl && wallet.available !== undefined) balEl.textContent = parseFloat(wallet.available).toFixed(2);
-        if (expEl && wallet.exposure !== undefined) expEl.textContent = parseFloat(wallet.exposure).toFixed(2);
+        if (window.WB24 && typeof WB24.updateWalletDisplay === 'function') {
+            WB24.updateWalletDisplay(wallet);
+        }
+        document.querySelectorAll('.js-user-balance, #headerAvailableBalance').forEach(el => {
+            if (wallet.available !== undefined) el.textContent = parseFloat(wallet.available).toFixed(2);
+        });
+        document.querySelectorAll('.js-user-exposure, #headerExposure').forEach(el => {
+            if (wallet.exposure !== undefined) el.textContent = parseFloat(wallet.exposure).toFixed(2);
+        });
     }
 
     function showWinToast(text) {

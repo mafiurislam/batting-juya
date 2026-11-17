@@ -125,6 +125,7 @@ Route::get('/api/live-pulse', [ExchangeController::class, 'livePulse'])->name('a
 Route::get('/api/exchange/search', [ExchangeController::class, 'search'])->name('api.search');
 Route::post('/api/exchange/place-bet', [ExchangeController::class, 'placeBet'])->name('api.place.bet');
 Route::post('/api/exchange/cashout-bet', [ExchangeController::class, 'cashoutBet'])->name('api.cashout.bet');
+Route::post('/api/exchange/cashout-market', [ExchangeController::class, 'cashoutMarket'])->name('api.cashout.market');
 Route::post('/api/exchange/toggle-pin', [ExchangeController::class, 'togglePin'])->name('api.toggle.pin');
 Route::get('/api/exchange/ballbyball/state', [ExchangeController::class, 'ballByBallState'])->name('api.ballbyball.state');
 Route::get('/api/exchange/ballbyball/results', [ExchangeController::class, 'ballByBallResults'])->name('api.ballbyball.results');

@@ -782,10 +782,16 @@
   }
 
   function updateHeaderWallet(wallet) {
-    const balEl = document.querySelector('.userTotalBalance, #userBalanceVal');
-    const expEl = document.querySelector('.userTotalExposure, #userExposureVal');
-    if (balEl && wallet.available !== undefined) balEl.textContent = Number(wallet.available).toFixed(2);
-    if (expEl && wallet.exposure !== undefined) expEl.textContent = Number(wallet.exposure).toFixed(2);
+    if (!wallet) return;
+    if (window.WB24 && typeof WB24.updateWalletDisplay === 'function') {
+      WB24.updateWalletDisplay(wallet);
+    }
+    document.querySelectorAll('.js-user-balance, .userTotalBalance, #userBalanceVal').forEach(el => {
+      if (wallet.available !== undefined) el.textContent = Number(wallet.available).toFixed(2);
+    });
+    document.querySelectorAll('.js-user-exposure, .userTotalExposure, #userExposureVal').forEach(el => {
+      if (wallet.exposure !== undefined) el.textContent = Number(wallet.exposure).toFixed(2);
+    });
   }
 
   function appendOpenBetRow(selectionName, odds, stake) {
