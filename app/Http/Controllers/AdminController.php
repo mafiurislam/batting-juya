@@ -63,7 +63,7 @@ class AdminController extends Controller
         $recentLogs = ActivityLog::with('user')->latest()->take(8)->get();
         $supportWhatsapp = SiteSetting::getValue('support_whatsapp', '+919831391470');
         $depositQrImage = SiteSetting::getValue('deposit_qr_image', '');
-        $depositUpi = SiteSetting::getValue('deposit_upi_id', 'winbook24.pay@axis');
+        $depositUpi = SiteSetting::getValue('deposit_upi_id', 's7484819820530667@slc');
 
         return view('admin.dashboard', compact(
             'stats', 'recentBets', 'recentOtps', 'pendingTx', 'recentUsers', 'recentLogs',

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Ball By Ball | WINBOOK24')
+@section('title', 'Ball By Ball | CRICEXPERTS')
 
 @php
   $game = $bbbGame ?? [];

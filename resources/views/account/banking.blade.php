@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Banking - winbook24')
+@section('title', 'Banking - CRICEXPERTS')
 
 @section('content')
 <style>

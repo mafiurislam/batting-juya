@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'winbook24')
+@section('title', 'CRICEXPERTS - Settings')
 
 @push('styles')
 <style>

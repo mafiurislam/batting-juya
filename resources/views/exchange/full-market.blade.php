@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $event->event_name . ' - winbook24')
+@section('title', $event->event_name . ' - CRICEXPERTS')
 
 @push('styles')
 <style>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Our Casino - winbook24')
+@section('title', 'Our Casino - CRICEXPERTS')
 
 @section('content')
   <!-- Our Casino / New Casino Tab Bar (Screenshot 26_newCasino.png) -->

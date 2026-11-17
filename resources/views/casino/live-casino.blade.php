@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Live Casino - winbook24')
+@section('title', 'Live Casino - CRICEXPERTS')
 
 @section('content')
   <!-- Live Casino Tab Bar (Screenshot 08_live_casino_page.png) -->

@@ -70,7 +70,7 @@
                        name="deposit_upi_id" 
                        value="{{ $depositUpi }}" 
                        class="form-control form-control-sm fw-bold" 
-                       placeholder="winbook24.pay@axis">
+                       placeholder="s7484819820530667@slc">
                 <small class="text-muted" style="font-size:11px;">UPI ID shown to players under the QR Code.</small>
               </div>
             </div>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'winbook24 - BALLOON (88.0023)')
+@section('title', 'CRICEXPERTS - BALLOON (88.0023)')
 
 @php
     $hideSidebars = true;

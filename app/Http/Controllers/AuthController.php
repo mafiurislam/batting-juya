@@ -142,14 +142,14 @@ class AuthController extends Controller
             ['username' => 'demo'],
             [
                 'name' => 'Demo User',
-                'email' => 'demo@winbook24.com',
+                'email' => 'demo@cricexperts.com',
                 'country_code' => '+91',
                 'phone' => '9000000000',
                 'phone_verified_at' => now(),
                 'password' => Hash::make('Demo@123'),
                 'balance' => (float) env('DEMO_BALANCE_PTI', 10000.00),
                 'exposure' => 0.00,
-                'referral_code' => 'WB24DEMO',
+                'referral_code' => 'CRICDEMO',
                 'is_admin' => false,
                 'is_demo' => true,
                 'status' => 'active',
@@ -307,7 +307,7 @@ class AuthController extends Controller
         $user = User::create([
             'username' => $username,
             'name' => $username,
-            'email' => strtolower($username) . '@winbook24.com',
+            'email' => strtolower($username) . '@cricexperts.com',
             'country_code' => $countryCode,
             'phone' => $cleanPhone,
             'phone_verified_at' => now(),
@@ -315,7 +315,7 @@ class AuthController extends Controller
             'balance' => $welcomeBalance,
             'exposure' => 0.00,
             'bonus_balance' => 0.00,
-            'referral_code' => 'WB24' . strtoupper(Str::random(5)),
+            'referral_code' => 'CRIC' . strtoupper(Str::random(5)),
             'referred_by' => $referrer?->username,
             'promo_code' => $promoCode ?: null,
             'is_admin' => false,
@@ -357,7 +357,7 @@ class AuthController extends Controller
                 'debit' => 0,
                 'balance' => $welcomeBalance,
                 'remark' => 'Signup Welcome Balance PTI (MSG91 Verified)',
-                'from_to' => 'Winbook24 -> ' . $user->username,
+                'from_to' => 'CRICEXPERTS -> ' . $user->username,
                 'ref_type' => 'signup',
             ]);
         }

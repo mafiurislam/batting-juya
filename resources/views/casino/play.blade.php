@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $game->event_name . ' - Live Casino | winbook24')
+@section('title', $game->event_name . ' - Live Casino | CRICEXPERTS')
 
 @section('content')
   <!-- Top Studio Bar -->

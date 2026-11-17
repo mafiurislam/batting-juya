@@ -11,7 +11,38 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-// Instant health check: https://yourdomain.com/?health_test=1
+// 1. Instant static asset streaming fallback if requested directly from root
+$requestUri = urldecode(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '');
+if ($requestUri !== '/' && $requestUri !== '' && $requestUri !== '/index.php') {
+    $publicCandidate = __DIR__ . '/public' . $requestUri;
+    if (file_exists($publicCandidate) && is_file($publicCandidate)) {
+        $ext = strtolower(pathinfo($publicCandidate, PATHINFO_EXTENSION));
+        $mimes = [
+            'css' => 'text/css',
+            'js' => 'application/javascript',
+            'json' => 'application/json',
+            'webmanifest' => 'application/manifest+json',
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'ico' => 'image/x-icon',
+            'webp' => 'image/webp',
+            'woff' => 'font/woff',
+            'woff2' => 'font/woff2',
+            'ttf' => 'font/ttf',
+            'mp4' => 'video/mp4',
+        ];
+        header('Content-Type: ' . ($mimes[$ext] ?? 'application/octet-stream'));
+        header('Content-Length: ' . filesize($publicCandidate));
+        header('Cache-Control: public, max-age=86400');
+        readfile($publicCandidate);
+        exit;
+    }
+}
+
+// 2. Instant health check: https://yourdomain.com/?health_test=1
 if (isset($_GET['health_test'])) {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([

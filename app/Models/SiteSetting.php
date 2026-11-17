@@ -12,7 +12,7 @@ class SiteSetting extends Model
     public static function getValue(string $key, mixed $default = null): mixed
     {
         try {
-            $all = Cache::remember('winbook24_site_settings', 120, function () {
+            $all = Cache::remember('cricexperts_site_settings', 120, function () {
                 return static::pluck('value', 'key')->toArray();
             });
             return array_key_exists($key, $all) ? $all[$key] : $default;
@@ -27,7 +27,7 @@ class SiteSetting extends Model
             ['key' => $key],
             ['value' => is_array($value) ? json_encode($value) : (string) $value, 'group' => $group]
         );
-        Cache::forget('winbook24_site_settings');
+        Cache::forget('cricexperts_site_settings');
     }
 }
 

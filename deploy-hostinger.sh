@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "===================================================="
-echo " Winbook24 - Hostinger Deployment & Optimization"
+echo " CRICEXPERTS - Hostinger Deployment & Optimization"
 echo "===================================================="
 
 # 1. Ensure .env exists and is for CRICEXPERTS
@@ -23,7 +23,7 @@ mkdir -p storage/app/public \
          storage/logs \
          bootstrap/cache || true
 
-chmod -R 775 storage bootstrap/cache database 2>/dev/null || true
+chmod -R 755 storage bootstrap/cache database 2>/dev/null || true
 
 # 3. Ensure SQLite database exists
 if [ ! -f database/database.sqlite ]; then
@@ -34,7 +34,7 @@ if [ ! -f database/database.sqlite ]; then
         touch database/database.sqlite || true
     fi
 fi
-chmod 664 database/database.sqlite 2>/dev/null || true
+chmod 644 database/database.sqlite 2>/dev/null || true
 
 # 4. Clear caches safely
 php artisan optimize:clear 2>/dev/null || true

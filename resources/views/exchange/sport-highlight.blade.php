@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $activeSportName . ' - winbook24')
+@section('title', $activeSportName . ' - CRICEXPERTS')
 
 @section('content')
   <div class="wb-highlights-header mt-1 d-flex justify-content-between align-items-center">

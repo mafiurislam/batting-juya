@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Activity Log - winbook24')
+@section('title', 'Activity Log - CRICEXPERTS')
 
 @section('content')
 <div class="wb-acct-card">

@@ -56,7 +56,7 @@ class Msg91Service
                     ])
                     ->post($url . '?' . http_build_query($queryParams), [
                         'OTP' => $otp,
-                        'company_name' => 'winbook24.com',
+                        'company_name' => 'cricexperts.com',
                     ]);
 
                 $body = $response->json() ?? ['raw' => $response->body()];

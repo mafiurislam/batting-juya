@@ -23,10 +23,10 @@
   <meta name="msapplication-TileImage" content="/assets/brand/app-icon-192.png">
 
   <!-- Favicons and High-Resolution Mobile Launcher Icons -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/app-icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="/assets/brand/app-icon-512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/app-icon-192.png?v=3">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/brand/app-icon-512.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=3">
   <link rel="manifest" href="/manifest.json">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -656,7 +656,7 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body small">
-          <p class="fw-bold mb-2">winbook24.com Official Exchange Policy</p>
+          <p class="fw-bold mb-2">cricexperts.com Official Exchange Policy</p>
           <p class="mb-2">1. All users must be 18 years of age or older. Underage gambling is strictly prohibited.</p>
           <p class="mb-2">2. All sports exchange markets (Match Odds, Bookmaker, Fancy Bet, Sportsbook) are settled according to official governing federation results.</p>
           <p class="mb-0">3. Minimum Deposit is 500 PTI and Minimum Withdrawal is 1000 PTI with 24x7 customer support.</p>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Bets History - winbook24')
+@section('title', 'Bets History - CRICEXPERTS')
 
 @section('content')
 <div class="wb-filter-card">

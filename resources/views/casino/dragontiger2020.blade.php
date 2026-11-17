@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', ($game->event_name ?? '20-20 DRAGON TIGER') . ' - winbook24')
+@section('title', ($game->event_name ?? '20-20 DRAGON TIGER') . ' - CRICEXPERTS')
 
 @php
   $stakeButtons = auth()->check() ? auth()->user()->getStakeButtons() : [

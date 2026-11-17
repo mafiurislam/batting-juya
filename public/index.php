@@ -28,7 +28,7 @@ if ($needsEnvInit) {
     }
 }
 if (file_exists($envFile)) {
-    @chmod($envFile, 0666);
+    @chmod($envFile, 0644);
 }
 
 // 2. Ensure required writable storage, database & cache directories exist on Hostinger Linux
@@ -50,16 +50,16 @@ $criticalDirs = [
 
 foreach ($criticalDirs as $dir) {
     if (!is_dir($dir)) {
-        @mkdir($dir, 0777, true);
+        @mkdir($dir, 0755, true);
     }
-    @chmod($dir, 0777);
+    @chmod($dir, 0755);
 }
 
 $logFile = $basePath . '/storage/logs/laravel.log';
 if (!file_exists($logFile)) {
     @touch($logFile);
 }
-@chmod($logFile, 0666);
+@chmod($logFile, 0644);
 
 // 3. Ensure SQLite database file exists on first deployment (copies pre-seeded snapshot)
 $sqlitePath = $basePath . '/database/database.sqlite';
@@ -67,13 +67,13 @@ $initialSqlitePath = $basePath . '/database/data/initial_database.sqlite';
 if (!file_exists($sqlitePath) || filesize($sqlitePath) === 0) {
     if (file_exists($initialSqlitePath) && filesize($initialSqlitePath) > 0) {
         @copy($initialSqlitePath, $sqlitePath);
-        @chmod($sqlitePath, 0666);
+        @chmod($sqlitePath, 0644);
     } else {
         @touch($sqlitePath);
-        @chmod($sqlitePath, 0666);
+        @chmod($sqlitePath, 0644);
     }
 } else {
-    @chmod($sqlitePath, 0666);
+    @chmod($sqlitePath, 0644);
 }
 
 // 4. Ensure public/storage symlink exists for media uploads

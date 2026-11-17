@@ -1,9 +1,9 @@
 {
   "data": {
-    "exchangeName": "winbook24.com",
-    "exchangeTitle": "winbook24",
-    "exchangeLogo": "https://winbook24.com/api/users/images/theme-1779260300005-winbook24.png",
-    "exchangeFavicon": "https://winbook24.com/api/users/images/theme-1709701978646-t20exch arrow.ico",
+    "exchangeName": "cricexperts.com",
+    "exchangeTitle": "CRICEXPERTS",
+    "exchangeLogo": "/assets/brand/logo.png",
+    "exchangeFavicon": "/assets/brand/app-icon-192.png",
     "header": "1",
     "themeColor": "black",
     "--mainBodyBG": "#ededed",

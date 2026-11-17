@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Two Factor Authentication - winbook24')
+@section('title', 'Two Factor Authentication - CRICEXPERTS')
 
 @section('content')
 <style>
@@ -96,7 +96,7 @@
     <div class="text-muted" style="font-size:12px;">Use an Authenticator App to complete the process</div>
 
     <div class="wb-2fa-qr-card">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ urlencode('otpauth://totp/winbook24:' . $user->username . '?secret=' . $secretKey . '&issuer=winbook24') }}"
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ urlencode('otpauth://totp/cricexperts.com:' . $user->username . '?secret=' . $secretKey . '&issuer=cricexperts.com') }}"
            alt="2FA QR Code"
            style="width:150px;height:150px;display:block;margin:0 auto 8px auto;">
       <div class="d-flex align-items-center justify-content-center gap-1" style="font-size:11px;word-break:break-all;color:#23282c;">

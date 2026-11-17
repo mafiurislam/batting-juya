@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Virtual Sports - winbook24')
+@section('title', 'Virtual Sports - CRICEXPERTS')
 
 @section('content')
   <div class="wb-highlights-header mt-1">

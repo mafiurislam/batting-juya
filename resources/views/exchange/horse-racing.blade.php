@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Horse Racing - winbook24')
+@section('title', 'Horse Racing - CRICEXPERTS')
 
 @section('content')
   <div class="text-white fw-bold px-3 py-2 mt-1" style="background:var(--header-bg);">

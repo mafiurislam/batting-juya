@@ -43,14 +43,14 @@ class DatabaseSeeder extends Seeder
             ['username' => 'admin'],
             [
                 'name' => 'Master Admin',
-                'email' => 'admin@winbook24.com',
+                'email' => 'admin@cricexperts.com',
                 'country_code' => '+91',
                 'phone' => '9831391470',
                 'phone_verified_at' => now(),
                 'password' => Hash::make('Admin@123'),
                 'balance' => 500000.00,
                 'exposure' => 0.00,
-                'referral_code' => 'WB24ADMIN',
+                'referral_code' => 'CRICADMIN01',
                 'is_admin' => true,
                 'is_demo' => false,
                 'status' => 'active',
@@ -92,14 +92,14 @@ class DatabaseSeeder extends Seeder
             ['username' => 'demo'],
             [
                 'name' => 'Demo User',
-                'email' => 'demo@winbook24.com',
+                'email' => 'demo@cricexperts.com',
                 'country_code' => '+91',
                 'phone' => '9000000000',
                 'phone_verified_at' => now(),
                 'password' => Hash::make('Demo@123'),
                 'balance' => 10000.00,
                 'exposure' => 0.00,
-                'referral_code' => 'WB24DEMO',
+                'referral_code' => 'CRICDEMO',
                 'is_admin' => false,
                 'is_demo' => true,
                 'status' => 'active',
@@ -112,14 +112,14 @@ class DatabaseSeeder extends Seeder
             ['username' => 'player1'],
             [
                 'name' => 'Rahul Sharma',
-                'email' => 'player1@winbook24.com',
+                'email' => 'player1@cricexperts.com',
                 'country_code' => '+91',
                 'phone' => '9876543210',
                 'phone_verified_at' => now(),
                 'password' => Hash::make('Player@123'),
                 'balance' => 5000.00,
                 'exposure' => 0.00,
-                'referral_code' => 'WB24RAHUL',
+                'referral_code' => 'CRICRAHUL',
                 'is_admin' => false,
                 'is_demo' => false,
                 'status' => 'active',
@@ -167,9 +167,9 @@ class DatabaseSeeder extends Seeder
 
         SiteSetting::setValue('exchange_name', 'cricexperts.com', 'general');
         SiteSetting::setValue('exchange_title', 'CRICEXPERTS', 'general');
-        SiteSetting::setValue('news_marquee', 'Minimum deposit 500 and minimum withdrawal 1000 | Welcome to winbook24.com - Instant Deposit & 24x7 Fast Withdrawal!', 'general');
+        SiteSetting::setValue('news_marquee', 'Minimum deposit 500 and minimum withdrawal 1000 | Welcome to cricexperts.com - Instant Deposit & 24x7 Fast Withdrawal!', 'general');
         SiteSetting::setValue('support_whatsapp', '+919831391470', 'general');
-        SiteSetting::setValue('support_telegram', 'https://t.me/winbook24official', 'general');
+        SiteSetting::setValue('support_telegram', 'https://t.me/cricexpertsofficial', 'general');
         SiteSetting::setValue('welcome_bonus_pti', '0.00', 'limits');
         SiteSetting::setValue('min_deposit', '100', 'banking');
         SiteSetting::setValue('min_withdraw', '1000', 'banking');

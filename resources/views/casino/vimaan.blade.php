@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'VIMAAN - Universe Original | winbook24')
+@section('title', 'VIMAAN - Universe Original | CRICEXPERTS')
 
 @push('styles')
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -827,7 +827,7 @@
         </p>
         <div class="mb-2">
           <label class="text-secondary d-block mb-1">Active Server Seed SHA-256:</label>
-          <input type="text" class="form-control form-control-sm bg-black text-info border-secondary" readonly value="{{ hash('sha256', 'winbook24-vimaan-' . now()->format('Y-m-d-H')) }}">
+          <input type="text" class="form-control form-control-sm bg-black text-info border-secondary" readonly value="{{ hash('sha256', 'cricexperts-vimaan-' . now()->format('Y-m-d-H')) }}">
         </div>
         <div class="mb-2">
           <label class="text-secondary d-block mb-1">Your Client Seed:</label>
