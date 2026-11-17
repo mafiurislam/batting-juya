@@ -1407,6 +1407,16 @@ class ExchangeController extends Controller
             ], 401);
         }
 
+        // Support both camelCase and snake_case payloads from any client
+        $request->merge([
+            'event_id' => $request->input('event_id', $request->input('eventId')),
+            'event_name' => $request->input('event_name', $request->input('eventName')),
+            'market_name' => $request->input('market_name', $request->input('marketName')),
+            'selection_id' => $request->input('selection_id', $request->input('selectionId')),
+            'selection_name' => $request->input('selection_name', $request->input('selectionName')),
+            'bet_type' => $request->input('bet_type', $request->input('betType')),
+        ]);
+
         $request->validate([
             'event_id' => 'required|string',
             'market_name' => 'required|string|max:120',
