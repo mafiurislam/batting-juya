@@ -1,11 +1,11 @@
-const CACHE_NAME = 'cricexperts-pwa-v1';
+const CACHE_NAME = 'cricexperts-pwa-v2';
 const PRECACHE_ASSETS = [
   '/assets/brand/app-icon-192.png',
   '/assets/brand/app-icon-512.png',
   '/assets/brand/apple-touch-icon.png',
   '/assets/brand/logo.png?v=2',
-  '/favicon.ico',
-  '/manifest.json'
+  '/favicon.ico?v=3',
+  '/manifest.json?v=4'
 ];
 
 self.addEventListener('install', (event) => {

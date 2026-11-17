@@ -23,11 +23,11 @@
   <meta name="msapplication-TileImage" content="/assets/brand/app-icon-192.png">
 
   <!-- Favicons and High-Resolution Mobile Launcher Icons -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3">
-  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/app-icon-192.png?v=3">
-  <link rel="icon" type="image/png" sizes="512x512" href="/assets/brand/app-icon-512.png?v=3">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=3">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=4">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/app-icon-192.png?v=4">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/brand/app-icon-512.png?v=4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=4">
+  <link rel="manifest" href="/manifest.json?v=4">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -746,7 +746,11 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').catch(function() {});
+        navigator.serviceWorker.register('/sw.js?v=2').then(function(reg) {
+          if (reg && reg.update) {
+            reg.update();
+          }
+        }).catch(function() {});
       });
     }
   </script>

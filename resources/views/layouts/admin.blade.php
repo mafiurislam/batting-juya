@@ -6,10 +6,10 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Master Admin Dashboard - CRICEXPERTS.COM')</title>
   <meta name="theme-color" content="#081225">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/app-icon-192.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=4">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/app-icon-192.png?v=4">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=4">
+  <link rel="manifest" href="/manifest.json?v=4">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>

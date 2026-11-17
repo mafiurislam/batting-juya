@@ -25,7 +25,7 @@ class Winbook24CloneTest extends TestCase
         $homeRes = $this->get('/home');
         $homeRes->assertStatus(200)
             ->assertSee('Highlights')
-            ->assertSee('rel="manifest" href="/manifest.json"', false)
+            ->assertSee('rel="manifest" href="/manifest.json', false)
             ->assertSee('app-icon-192.png')
             ->assertSee('CRICEXPERTS');
 
