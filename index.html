@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+      window.location.replace('/home');
+    }
+  </script>
   <base href="/batting-new-vertion/">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">

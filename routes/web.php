@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Route;
 
 // Root redirects to /home exactly like winbook24.com
 Route::get('/', fn () => redirect()->route('home'));
+Route::get('/index.html', fn () => redirect()->route('home'));
+Route::get('/inplay.html', fn () => redirect()->route('inplay'));
+Route::get('/livecasino.html', fn () => redirect()->route('livecasino'));
+Route::get('/fullMarket.html', fn () => redirect()->route('home'));
 
 // Web App Manifest & Service Worker (PWA Install & Home Screen Shortcut)
 Route::get('/manifest.json', function () {

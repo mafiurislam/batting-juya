@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
             // Ignore if connection not ready
         }
 
-        // 1. Dynamic URL & HTTPS detection for Hostinger / Production domains
+        // 1. Dynamic URL, HTTPS & Persistent Session for Production / Live domains
         if (!$this->app->runningInConsole() && !$this->app->runningUnitTests()) {
             $request = request();
             $host = $request->getHost();
@@ -58,8 +58,15 @@ class AppServiceProvider extends ServiceProvider
 
                 if ($isSecure) {
                     URL::forceScheme('https');
+                    config(['session.secure' => true]);
                 }
             }
+
+            // Always enforce 1-year persistent session lifetime so users stay logged in indefinitely until manual logout
+            config([
+                'session.lifetime' => 525600,
+                'session.expire_on_close' => false,
+            ]);
         }
 
         // 2. Self-healing Auto-Migration & Auto-Seeding on first live deployment

@@ -1,25 +1,31 @@
-DirectoryIndex index.php index.html
+DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # 1. Block direct public access to sensitive files and directories
+    # 1. Redirect legacy static HTML files directly to dynamic Laravel routes
+    RewriteRule ^index\.html$ /home [R=301,L]
+    RewriteRule ^inplay\.html$ /inplay [R=301,L]
+    RewriteRule ^livecasino\.html$ /livecasino [R=301,L]
+    RewriteRule ^fullMarket\.html$ /home [R=301,L]
+
+    # 2. Block direct public access to sensitive files and directories
     RewriteRule ^(\.env|\.git|artisan|composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|README\.md|AGENTS\.md) - [F,L,NC]
     RewriteRule \.(sqlite|sqlite3|log|sh|sql|bak)$ - [F,L,NC]
     RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)(/|$) - [F,L,NC]
 
-    # 2. Preserve Authorization & X-XSRF-Token Headers
+    # 3. Preserve Authorization & X-XSRF-Token Headers
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
-    # 3. If file or directory physically exists in root, serve it directly
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
+    # 4. If static asset file physically exists in root (e.g. favicon.ico, robots.txt), serve directly
+    RewriteCond %{REQUEST_URI} !^/(index\.php)?$
+    RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    # 4. Route everything else through Front Controller (index.php)
+    # 5. Route everything else through Front Controller (index.php)
     RewriteRule ^ index.php [L,QSA]
 </IfModule>
 

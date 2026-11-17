@@ -112,7 +112,6 @@ class AuthController extends Controller
         }
 
         Auth::login($user, true);
-        $request->session()->regenerate();
 
         ActivityLog::create([
             'user_id' => $user->id,
@@ -379,7 +378,6 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user, true);
-        $request->session()->regenerate();
 
         return response()->json([
             'status' => true,
