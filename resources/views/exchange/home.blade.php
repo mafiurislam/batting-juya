@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'winbook24 - Home')
+@section('title', 'CRICEXPERTS - Home')
 
 @section('content')
   @auth

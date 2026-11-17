@@ -4,8 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>@yield('title', 'winbook24')</title>
+  @php
+    $appBrandTitle = \App\Models\SiteSetting::getValue('exchange_title', 'CRICEXPERTS');
+    if (empty($appBrandTitle) || strtolower($appBrandTitle) === 'winbook24') {
+        $appBrandTitle = 'CRICEXPERTS';
+    }
+  @endphp
+  <title>@yield('title', $appBrandTitle . ' - Live Sports & Casino')</title>
+
+  <!-- PWA & Mobile Web App Meta Tags (Home Screen Shortcut & Install) -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="{{ $appBrandTitle }}">
+  <meta name="application-name" content="{{ $appBrandTitle }}">
+  <meta name="theme-color" content="#081225">
+  <meta name="msapplication-TileColor" content="#081225">
+  <meta name="msapplication-TileImage" content="/assets/brand/app-icon-192.png">
+
+  <!-- Favicons and High-Resolution Mobile Launcher Icons -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/app-icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/brand/app-icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link href="/css/winbook24.css" rel="stylesheet">
@@ -720,6 +743,13 @@
     @include('partials.deposit-modal')
   @endauth
   @stack('scripts')
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').catch(function() {});
+      });
+    }
+  </script>
 </body>
 </html>
 

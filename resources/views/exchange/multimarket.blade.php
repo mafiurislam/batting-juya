@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Multi Markets - winbook24')
+@section('title', 'Multi Markets - CRICEXPERTS')
 
 @section('content')
   <div class="wb-report-title mt-1">

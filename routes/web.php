@@ -10,6 +10,59 @@ use Illuminate\Support\Facades\Route;
 // Root redirects to /home exactly like winbook24.com
 Route::get('/', fn () => redirect()->route('home'));
 
+// Web App Manifest & Service Worker (PWA Install & Home Screen Shortcut)
+Route::get('/manifest.json', function () {
+    $title = \App\Models\SiteSetting::getValue('exchange_title', 'CRICEXPERTS');
+    if (empty($title) || strtolower($title) === 'winbook24') {
+        $title = 'CRICEXPERTS';
+    }
+    return response()->json([
+        'name' => $title,
+        'short_name' => $title,
+        'start_url' => '/home',
+        'scope' => '/',
+        'display' => 'standalone',
+        'background_color' => '#081225',
+        'theme_color' => '#081225',
+        'orientation' => 'portrait-primary',
+        'description' => $title . ' - Live Sports Exchange, In-Play & Casino',
+        'categories' => ['sports', 'games', 'entertainment'],
+        'icons' => [
+            [
+                'src' => '/assets/brand/app-icon-192.png',
+                'sizes' => '192x192',
+                'type' => 'image/png',
+                'purpose' => 'any'
+            ],
+            [
+                'src' => '/assets/brand/app-icon-192.png',
+                'sizes' => '192x192',
+                'type' => 'image/png',
+                'purpose' => 'maskable'
+            ],
+            [
+                'src' => '/assets/brand/app-icon-512.png',
+                'sizes' => '512x512',
+                'type' => 'image/png',
+                'purpose' => 'any'
+            ],
+            [
+                'src' => '/assets/brand/app-icon-512.png',
+                'sizes' => '512x512',
+                'type' => 'image/png',
+                'purpose' => 'maskable'
+            ],
+            [
+                'src' => '/assets/brand/apple-touch-icon.png',
+                'sizes' => '180x180',
+                'type' => 'image/png',
+                'purpose' => 'any'
+            ]
+        ]
+    ])->header('Content-Type', 'application/manifest+json');
+});
+Route::get('/manifest.webmanifest', fn () => redirect('/manifest.json'));
+
 // Public Exchange Pages
 Route::get('/home', [ExchangeController::class, 'home'])->name('home');
 Route::get('/inplay', [ExchangeController::class, 'inplay'])->name('inplay');

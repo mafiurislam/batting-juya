@@ -16,7 +16,7 @@ $envFile = $basePath . '/.env';
 $needsEnvInit = !file_exists($envFile) || filesize($envFile) === 0;
 if (!$needsEnvInit && file_exists($envFile)) {
     $envContent = @file_get_contents($envFile);
-    if ($envContent !== false && strpos($envContent, 'Winbook24') === false) {
+    if ($envContent !== false && strpos($envContent, 'k9JqOeiiuL6UYgdFWBMa8VAUooMB4h+QcYdK/+U1Zkw=') === false) {
         $needsEnvInit = true;
     }
 }

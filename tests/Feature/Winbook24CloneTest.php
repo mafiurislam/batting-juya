@@ -22,13 +22,24 @@ class Winbook24CloneTest extends TestCase
 
     public function test_home_and_public_pages_render_cleanly(): void
     {
-        $this->get('/home')->assertStatus(200)->assertSee('Highlights');
+        $homeRes = $this->get('/home');
+        $homeRes->assertStatus(200)
+            ->assertSee('Highlights')
+            ->assertSee('rel="manifest" href="/manifest.json"', false)
+            ->assertSee('app-icon-192.png')
+            ->assertSee('CRICEXPERTS');
+
         $this->get('/inplay')->assertStatus(200)->assertSee('In-Play');
         $this->get('/livecasino')->assertStatus(200)->assertSee('Universe Live');
         $this->get('/newCasino')->assertStatus(200)->assertSee('OUR CASINO');
         $this->get('/login')->assertStatus(200)->assertSee('Login with Demo ID');
         $this->get('/signup')->assertStatus(200)->assertSee('Generate OTP');
         $this->get('/forgetPassword')->assertStatus(200)->assertSee('Reset Password');
+
+        $manifestRes = $this->get('/manifest.json');
+        $manifestRes->assertStatus(200)
+            ->assertJsonPath('name', 'CRICEXPERTS')
+            ->assertJsonPath('short_name', 'CRICEXPERTS');
     }
 
     public function test_msg91_otp_signup_and_verification_flow(): void

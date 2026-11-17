@@ -165,8 +165,8 @@ class DatabaseSeeder extends Seeder
         $tipsJson = @file_get_contents(database_path('data/tipsPreviewList.json'));
         $tipsData = $tipsJson ? (json_decode($tipsJson, true)['data']['preview'] ?? []) : [];
 
-        SiteSetting::setValue('exchange_name', 'winbook24.com', 'general');
-        SiteSetting::setValue('exchange_title', 'winbook24', 'general');
+        SiteSetting::setValue('exchange_name', 'cricexperts.com', 'general');
+        SiteSetting::setValue('exchange_title', 'CRICEXPERTS', 'general');
         SiteSetting::setValue('news_marquee', 'Minimum deposit 500 and minimum withdrawal 1000 | Welcome to winbook24.com - Instant Deposit & 24x7 Fast Withdrawal!', 'general');
         SiteSetting::setValue('support_whatsapp', '+919831391470', 'general');
         SiteSetting::setValue('support_telegram', 'https://t.me/winbook24official', 'general');

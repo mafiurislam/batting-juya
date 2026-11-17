@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'In-Play - winbook24')
+@section('title', 'In-Play - CRICEXPERTS')
 
 @section('content')
   <!-- In-Play | Today | Tomorrow | Yesterday Filter Tabs -->
