@@ -25,14 +25,23 @@ mkdir -p storage/app/public \
 
 chmod -R 755 storage bootstrap/cache database 2>/dev/null || true
 
-# 3. Ensure SQLite database exists
-if [ ! -f database/database.sqlite ]; then
-    if [ -f database/data/initial_database.sqlite ]; then
-        cp database/data/initial_database.sqlite database/database.sqlite || true
-        echo "[OK] Restored pre-seeded database/database.sqlite from snapshot."
-    else
-        touch database/database.sqlite || true
+# 3. Preserve persistent SQLite database OUTSIDE public_html so deployments NEVER wipe User IDs
+PERSISTENT_DB="$(dirname "$(pwd)")/cricexperts_persistent.sqlite"
+if [ ! -f "$PERSISTENT_DB" ]; then
+    if [ -f database/database.sqlite ] && [ -s database/database.sqlite ]; then
+        cp database/database.sqlite "$PERSISTENT_DB" || true
+        echo "[OK] Migrated existing live database to persistent storage: $PERSISTENT_DB"
+    elif [ -f database/data/initial_database.sqlite ]; then
+        cp database/data/initial_database.sqlite "$PERSISTENT_DB" || true
+        echo "[OK] Seeded persistent database from initial snapshot: $PERSISTENT_DB"
     fi
+else
+    echo "[OK] Preserved existing persistent live database (all User IDs intact): $PERSISTENT_DB"
+fi
+chmod 644 "$PERSISTENT_DB" 2>/dev/null || true
+
+if [ ! -f database/database.sqlite ] && [ -f "$PERSISTENT_DB" ]; then
+    cp "$PERSISTENT_DB" database/database.sqlite || true
 fi
 chmod 644 database/database.sqlite 2>/dev/null || true
 

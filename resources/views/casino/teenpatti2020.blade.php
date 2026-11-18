@@ -837,8 +837,7 @@
 
           <div class="d-flex justify-content-between gap-1 mt-2">
             <button type="button" class="btn btn-sm btn-secondary fw-bold flex-fill" style="font-size:11px;" onclick="TP2020.closeSlip()">Cancel</button>
-            <button type="button" id="tpBtnPlaceBet" class="btn btn-sm btn-primary fw-bold flex-fill" style="font-size:11px;background:#243A48;border-color:#14213D;" onclick="TP2020.submitBet(false)">Place Bet</button>
-            <button type="button" id="tpBtnDealNow" class="btn btn-sm btn-success fw-bold flex-fill" style="font-size:11px;" onclick="TP2020.submitBet(true)" title="Place Bet & Reveal Cards Immediately">Bet &amp; Deal</button>
+            <button type="button" id="tpBtnPlaceBet" class="btn btn-sm btn-success fw-bold flex-fill" style="font-size:11px;" onclick="TP2020.submitBet(false)">Place Bet</button>
           </div>
         </div>
 
@@ -1122,6 +1121,10 @@
     }
 
     function openSlip(marketKey, marketTitle, selectionKey, selectionLabel, odds, minBet, maxBet) {
+      if (phase !== 'BETTING' || countdown <= 0) {
+        if (window.WB24) WB24.toast('Market is suspended! Wait for next round timer.', 'danger');
+        return;
+      }
       currentSlip = { marketKey, marketTitle, selectionKey, selectionLabel, odds, minBet, maxBet };
       document.getElementById('tpSlipSelectionName').textContent = selectionLabel;
       document.getElementById('tpSlipMarketTitle').textContent = `20-20 TEENPATTI • ${marketTitle}`;
@@ -1131,8 +1134,12 @@
         stakeInput.value = minBet;
       }
       document.getElementById('tpSlipAlert').classList.add('d-none');
-      document.getElementById('tpBetSlip').classList.add('active');
+      const slipEl = document.getElementById('tpBetSlip');
+      slipEl.classList.add('active');
       updateSlipCalc();
+      if (window.innerWidth < 992) {
+        slipEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
 
     function closeSlip() {
@@ -1171,8 +1178,12 @@
       });
     }
 
-    async function submitBet(dealImmediately = false) {
+    async function submitBet() {
       if (!currentSlip) return;
+      if (phase !== 'BETTING' || countdown <= 0) {
+        showSlipMessage('Betting closed! Wait for next round timer.', true);
+        return;
+      }
       const stake = parseFloat(document.getElementById('tpSlipStake').value) || 0;
       if (stake < 10) {
         showSlipMessage('Minimum stake is 10 PTI.', true);
@@ -1180,9 +1191,7 @@
       }
 
       const btnPlace = document.getElementById('tpBtnPlaceBet');
-      const btnDeal = document.getElementById('tpBtnDealNow');
-      btnPlace.disabled = true;
-      btnDeal.disabled = true;
+      if (btnPlace) btnPlace.disabled = true;
 
       try {
         const res = await fetch('/api/casino/teenpatti/place-bet', {
@@ -1221,16 +1230,11 @@
         openRoundBets.unshift(data.bet);
         updateBookPreview();
         renderOpenBetsList();
-        showSlipMessage(`Bet Placed: ${currentSlip.selectionLabel} @ ${currentSlip.odds} (Stake: ${stake.toFixed(2)})`, false);
-
-        if (dealImmediately) {
-          await triggerDealAndSettle();
-        }
+        showSlipMessage(`Bet Placed: ${currentSlip.selectionLabel} @ ${currentSlip.odds} (${stake.toFixed(2)} PTI) — Winner in ${countdown}s`, false);
       } catch (err) {
         showSlipMessage('Network error placing bet.', true);
       } finally {
-        btnPlace.disabled = false;
-        btnDeal.disabled = false;
+        if (btnPlace) btnPlace.disabled = false;
       }
     }
 

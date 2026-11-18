@@ -37,7 +37,8 @@ class ExchangeBookService
             $profit = $betType === 'BACK' ? round($stake * ($odds / 100), 2) : $stake;
             $liability = $betType === 'BACK' ? $stake : round($stake * ($odds / 100), 2);
         } elseif ($category === 'fancy' || in_array($betType, ['YES', 'NO'], true)) {
-            $rate = $odds / 100;
+            $effectiveOdds = ($odds >= 5 && $odds <= 300) ? $odds : 100.0;
+            $rate = $effectiveOdds / 100;
             $profit = $betType === 'YES' ? round($stake * $rate, 2) : $stake;
             $liability = $betType === 'YES' ? $stake : round($stake * $rate, 2);
         } else {
@@ -86,7 +87,7 @@ class ExchangeBookService
             : '';
 
         if ($category === 'fancy' || in_array($betType, ['YES', 'NO'], true)) {
-            return "fancy|{$eventId}|{$marketName}|{$selectionName}|{$runLine}";
+            return "fancy|{$eventId}|{$marketName}";
         }
 
         if ($category === 'casino') {
@@ -182,26 +183,67 @@ class ExchangeBookService
         }
 
         if (str_starts_with($marketKey, 'fancy|')) {
-            $yesPl = 0.0;
-            $noPl = 0.0;
+            $runLines = [];
             foreach ($marketBets as $b) {
-                $bt = strtoupper(trim((string) ($b['bet_type'] ?? 'YES')));
-                $prof = (float) ($b['potential_profit'] ?? 0);
-                $liab = (float) ($b['liability'] ?? 0);
-                if ($bt === 'YES' || $bt === 'BACK') {
-                    $yesPl += $prof;
-                    $noPl -= $liab;
-                } else {
-                    $yesPl -= $liab;
-                    $noPl += $prof;
+                if (isset($b['run_line']) && is_numeric($b['run_line']) && (float) $b['run_line'] > 0) {
+                    $runLines[] = (float) $b['run_line'];
                 }
             }
-            $runnerPl = [
-                'YES' => round($yesPl, 2),
-                'NO' => round($noPl, 2),
-            ];
-            $minPl = min($runnerPl);
-            $maxPl = max($runnerPl);
+
+            if (!empty($runLines)) {
+                $uniqueLines = array_values(array_unique($runLines));
+                sort($uniqueLines);
+                // Test every run-interval boundary: below lowest line, at each line, and above highest line
+                $testRuns = [max(0.0, $uniqueLines[0] - 1.0)];
+                foreach ($uniqueLines as $ln) {
+                    $testRuns[] = $ln;
+                }
+                $testRuns[] = end($uniqueLines) + 1.0;
+
+                $intervalPls = [];
+                foreach ($testRuns as $rVal) {
+                    $net = 0.0;
+                    foreach ($marketBets as $b) {
+                        $bt = strtoupper(trim((string) ($b['bet_type'] ?? 'YES')));
+                        $prof = (float) ($b['potential_profit'] ?? 0);
+                        $liab = (float) ($b['liability'] ?? 0);
+                        $line = (float) ($b['run_line'] ?? $uniqueLines[0]);
+                        if ($bt === 'YES' || $bt === 'BACK') {
+                            $net += ($rVal >= $line) ? $prof : -$liab;
+                        } else {
+                            $net += ($rVal < $line) ? $prof : -$liab;
+                        }
+                    }
+                    $intervalPls[] = round($net, 2);
+                }
+                $runnerPl = [
+                    'NO' => $intervalPls[0],
+                    'YES' => end($intervalPls),
+                ];
+                $minPl = min($intervalPls);
+                $maxPl = max($intervalPls);
+            } else {
+                $yesPl = 0.0;
+                $noPl = 0.0;
+                foreach ($marketBets as $b) {
+                    $bt = strtoupper(trim((string) ($b['bet_type'] ?? 'YES')));
+                    $prof = (float) ($b['potential_profit'] ?? 0);
+                    $liab = (float) ($b['liability'] ?? 0);
+                    if ($bt === 'YES' || $bt === 'BACK') {
+                        $yesPl += $prof;
+                        $noPl -= $liab;
+                    } else {
+                        $yesPl -= $liab;
+                        $noPl += $prof;
+                    }
+                }
+                $runnerPl = [
+                    'YES' => round($yesPl, 2),
+                    'NO' => round($noPl, 2),
+                ];
+                $minPl = min($runnerPl);
+                $maxPl = max($runnerPl);
+            }
             $exposure = round(max(0.0, -$minPl), 2);
             $lockedProfit = round(max(0.0, $minPl), 2);
 

@@ -61,19 +61,44 @@ if (!file_exists($logFile)) {
 }
 @chmod($logFile, 0644);
 
-// 3. Ensure SQLite database file exists on first deployment (copies pre-seeded snapshot)
+// 3. Persistent SQLite database setup (NEVER wiped by Hostinger Git Deployment!)
+// On Hostinger Linux, store the live SQLite DB in the parent directory outside public_html
+// so git clone / deploy NEVER overwrites or deletes live user IDs, balances, or bets.
 $sqlitePath = $basePath . '/database/database.sqlite';
 $initialSqlitePath = $basePath . '/database/data/initial_database.sqlite';
-if (!file_exists($sqlitePath) || filesize($sqlitePath) === 0) {
-    if (file_exists($initialSqlitePath) && filesize($initialSqlitePath) > 0) {
-        @copy($initialSqlitePath, $sqlitePath);
-        @chmod($sqlitePath, 0644);
+$parentDir = dirname($basePath);
+$persistentSqlitePath = $parentDir . '/cricexperts_persistent.sqlite';
+
+if (PHP_OS_FAMILY !== 'Windows' && is_dir($parentDir) && is_writable($parentDir)) {
+    if (!file_exists($persistentSqlitePath) || filesize($persistentSqlitePath) === 0) {
+        if (file_exists($sqlitePath) && filesize($sqlitePath) > 0) {
+            @copy($sqlitePath, $persistentSqlitePath);
+        } elseif (file_exists($initialSqlitePath) && filesize($initialSqlitePath) > 0) {
+            @copy($initialSqlitePath, $persistentSqlitePath);
+        } else {
+            @touch($persistentSqlitePath);
+        }
+        @chmod($persistentSqlitePath, 0644);
     } else {
-        @touch($sqlitePath);
+        @chmod($persistentSqlitePath, 0644);
+    }
+    // Also keep local database/database.sqlite populated if missing for CLI tools
+    if (!file_exists($sqlitePath) || filesize($sqlitePath) === 0) {
+        @copy($persistentSqlitePath, $sqlitePath);
         @chmod($sqlitePath, 0644);
     }
 } else {
-    @chmod($sqlitePath, 0644);
+    if (!file_exists($sqlitePath) || filesize($sqlitePath) === 0) {
+        if (file_exists($initialSqlitePath) && filesize($initialSqlitePath) > 0) {
+            @copy($initialSqlitePath, $sqlitePath);
+            @chmod($sqlitePath, 0644);
+        } else {
+            @touch($sqlitePath);
+            @chmod($sqlitePath, 0644);
+        }
+    } else {
+        @chmod($sqlitePath, 0644);
+    }
 }
 
 // 4. Ensure public/storage symlink exists for media uploads

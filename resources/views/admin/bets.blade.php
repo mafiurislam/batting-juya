@@ -257,6 +257,8 @@
                 <select name="bet_type" id="ebet_type" class="form-select form-select-sm">
                   <option value="BACK">BACK</option>
                   <option value="LAY">LAY</option>
+                  <option value="YES">YES (Fancy)</option>
+                  <option value="NO">NO (Fancy)</option>
                 </select>
               </div>
               <div class="col-md-4">

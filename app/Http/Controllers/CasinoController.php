@@ -319,7 +319,7 @@ class CasinoController extends Controller
             ]);
         });
 
-        $fresh = $user->fresh();
+        $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
 
         return response()->json([
             'status' => true,
@@ -331,9 +331,9 @@ class CasinoController extends Controller
                 'created_at' => $bet->created_at->format('H:i'),
             ],
             'wallet' => [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ],
         ]);
     }
@@ -369,14 +369,14 @@ class CasinoController extends Controller
             });
         }
 
-        $fresh = $user->fresh();
+        $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
 
         return response()->json([
             'status' => true,
             'wallet' => [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ],
         ]);
     }
@@ -441,7 +441,7 @@ class CasinoController extends Controller
             ]);
         });
 
-        $fresh = $user->fresh();
+        $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
 
         return response()->json([
             'status' => true,
@@ -454,9 +454,9 @@ class CasinoController extends Controller
                 'time' => now()->format('H:i'),
             ],
             'wallet' => [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ],
         ]);
     }
@@ -528,15 +528,15 @@ class CasinoController extends Controller
             });
         }
 
-        $fresh = $user->fresh();
+        $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
 
         return response()->json([
             'status' => true,
             'settled' => $settled,
             'wallet' => [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ],
         ]);
     }
@@ -666,6 +666,7 @@ class CasinoController extends Controller
             'market_name' => 'required|string',
             'selection_key' => 'required|string',
             'selection_name' => 'required|string',
+            'side' => 'nullable|string|in:BACK,LAY',
             'odds' => 'required|numeric|min:1.01|max:500',
             'stake' => 'required|numeric|min:10|max:500000',
         ]);
@@ -675,22 +676,25 @@ class CasinoController extends Controller
         $game = CasinoGame::where('event_id', $eventId)->first();
         $eventName = $game ? $game->event_name : '20-20 TEENPATTI';
         $roundId = $request->input('round_id') ?: ('91010' . random_int(11075100, 99999999));
+        $side = strtoupper((string) $request->input('side', 'BACK'));
         $stake = round((float) $request->input('stake'), 2);
         $odds = round((float) $request->input('odds'), 2);
-        $potentialProfit = round($stake * ($odds - 1), 2);
+        $potentialProfit = $side === 'LAY' ? $stake : round($stake * ($odds - 1), 2);
+        $liability = $side === 'LAY' ? round($stake * ($odds - 1), 2) : $stake;
 
-        if ($user->available_balance < $stake) {
+        $bookSvc = app(\App\Services\ExchangeBookService::class);
+        $walletBefore = $bookSvc->syncUserWallet($user->fresh());
+
+        if ($walletBefore['available'] < $liability) {
             return response()->json([
                 'status' => false,
-                'message' => sprintf('Insufficient PTI Balance! Available: %.2f PTI', $user->available_balance),
+                'message' => sprintf('Insufficient PTI Balance! Required: %.2f PTI, Available: %.2f PTI', $liability, $walletBefore['available']),
             ], 422);
         }
 
-        $bet = DB::transaction(function () use ($user, $eventId, $eventName, $roundId, $stake, $odds, $potentialProfit, $request) {
-            $user->increment('exposure', $stake);
-
+        $bet = DB::transaction(function () use ($eventId, $eventName, $roundId, $side, $stake, $odds, $potentialProfit, $liability, $user, $request) {
             return Bet::create([
-                'bet_ref' => 'TP-' . $roundId . '-' . random_int(100, 999),
+                'bet_ref' => 'CS-' . $roundId . '-' . random_int(100, 999),
                 'user_id' => $user->id,
                 'category' => 'casino',
                 'sport_id' => '66102',
@@ -701,11 +705,11 @@ class CasinoController extends Controller
                 'market_name' => $request->input('market_name'),
                 'selection_id' => $request->input('selection_key'),
                 'selection_name' => $request->input('selection_name'),
-                'bet_type' => 'BACK',
+                'bet_type' => $side,
                 'odds' => $odds,
                 'stake' => $stake,
                 'potential_profit' => $potentialProfit,
-                'liability' => $stake,
+                'liability' => $liability,
                 'profit_loss' => 0,
                 'status' => 'MATCHED',
                 'result_summary' => 'Round #' . $roundId . ' In Progress',
@@ -717,16 +721,126 @@ class CasinoController extends Controller
             ]);
         });
 
-        $fresh = $user->fresh();
+        $walletState = $bookSvc->syncUserWallet($user->fresh());
 
         return response()->json([
             'status' => true,
             'bet' => $bet,
             'wallet' => [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ],
+        ]);
+    }
+
+    /**
+     * POST /api/casino/table/settle-round - Settles all queued bets for ANY generic live casino table
+     * ONLY after the countdown timer finishes (0s), dealing ONE fair visual outcome for the round.
+     */
+    public function tableSettleRound(Request $request)
+    {
+        $eventId = (string) $request->input('event_id', '');
+        $roundId = (string) $request->input('round_id', 'R' . now()->format('ymdHis'));
+        $game = CasinoGame::where('event_id', $eventId)->first() ?? CasinoGame::firstOrFail();
+
+        $def = $this->engine->getTableDefinition($game);
+        $defaultSelection = $def['markets'][0]['key'] ?? 'PLAYER_A';
+
+        $openBets = Auth::check()
+            ? Bet::where('user_id', Auth::id())
+                ->where('category', 'casino')
+                ->where('event_id', $game->event_id)
+                ->where('status', 'MATCHED')
+                ->get()
+            : collect();
+
+        // Deal ONE fair round outcome for this timer cycle
+        $firstBet = $openBets->first();
+        $probeSel = $firstBet ? (string) $firstBet->selection_id : $defaultSelection;
+        $probeStake = $firstBet ? (float) $firstBet->stake : 100.0;
+        $probeSide = $firstBet ? strtoupper((string) $firstBet->bet_type) : 'BACK';
+
+        $outcome = $this->engine->playRound($game, $probeSel, $probeStake, $probeSide);
+        $outcome['round_id'] = $roundId;
+
+        $settledBets = [];
+        $totalNetPl = 0.0;
+        $wallet = null;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($openBets->isNotEmpty()) {
+                DB::transaction(function () use ($user, $game, $openBets, $firstBet, $outcome, &$settledBets, &$totalNetPl) {
+                    foreach ($openBets as $idx => $bet) {
+                        $side = strtoupper((string) $bet->bet_type);
+                        $stake = round((float) $bet->stake, 2);
+                        $odds = round((float) $bet->odds, 2);
+
+                        if ($firstBet && $bet->id === $firstBet->id) {
+                            $won = (bool) $outcome['won'];
+                        } else {
+                            $hit = $this->engine->didSelectionHitOutcome($outcome, (string) $bet->selection_id);
+                            $won = ($side === 'LAY') ? !$hit : $hit;
+                        }
+
+                        if ($side === 'LAY') {
+                            $netPl = $won ? $stake : -round($stake * ($odds - 1), 2);
+                        } else {
+                            $netPl = $won ? round($stake * ($odds - 1), 2) : -$stake;
+                        }
+
+                        $totalNetPl = round($totalNetPl + $netPl, 2);
+                        $user->increment('balance', $netPl);
+
+                        $bet->update([
+                            'profit_loss' => $netPl,
+                            'status' => $won ? 'WON' : 'LOST',
+                            'result_summary' => $outcome['summary'],
+                            'game_details_json' => $outcome['visual'],
+                            'settled_at' => now(),
+                        ]);
+
+                        AccountStatement::create([
+                            'user_id' => $user->id,
+                            'credit' => $netPl > 0 ? $netPl : 0,
+                            'debit' => $netPl < 0 ? abs($netPl) : 0,
+                            'balance' => $user->fresh()->balance,
+                            'remark' => "Casino [{$game->event_name}] #{$bet->market_id} ({$bet->selection_name}): {$outcome['summary']}",
+                            'from_to' => $netPl >= 0 ? "Casino -> {$user->username}" : "{$user->username} -> Casino",
+                            'ref_type' => 'casino',
+                            'ref_id' => $bet->bet_ref,
+                        ]);
+
+                        $settledBets[] = [
+                            'id' => $bet->id,
+                            'selection_name' => $bet->selection_name,
+                            'bet_type' => $side,
+                            'stake' => $stake,
+                            'odds' => $odds,
+                            'status' => $won ? 'WON' : 'LOST',
+                            'net_pl' => $netPl,
+                            'result_summary' => $outcome['summary'],
+                        ];
+                    }
+                });
+            }
+
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
+            $wallet = [
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
+            ];
+        }
+
+        return response()->json([
+            'status' => true,
+            'round_id' => $roundId,
+            'outcome' => $outcome,
+            'settled_bets' => $settledBets,
+            'total_net_pl' => round($totalNetPl, 2),
+            'wallet' => $wallet,
         ]);
     }
 
@@ -901,11 +1015,11 @@ class CasinoController extends Controller
                 });
             }
 
-            $fresh = $user->fresh();
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
             $wallet = [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ];
         }
 
@@ -1167,11 +1281,11 @@ class CasinoController extends Controller
                 });
             }
 
-            $fresh = $user->fresh();
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
             $wallet = [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ];
         }
 
@@ -1313,11 +1427,11 @@ class CasinoController extends Controller
                 });
             }
 
-            $fresh = $user->fresh();
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
             $wallet = [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ];
         }
 
@@ -1433,11 +1547,11 @@ class CasinoController extends Controller
                 });
             }
 
-            $fresh = $user->fresh();
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
             $wallet = [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ];
         }
 
@@ -1533,11 +1647,11 @@ class CasinoController extends Controller
                 });
             }
 
-            $fresh = $user->fresh();
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
             $wallet = [
-                'balance' => round($fresh->balance, 2),
-                'exposure' => round($fresh->exposure, 2),
-                'available' => round($fresh->available_balance, 2),
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'available' => $walletState['available'],
             ];
         }
 

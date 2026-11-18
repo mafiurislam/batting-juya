@@ -35,7 +35,20 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => (function () {
+                $envDb = env('DB_DATABASE');
+                if ($envDb === ':memory:') {
+                    return ':memory:';
+                }
+                // On Hostinger Linux production, persist SQLite OUTSIDE public_html so Git deployments never wipe User IDs
+                if (PHP_OS_FAMILY !== 'Windows' && empty($envDb)) {
+                    $persistentPath = dirname(base_path()) . '/cricexperts_persistent.sqlite';
+                    if (file_exists($persistentPath) || (is_dir(dirname(base_path())) && is_writable(dirname(base_path())))) {
+                        return $persistentPath;
+                    }
+                }
+                return $envDb ?: database_path('database.sqlite');
+            })(),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => 5000,

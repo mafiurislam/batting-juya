@@ -594,11 +594,172 @@ class ExchangeController extends Controller
             $payload = $this->applyDynamicLiveTicks($payload, $sportId, $eventId);
         }
 
+        $autoSettledBets = [];
+        $wallet = null;
+        if (Auth::check()) {
+            $autoSettledBets = $this->autoSettleCompletedFancyBets($eventId, $payload, $liveScore);
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet(Auth::user()->fresh());
+            $wallet = [
+                'balance' => $walletState['balance'],
+                'exposure' => $walletState['exposure'],
+                'locked_profit' => $walletState['locked_profit'],
+                'available' => $walletState['available'],
+            ];
+        }
+
         return response()->json([
             'meta' => ['status_code' => 200, 'status' => true, 'message' => 'Market List'],
             'data' => $payload,
             'liveScore' => $liveScore,
+            'autoSettledBets' => $autoSettledBets,
+            'wallet' => $wallet,
         ]);
+    }
+
+    /**
+     * Automatically settle open Fancy bets (YES / NO) when:
+     * 1) The live Fancy market carries an official declared numeric `result` or is marked `RESULT`/`SETTLED`/`CLOSED`, OR
+     * 2) The live Cricket scoreboard has completed the session over (e.g. "6 Overs Runs" when current overs >= 6.0)
+     *    so winning Fancy bets immediately credit profit + return staked exposure to the user's wallet.
+     */
+    private function autoSettleCompletedFancyBets(string $eventId, array $payload, ?array $liveScore): array
+    {
+        if (!Auth::check()) {
+            return [];
+        }
+
+        $user = Auth::user();
+        $openFancyBets = Bet::where('user_id', $user->id)
+            ->where('event_id', $eventId)
+            ->where('status', 'MATCHED')
+            ->where(function ($q) {
+                $q->where('category', 'fancy')
+                  ->orWhereIn('bet_type', ['YES', 'NO']);
+            })
+            ->orderBy('id')
+            ->get();
+
+        if ($openFancyBets->isEmpty()) {
+            return [];
+        }
+
+        // Index live fancy markets by normalized marketName and exMarketId
+        $fancyByKey = [];
+        foreach (($payload['fancyData'] ?? []) as $fItem) {
+            $fId = (string) ($fItem['exMarketId'] ?? $fItem['marketId'] ?? '');
+            $fName = strtolower(trim((string) ($fItem['marketName'] ?? $fItem['runnerName'] ?? '')));
+            if ($fId !== '') {
+                $fancyByKey['id:' . $fId] = $fItem;
+            }
+            if ($fName !== '') {
+                $fancyByKey['name:' . $fName] = $fItem;
+            }
+        }
+
+        // Extract current innings runs and overs from live scoreboard (if available)
+        $currentRuns = null;
+        $currentOvers = null;
+        if (is_array($liveScore)) {
+            $activeScoreStr = !empty($liveScore['team2Flag']) && !empty($liveScore['score2'])
+                ? (string) $liveScore['score2']
+                : (string) ($liveScore['score1'] ?? '');
+            $activeOversStr = !empty($liveScore['team2Flag']) && !empty($liveScore['overs2'])
+                ? (string) $liveScore['overs2']
+                : (string) ($liveScore['overs1'] ?? '');
+
+            if (preg_match('/(\d+)/', $activeScoreStr, $rm)) {
+                $currentRuns = (int) $rm[1];
+            }
+            if (preg_match('/(\d+(?:\.\d+)?)/', $activeOversStr, $om)) {
+                $currentOvers = (float) $om[1];
+            }
+        }
+
+        $settled = [];
+        foreach ($openFancyBets as $bet) {
+            $fNameNorm = strtolower(trim((string) $bet->market_name));
+            $fItem = $fancyByKey['id:' . $bet->selection_id] ?? $fancyByKey['name:' . $fNameNorm] ?? null;
+
+            $actualResult = null;
+            $reason = null;
+
+            // Case 1: Live feed provides an explicit numeric result for this Fancy market
+            if (is_array($fItem)) {
+                $rawRes = $fItem['result'] ?? ($fItem['oddsData']['result'] ?? null);
+                $fStatus = strtoupper((string) ($fItem['oddsData']['status'] ?? $fItem['status'] ?? 'ONLINE'));
+                if ($rawRes !== null && $rawRes !== '' && is_numeric($rawRes)) {
+                    $actualResult = (float) $rawRes;
+                    $reason = "Official Result: {$actualResult}";
+                } elseif (in_array($fStatus, ['RESULT', 'SETTLED'], true) && $currentRuns !== null) {
+                    $actualResult = (float) $currentRuns;
+                    $reason = "Session Completed ({$actualResult} runs)";
+                }
+            }
+
+            // Case 2: Session over target in market name (e.g. "6 Overs PAK Runs", "10 Over Runs") has been reached in live score
+            if ($actualResult === null && $currentOvers !== null && $currentRuns !== null) {
+                if (preg_match('/\b(\d{1,2})\s*(?:st|nd|rd|th)?\s*overs?\b/i', $bet->market_name, $ovMatch)) {
+                    $targetOver = (float) $ovMatch[1];
+                    if ($targetOver > 0 && $currentOvers >= $targetOver && $currentOvers <= ($targetOver + 1.5)) {
+                        $actualResult = (float) $currentRuns;
+                        $reason = "{$targetOver} Overs Completed ({$actualResult} runs)";
+                    }
+                }
+            }
+
+            if ($actualResult === null) {
+                continue;
+            }
+
+            $runLine = (float) ($bet->run_line ?? 0);
+            if ($runLine <= 0 && preg_match('/@\s*(\d+(?:\.\d+)?)/', (string) $bet->selection_name, $lm)) {
+                $runLine = (float) $lm[1];
+            }
+
+            $bt = strtoupper(trim((string) $bet->bet_type));
+            $won = ($bt === 'YES' || $bt === 'BACK')
+                ? ($actualResult >= $runLine)
+                : ($actualResult < $runLine);
+
+            $pl = $won ? round((float) $bet->potential_profit, 2) : -round((float) $bet->liability, 2);
+            $status = $won ? 'WON' : 'LOST';
+
+            DB::transaction(function () use ($user, $bet, $pl, $status, $reason) {
+                $user->increment('balance', $pl);
+
+                $bet->update([
+                    'profit_loss' => $pl,
+                    'status' => $status,
+                    'result_summary' => "Fancy Settled: {$reason} (" . ($pl >= 0 ? '+' : '') . number_format($pl, 2) . ' PTI)',
+                    'settled_at' => now(),
+                ]);
+
+                AccountStatement::create([
+                    'user_id' => $user->id,
+                    'credit' => $pl > 0 ? $pl : 0,
+                    'debit' => $pl < 0 ? abs($pl) : 0,
+                    'balance' => $user->fresh()->balance,
+                    'remark' => "Fancy Settlement: {$bet->event_name} - {$bet->market_name} ({$reason})",
+                    'from_to' => $pl >= 0 ? "Fancy/Exchange -> {$user->username}" : "{$user->username} -> Fancy/Exchange",
+                    'ref_type' => 'bet_settle',
+                    'ref_id' => $bet->bet_ref,
+                ]);
+            });
+
+            $settled[] = [
+                'id' => $bet->id,
+                'market_name' => $bet->market_name,
+                'status' => $status,
+                'profit_loss' => $pl,
+                'reason' => $reason,
+            ];
+        }
+
+        if (!empty($settled)) {
+            app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
+        }
+
+        return $settled;
     }
 
     private function applyDynamicLiveTicks(array $payload, string $sportId, string $eventId): array
@@ -1432,7 +1593,7 @@ class ExchangeController extends Controller
             'market_name' => 'required|string|max:120',
             'selection_name' => 'required|string|max:150',
             'bet_type' => 'required|string|in:BACK,LAY,YES,NO',
-            'odds' => 'required|numeric|min:1.01|max:5000',
+            'odds' => 'required|numeric|min:0.01|max:100000',
             'stake' => "required|numeric|min:{$minStake}|max:1000000",
             'category' => 'nullable|string|max:30',
             'run_line' => 'nullable|numeric',
@@ -1444,6 +1605,17 @@ class ExchangeController extends Controller
         $betType = strtoupper($request->input('bet_type'));
         $rawCategory = strtolower(trim((string) $request->input('category', 'exchange')));
         $category = $rawCategory === 'sports' ? 'exchange' : ($rawCategory ?: 'exchange');
+
+        if ($category === 'fancy' || in_array($betType, ['YES', 'NO'], true)) {
+            if ($odds < 5 || $odds > 300) {
+                $odds = 100.00;
+            }
+        } elseif ($category !== 'bookmaker' && $odds < 1.01) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid odds value.',
+            ], 422);
+        }
 
         $bookService = app(\App\Services\ExchangeBookService::class);
         $calc = $bookService->calculateProfitAndLiability($category, $betType, $odds, $stake);

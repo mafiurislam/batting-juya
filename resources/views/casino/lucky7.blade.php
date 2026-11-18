@@ -871,8 +871,7 @@
 
           <div class="d-flex justify-content-between gap-1 mt-2">
             <button type="button" class="btn btn-sm btn-secondary fw-bold flex-fill" style="font-size:11px;" onclick="LUCKY7.closeSlip()">Cancel</button>
-            <button type="button" id="l7BtnPlaceBet" class="btn btn-sm btn-primary fw-bold flex-fill" style="font-size:11px;background:#243A48;border-color:#14213D;" onclick="LUCKY7.submitBet(false)">Place Bet</button>
-            <button type="button" id="l7BtnDealNow" class="btn btn-sm btn-success fw-bold flex-fill" style="font-size:11px;" onclick="LUCKY7.submitBet(true)" title="Place Bet & Reveal Card Immediately">Bet &amp; Deal</button>
+            <button type="button" id="l7BtnPlaceBet" class="btn btn-sm btn-success fw-bold flex-fill" style="font-size:11px;" onclick="LUCKY7.submitBet(false)">Place Bet</button>
           </div>
         </div>
 
@@ -1117,6 +1116,10 @@
     }
 
     function openSlip(marketKey, marketTitle, selectionKey, selectionLabel, odds, minBet, maxBet) {
+      if (phase !== 'BETTING' || countdown <= 0) {
+        if (window.WB24) WB24.toast('Market is suspended! Wait for next round timer.', 'danger');
+        return;
+      }
       currentSlip = { marketKey, marketTitle, selectionKey, selectionLabel, odds, minBet, maxBet };
       document.getElementById('l7SlipSelectionName').textContent = selectionLabel;
       document.getElementById('l7SlipMarketTitle').textContent = `LUCKY 7 • ${marketTitle}`;
@@ -1126,8 +1129,12 @@
         stakeInput.value = minBet;
       }
       document.getElementById('l7SlipAlert').classList.add('d-none');
-      document.getElementById('l7BetSlip').classList.add('active');
+      const slipEl = document.getElementById('l7BetSlip');
+      slipEl.classList.add('active');
       updateSlipCalc();
+      if (window.innerWidth < 992) {
+        slipEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
 
     function closeSlip() {
@@ -1165,8 +1172,12 @@
       });
     }
 
-    async function submitBet(dealImmediately = false) {
+    async function submitBet() {
       if (!currentSlip) return;
+      if (phase !== 'BETTING' || countdown <= 0) {
+        showSlipMessage('Betting closed! Wait for next round timer.', true);
+        return;
+      }
       const stake = parseFloat(document.getElementById('l7SlipStake').value) || 0;
       if (stake < 10) {
         showSlipMessage('Minimum stake is 10 PTI.', true);
@@ -1174,9 +1185,7 @@
       }
 
       const btnPlace = document.getElementById('l7BtnPlaceBet');
-      const btnDeal = document.getElementById('l7BtnDealNow');
-      btnPlace.disabled = true;
-      btnDeal.disabled = true;
+      if (btnPlace) btnPlace.disabled = true;
 
       try {
         // Uses the same casino place-bet endpoint!
@@ -1216,16 +1225,11 @@
         openRoundBets.unshift(data.bet);
         updateBookPreview();
         renderOpenBetsList();
-        showSlipMessage(`Bet Placed: ${currentSlip.selectionLabel} @ ${currentSlip.odds} (Stake: ${stake.toFixed(2)})`, false);
-
-        if (dealImmediately) {
-          await triggerDealAndSettle();
-        }
+        showSlipMessage(`Bet Placed: ${currentSlip.selectionLabel} @ ${currentSlip.odds} (${stake.toFixed(2)} PTI) — Winner in ${countdown}s`, false);
       } catch (err) {
         showSlipMessage('Network error placing bet.', true);
       } finally {
-        btnPlace.disabled = false;
-        btnDeal.disabled = false;
+        if (btnPlace) btnPlace.disabled = false;
       }
     }
 

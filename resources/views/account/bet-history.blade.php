@@ -2,6 +2,52 @@
 @section('title', 'Bets History - CRICEXPERTS')
 
 @section('content')
+@if(isset($openBets) && $openBets->count() > 0)
+<div class="wb-acct-card mb-3">
+  <div class="wb-acct-head d-flex justify-content-between align-items-center">
+    <span>Open / Active Bets ({{ $openBets->count() }})</span>
+    <span class="badge bg-warning text-dark">Live Exposure</span>
+  </div>
+  <div class="p-2">
+    <div class="table-responsive">
+      <table class="wb-dt-table">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Market</th>
+            <th>Selection</th>
+            <th>Type</th>
+            <th>Odds</th>
+            <th>Stake</th>
+            <th>To Win</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($openBets as $ob)
+            <tr id="openBetRow_{{ $ob->id }}" style="background:{{ in_array($ob->bet_type, ['LAY', 'NO']) ? '#faa9ba' : '#72bbef' }};">
+              <td>{{ $ob->event_name }}</td>
+              <td>{{ $ob->market_name }}</td>
+              <td class="fw-bold">{{ $ob->selection_name }}</td>
+              <td class="fw-bold">{{ $ob->bet_type }}</td>
+              <td class="fw-bold">{{ number_format($ob->odds, 2) }}</td>
+              <td class="fw-bold">{{ number_format($ob->stake, 2) }}</td>
+              <td class="fw-bold text-success">+{{ number_format($ob->potential_profit, 2) }}</td>
+              <td>
+                <div class="d-flex justify-content-center gap-1">
+                  <button type="button" class="btn btn-warning btn-sm py-0 px-2 fw-bold" style="font-size:11px;" onclick="WB24.cashoutBet({{ $ob->id }}, 'cashout')">Cashout</button>
+                  <button type="button" class="btn btn-success btn-sm py-0 px-2 fw-bold" style="font-size:11px;" onclick="WB24.cashoutBet({{ $ob->id }}, 'instant_settle')">Settle</button>
+                </div>
+              </td>
+            </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+@endif
+
 <div class="wb-filter-card">
   <form action="{{ route('bet.history') }}" method="GET" id="bhFilterForm">
     <input type="hidden" name="per_page" id="bhPerPageInput" value="{{ $perPage ?? 10 }}">

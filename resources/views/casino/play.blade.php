@@ -248,16 +248,49 @@
 @endsection
 
 @push('scripts')
+@php
+  $jsGameLayout = $tableDef['layout'] ?? 'cards_ab';
+  $jsMarketsMap = collect($tableDef['markets'] ?? [])->keyBy('key')->all();
+  $jsSlotSyms = $tableDef['symbols'] ?? ['7️⃣', '💎', '👑', '🔔', '🍀', '🍒', '🔥', '⭐'];
+@endphp
 <script>
   const gameEventId = '{{ $game->event_id }}';
-  let countdown = 18;
-  let isPlayingRound = false;
+  const gameEventName = @json($game->event_name);
+  const gameLayout = @json($jsGameLayout);
+  const gameMarketsMap = @json($jsMarketsMap);
+  const slotSyms = @json($jsSlotSyms);
+  const isSlotGame = (gameLayout === 'slot');
 
-  setInterval(() => {
-    countdown = countdown <= 1 ? 20 : countdown - 1;
+  let currentRoundId = 'R' + Date.now().toString().slice(-9);
+  let countdown = 18;
+  let tablePhase = 'BETTING'; // 'BETTING' | 'DEALING'
+  let isPlayingRound = false;
+  let queuedRoundBets = [];
+
+  if (isSlotGame) {
     const tEl = document.getElementById('studioTimer');
-    if (tEl) tEl.textContent = countdown + 's';
-  }, 1000);
+    if (tEl) tEl.classList.add('d-none');
+  } else {
+    document.getElementById('studioRoundId').textContent = '#' + currentRoundId;
+    setInterval(() => {
+      if (tablePhase !== 'BETTING') return;
+      const tEl = document.getElementById('studioTimer');
+      if (countdown > 1) {
+        countdown--;
+        if (tEl) {
+          tEl.textContent = countdown + 's';
+          tEl.className = 'badge ' + (countdown <= 5 ? 'bg-danger text-white' : 'bg-warning text-dark');
+        }
+      } else {
+        countdown = 0;
+        if (tEl) {
+          tEl.textContent = 'DEALING';
+          tEl.className = 'badge bg-danger text-white';
+        }
+        settleTableRoundOnTimer();
+      }
+    }, 1000);
+  }
 
   function selectCasinoChip(val, el) {
     document.querySelectorAll('.wb-casino-chip').forEach(c => c.classList.remove('active'));
@@ -280,19 +313,36 @@
     return `<span class="playing-card ${isRed ? 'red-card' : ''}">${card.code}</span>`;
   }
 
-  async function playCasinoSelection(selectionKey, side = 'BACK', targetMultiplier = null) {
-    if (isPlayingRound) return;
-    isPlayingRound = true;
+  function startNextTableRound() {
+    currentRoundId = 'R' + Date.now().toString().slice(-9);
+    queuedRoundBets = [];
+    countdown = 18;
+    tablePhase = 'BETTING';
+    const rEl = document.getElementById('studioRoundId');
+    if (rEl) rEl.textContent = '#' + currentRoundId;
+    const tEl = document.getElementById('studioTimer');
+    if (tEl) {
+      tEl.textContent = countdown + 's';
+      tEl.className = 'badge bg-warning text-dark';
+    }
+    const banner = document.getElementById('studioResultBanner');
+    if (banner) {
+      banner.className = 'mt-2 fw-bold fs-6 text-info';
+      banner.textContent = 'Place Your Bets! Betting closes in 18s...';
+    }
+  }
 
-    const stake = parseFloat(document.getElementById('casinoStakeInput')?.value || 100);
-    const spinBtn = document.getElementById('btnSlotSpin');
-    if (spinBtn) {
-      spinBtn.disabled = true;
-      spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> SPINNING...';
+  async function settleTableRoundOnTimer() {
+    if (tablePhase === 'DEALING') return;
+    tablePhase = 'DEALING';
+    const banner = document.getElementById('studioResultBanner');
+    if (banner) {
+      banner.className = 'mt-2 fw-bold fs-6 text-warning';
+      banner.textContent = 'No More Bets! Dealing cards & declaring winner...';
     }
 
     try {
-      const res = await fetch('{{ route("api.casino.play") }}', {
+      const res = await fetch('{{ route("api.casino.table.settle") }}', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -301,12 +351,166 @@
         },
         body: JSON.stringify({
           event_id: gameEventId,
-          selection_key: selectionKey,
-          stake,
-          side,
-          target_multiplier: targetMultiplier,
+          round_id: currentRoundId,
         }),
       });
+      const data = await res.json();
+      if (data && data.status && data.outcome) {
+        const outcome = data.outcome;
+        if (data.wallet) {
+          WB24.updateWalletDisplay(data.wallet);
+        }
+
+        renderVisualOutcome(outcome, data.settled_bets || []);
+
+        const badgeBar = document.getElementById('recentBadgesBar');
+        if (badgeBar) {
+          const b = document.createElement('span');
+          const hadBets = Array.isArray(data.settled_bets) && data.settled_bets.length > 0;
+          const badgeCls = hadBets ? ((data.total_net_pl || 0) >= 0 ? 'bg-success' : 'bg-danger') : 'bg-secondary';
+          b.className = `badge rounded-pill ${badgeCls}`;
+          b.textContent = outcome.badge || 'R';
+          badgeBar.prepend(b);
+          if (badgeBar.children.length > 9) badgeBar.lastElementChild.remove();
+        }
+
+        const tbody = document.getElementById('myCasinoRoundsBody');
+        if (tbody && Array.isArray(data.settled_bets) && data.settled_bets.length > 0) {
+          tbody.querySelector('.js-no-rounds')?.remove();
+          data.settled_bets.forEach(sb => {
+            const tr = document.createElement('tr');
+            const pl = parseFloat(sb.net_pl || 0);
+            tr.innerHTML = `
+              <td>${data.round_id}</td>
+              <td>${sb.selection_name}</td>
+              <td>${parseFloat(sb.stake).toFixed(2)}</td>
+              <td>${sb.result_summary || outcome.summary}</td>
+              <td class="${pl >= 0 ? 'text-success' : 'text-danger'} fw-bold">${pl >= 0 ? '+' : ''}${pl.toFixed(2)}</td>
+            `;
+            tbody.prepend(tr);
+          });
+          const net = parseFloat(data.total_net_pl || 0);
+          WB24.toast(
+            `${outcome.summary} | ${net >= 0 ? 'WON +' : 'LOST '}${net.toFixed(2)} PTI`,
+            net >= 0 ? 'success' : 'danger'
+          );
+        }
+      }
+    } catch (e) {
+      console.error('Table settle error:', e);
+    } finally {
+      setTimeout(() => {
+        startNextTableRound();
+      }, 4200);
+    }
+  }
+
+  async function playCasinoSelection(selectionKey, side = 'BACK', targetMultiplier = null) {
+    if (isPlayingRound) return;
+
+    const stake = parseFloat(document.getElementById('casinoStakeInput')?.value || 100);
+    if (isNaN(stake) || stake < 10) {
+      WB24.toast('Minimum stake is 10 PTI.', 'danger');
+      return;
+    }
+
+    // For live dealer tables (non-slot): place bet during timer window & WAIT for timer (0s) to declare winner!
+    if (!isSlotGame) {
+      if (tablePhase !== 'BETTING' || countdown <= 0) {
+        WB24.toast('Betting is suspended! Wait for next round timer.', 'danger');
+        return;
+      }
+
+      isPlayingRound = true;
+      try {
+        const mkt = gameMarketsMap[selectionKey] || Object.values(gameMarketsMap)[0] || { label: selectionKey, odds: 1.98 };
+        const odds = side === 'LAY'
+          ? parseFloat(mkt.lay || (parseFloat(mkt.odds || 2.0) + 0.04))
+          : parseFloat(targetMultiplier || mkt.odds || 1.98);
+
+        const res = await fetch('{{ route("api.teenpatti.place") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': WB24.csrfToken,
+          },
+          body: JSON.stringify({
+            event_id: gameEventId,
+            round_id: currentRoundId,
+            market_key: gameLayout.toUpperCase(),
+            market_name: gameEventName,
+            selection_key: selectionKey,
+            selection_name: mkt.label || selectionKey,
+            side: side,
+            odds: odds,
+            stake: stake,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.status) {
+          WB24.toast(data.message || 'Unable to place bet.', 'danger');
+          if (data.redirect) setTimeout(() => (window.location.href = data.redirect), 900);
+          return;
+        }
+
+        if (data.wallet) {
+          WB24.updateWalletDisplay(data.wallet);
+        }
+        queuedRoundBets.push(data.bet);
+
+        const banner = document.getElementById('studioResultBanner');
+        if (banner) {
+          banner.className = 'mt-2 fw-bold fs-6 text-info';
+          banner.textContent = `Bet Placed: ${mkt.label || selectionKey} (${side} @ ${odds.toFixed(2)}) • ${stake.toFixed(0)} PTI — Winner in ${countdown}s!`;
+        }
+        WB24.toast(`Bet Placed on ${mkt.label || selectionKey} (${stake} PTI). Waiting for timer (${countdown}s)!`, 'success');
+      } catch (e) {
+        WB24.toast('Network error while placing bet.', 'danger');
+      } finally {
+        isPlayingRound = false;
+      }
+      return;
+    }
+
+    // Slot Machine spin (on-demand 1.2s reel animation -> settle with balanced paytable)
+    isPlayingRound = true;
+    const spinBtn = document.getElementById('btnSlotSpin');
+    if (spinBtn) {
+      spinBtn.disabled = true;
+      spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> SPINNING...';
+    }
+
+    // Brief visual reel spin shuffle before showing result
+    const spinAnim = setInterval(() => {
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 5; c++) {
+          const el = document.getElementById(`slotCell_${r}_${c}`);
+          if (el) el.textContent = slotSyms[Math.floor(Math.random() * slotSyms.length)];
+        }
+      }
+    }, 85);
+
+    try {
+      const [res] = await Promise.all([
+        fetch('{{ route("api.casino.play") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': WB24.csrfToken,
+          },
+          body: JSON.stringify({
+            event_id: gameEventId,
+            selection_key: selectionKey,
+            stake,
+            side,
+            target_multiplier: targetMultiplier,
+          }),
+        }),
+        new Promise(r => setTimeout(r, 950)),
+      ]);
+      clearInterval(spinAnim);
 
       const data = await res.json();
       if (!res.ok || !data.status) {
@@ -317,15 +521,9 @@
 
       const outcome = data.outcome;
       document.getElementById('studioRoundId').textContent = '#' + outcome.round_id;
-      countdown = 20;
-
-      // Update Wallet
       WB24.updateWalletDisplay(data.wallet);
+      renderVisualOutcome(outcome, [data.bet]);
 
-      // Render Visual Stage Update
-      renderVisualOutcome(outcome);
-
-      // Prepend badge & history row
       const badgeBar = document.getElementById('recentBadgesBar');
       if (badgeBar) {
         const b = document.createElement('span');
@@ -351,10 +549,11 @@
       }
 
       WB24.toast(
-        `${outcome.summary} | ${outcome.won ? 'WON +' : 'LOST '}${parseFloat(outcome.net_pl).toFixed(2)} PTI`,
+        `${outcome.summary} | ${outcome.won ? 'WON +' : 'NET '}${parseFloat(outcome.net_pl).toFixed(2)} PTI`,
         outcome.won ? 'success' : 'danger'
       );
     } catch (e) {
+      clearInterval(spinAnim);
       WB24.toast('Network error while playing round.', 'danger');
     } finally {
       isPlayingRound = false;
@@ -365,12 +564,18 @@
     }
   }
 
-  function renderVisualOutcome(outcome) {
+  function renderVisualOutcome(outcome, settledBets = []) {
     const v = outcome.visual || {};
     const banner = document.getElementById('studioResultBanner');
     if (banner) {
-      banner.className = `mt-2 fw-bold fs-6 ${outcome.won ? 'text-warning' : 'text-light'}`;
-      banner.textContent = `${outcome.summary} (${outcome.won ? 'YOU WON +' + outcome.net_pl + ' PTI!' : 'Try Again!'})`;
+      if (Array.isArray(settledBets) && settledBets.length > 0) {
+        const totalPl = settledBets.reduce((acc, b) => acc + parseFloat(b?.net_pl ?? b?.profit_loss ?? 0), 0);
+        banner.className = `mt-2 fw-bold fs-6 ${totalPl >= 0 ? 'text-warning' : 'text-light'}`;
+        banner.textContent = `${outcome.summary} (${totalPl >= 0 ? 'YOU WON +' + totalPl.toFixed(2) + ' PTI!' : 'Net ' + totalPl.toFixed(2) + ' PTI'})`;
+      } else {
+        banner.className = 'mt-2 fw-bold fs-6 text-warning';
+        banner.textContent = `RESULT: ${outcome.summary}`;
+      }
     }
 
     if (v.type === 'crash') {

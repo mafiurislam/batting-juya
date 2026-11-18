@@ -1288,8 +1288,8 @@ const VimaanApp = (() => {
 
       st.betId = data.bet.id;
       st.stake = parseFloat(data.bet.stake);
-      // If placed during WAIT or active RUN, activate for current flight so player can cash out immediately
-      if (gameState === 'WAIT' || (gameState === 'RUN' && currentMultiplier < 3.50)) {
+      // Only bets placed during the WAIT countdown enter the current flight; bets placed mid-flight queue for next round!
+      if (gameState === 'WAIT') {
         st.status = 'ACTIVE';
         liveBetsRows.unshift({
           id: 'me_slot_' + slotNum,
@@ -1393,10 +1393,11 @@ const VimaanApp = (() => {
   // ================= ROUND LIFECYCLE =================
   function generateCrashPoint() {
     const r = Math.random();
-    if (r < 0.25) return +(1.12 + Math.random() * 0.75).toFixed(2);
-    if (r < 0.72) return +(2.05 + Math.random() * 3.80).toFixed(2);
-    if (r < 0.92) return +(6.00 + Math.random() * 9.50).toFixed(2);
-    return +(16.00 + Math.random() * 25.00).toFixed(2);
+    if (r < 0.04) return 1.00;
+    if (r < 0.54) return +(1.05 + Math.random() * 0.90).toFixed(2);
+    if (r < 0.86) return +(2.00 + Math.random() * 2.80).toFixed(2);
+    if (r < 0.96) return +(4.80 + Math.random() * 6.00).toFixed(2);
+    return +(10.80 + Math.random() * 14.00).toFixed(2);
   }
 
   function startFlightRound(customTarget = null) {

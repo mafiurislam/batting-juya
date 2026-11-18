@@ -959,13 +959,12 @@ document.addEventListener('DOMContentLoaded', function () {
         2: { state: 'IDLE', stake: 10, betId: null, cashedOut: false }
     };
 
-    // Game Phase State Machine
-    // Start in IN_FLIGHT around 9.46x so initial view matches the user's screenshot immediately!
-    let phase = 'IN_FLIGHT'; // 'WAITING', 'IN_FLIGHT', 'CRASHED'
-    let currentMultiplier = 9.46;
-    let crashPoint = 14.80;
+    // Game Phase State Machine - start cleanly in WAITING countdown so bets never enter mid-flight
+    let phase = 'WAITING'; // 'WAITING', 'IN_FLIGHT', 'CRASHED'
+    let currentMultiplier = 1.00;
+    let crashPoint = 2.40;
     let waitingTimer = 5;
-    let altitude = 420; // Mid-sky altitude matching screenshot
+    let altitude = 0;
     let currentLocKey = 'loc1';
     let flameFrame = 0;
     let animTick = 0;
@@ -1056,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', function () {
             slot.betId = data.bet.id;
             slot.stake = stakeToUse;
             slot.cashedOut = false;
-            slot.state = (phase === 'IN_FLIGHT') ? 'ACTIVE' : 'PLACED_WAITING';
+            slot.state = (phase === 'WAITING') ? 'PLACED_WAITING' : 'QUEUED';
             playSound('heat');
             updateWalletDOM(data.wallet);
             updateHeatButtonLabels();
@@ -1376,6 +1375,7 @@ document.addEventListener('DOMContentLoaded', function () {
         requestAnimationFrame(renderLoop);
     }
 
+    startWaitingPhase();
     requestAnimationFrame(renderLoop);
 });
 </script>

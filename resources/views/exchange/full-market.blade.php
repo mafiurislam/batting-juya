@@ -1702,10 +1702,12 @@
           $fMin = $fItem['min'] ?? 10;
           $fMax = $fItem['max'] ?? 50000;
           $fRunner = $fItem['oddsData']['runners'][0] ?? [];
-          $noRun = $fRunner['price']['lay'][0]['price'] ?? ($fItem['noRun'] ?? 0);
-          $noRate = $fRunner['price']['lay'][0]['size'] ?? ($fItem['noRate'] ?? 0);
-          $yesRun = $fRunner['price']['back'][0]['price'] ?? ($fItem['yesRun'] ?? 0);
-          $yesRate = $fRunner['price']['back'][0]['size'] ?? ($fItem['yesRate'] ?? 0);
+          $noRun = (float) ($fRunner['price']['lay'][0]['price'] ?? ($fItem['noRun'] ?? 0));
+          $rawNoRate = (float) ($fRunner['price']['lay'][0]['size'] ?? ($fItem['noRate'] ?? 100));
+          $noRate = ($rawNoRate >= 5 && $rawNoRate <= 300) ? $rawNoRate : 100;
+          $yesRun = (float) ($fRunner['price']['back'][0]['price'] ?? ($fItem['yesRun'] ?? 0));
+          $rawYesRate = (float) ($fRunner['price']['back'][0]['size'] ?? ($fItem['yesRate'] ?? 100));
+          $yesRate = ($rawYesRate >= 5 && $rawYesRate <= 300) ? $rawYesRate : 100;
           $fStatus = strtoupper((string) ($fItem['oddsData']['status'] ?? $fRunner['status'] ?? 'ONLINE'));
           $isFancySusp = in_array($fStatus, ['SUSPENDED', 'SUSPEND', 'BALL RUNNING', 'CLOSED']) || ($noRun == 0 && $yesRun == 0);
           $fSlipId = 'fancySlip_' . $fIdx;
@@ -1721,24 +1723,31 @@
                     data-selection-id="{{ $fId }}"
                     data-runner-name="{{ $fName }}"></span>
             </div>
-            <button type="button" class="btn btn-sm text-white py-0 px-2 fw-bold"
-                    style="background:var(--exchange-bg);font-size:11px;"
-                    onclick="showFancyBook('{{ addslashes($fName) }}', {{ (int)$noRun }}, {{ (int)$yesRun }})">
-              Book
-            </button>
+            <div class="d-flex align-items-center gap-1">
+              <button type="button" class="btn btn-sm btn-success py-0 px-2 fw-bold js-fancy-settle-btn d-none"
+                      style="font-size:10.5px;"
+                      onclick="FullMkt.settleFancyMarket('{{ addslashes($fName) }}', this)">
+                Settle
+              </button>
+              <button type="button" class="btn btn-sm text-white py-0 px-2 fw-bold"
+                      style="background:var(--exchange-bg);font-size:11px;"
+                      onclick="showFancyBook('{{ addslashes($fName) }}', {{ (int)$noRun }}, {{ (int)$yesRun }})">
+                Book
+              </button>
+            </div>
           </div>
 
           <div class="d-flex position-relative">
             <div class="fm-suspend-overlay {{ $isFancySusp ? '' : 'd-none' }}"><span>Suspended</span></div>
             <!-- No (Pink) -->
             <a href="javascript:void(0)" class="fm-odd-cell wb-odd-lay js-fancy-no-cell"
-               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', '{{ addslashes($fName) }}', '{{ $fId }}', '{{ addslashes($fName) }} (NO @ {{ $noRun }})', 'NO', {{ $noRate ?: 100 }}, 'fancy', {{ (float)$noRun }}, '{{ $fKey }}', this)">
+               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', '{{ addslashes($fName) }}', '{{ $fId }}', '{{ addslashes($fName) }} (NO @ {{ $noRun }})', 'NO', {{ $noRate }}, 'fancy', {{ (float)$noRun }}, '{{ $fKey }}', this)">
               <strong>{{ $noRun }}</strong>
               <small>{{ $noRate }}</small>
             </a>
             <!-- Yes (Blue) -->
             <a href="javascript:void(0)" class="fm-odd-cell wb-odd-back ms-1 js-fancy-yes-cell"
-               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', '{{ addslashes($fName) }}', '{{ $fId }}', '{{ addslashes($fName) }} (YES @ {{ $yesRun }})', 'YES', {{ $yesRate ?: 100 }}, 'fancy', {{ (float)$yesRun }}, '{{ $fKey }}', this)">
+               onclick="FullMkt.openInlineSlip('{{ $fSlipId }}', '{{ addslashes($fName) }}', '{{ $fId }}', '{{ addslashes($fName) }} (YES @ {{ $yesRun }})', 'YES', {{ $yesRate }}, 'fancy', {{ (float)$yesRun }}, '{{ $fKey }}', this)">
               <strong>{{ $yesRun }}</strong>
               <small>{{ $yesRate }}</small>
             </a>
@@ -2114,6 +2123,7 @@
     },
 
     cashoutOffers: {},
+    cashoutRevealed: {},
 
     formatBookPl: function (val) {
       const n = parseFloat(val) || 0;
@@ -2354,7 +2364,15 @@
           }
         });
 
-        // Update Market Cash Out button (1:1 with Winbook24 screenshot: [ ☑ 1112.00 ] when active, [ ● Cash Out ] when idle)
+        // Toggle Settle button on Fancy rows when the user has placed bets on this Fancy market
+        const fancySettleBtn = scope.querySelector('.js-fancy-settle-btn');
+        if (fancySettleBtn) {
+          fancySettleBtn.classList.toggle('d-none', !hasPlaced);
+        }
+
+        // Update Market Cash Out button (1:1 with Winbook24 two-step behavior:
+        // Default shows [ ● Cash Out ]; only after user taps Cash Out does it reveal [ ☑ 1112.00 ],
+        // and tapping [ ☑ 1112.00 ] confirms & executes the Cash Out!)
         const cashoutBtn = scope.querySelector('.js-market-cashout-btn');
         if (cashoutBtn) {
           const lbl = cashoutBtn.querySelector('.js-cashout-label') || cashoutBtn;
@@ -2365,16 +2383,27 @@
             const offer = this.computeWinbookCashoutForScope(scope, mktName, mktCategory, activeList);
             if (offer) {
               this.cashoutOffers[mktKey] = offer;
-              cashoutBtn.classList.add('has-cashout-val');
-              if (icon) {
-                icon.classList.remove('fa-circle');
-                icon.classList.add('fa-check');
+              if (this.cashoutRevealed[mktKey]) {
+                cashoutBtn.classList.add('has-cashout-val');
+                if (icon) {
+                  icon.classList.remove('fa-circle');
+                  icon.classList.add('fa-check');
+                }
+                lbl.classList.remove('fm-cashout-val-pos', 'fm-cashout-val-neg');
+                lbl.classList.add(offer.cashoutValue >= 0 ? 'fm-cashout-val-pos' : 'fm-cashout-val-neg');
+                lbl.textContent = offer.cashoutStr;
+              } else {
+                cashoutBtn.classList.remove('has-cashout-val');
+                if (icon) {
+                  icon.classList.remove('fa-check');
+                  icon.classList.add('fa-circle');
+                }
+                lbl.classList.remove('fm-cashout-val-pos', 'fm-cashout-val-neg');
+                lbl.textContent = 'Cash Out';
               }
-              lbl.classList.remove('fm-cashout-val-pos', 'fm-cashout-val-neg');
-              lbl.classList.add(offer.cashoutValue >= 0 ? 'fm-cashout-val-pos' : 'fm-cashout-val-neg');
-              lbl.textContent = offer.cashoutStr;
             } else {
               delete this.cashoutOffers[mktKey];
+              this.cashoutRevealed[mktKey] = false;
               cashoutBtn.classList.remove('has-cashout-val');
               if (icon) {
                 icon.classList.remove('fa-check');
@@ -2385,6 +2414,7 @@
             }
           } else {
             delete this.cashoutOffers[mktKey];
+            this.cashoutRevealed[mktKey] = false;
             cashoutBtn.classList.remove('has-cashout-val');
             if (icon) {
               icon.classList.remove('fa-check');
@@ -2474,16 +2504,44 @@
     },
 
     /**
-     * Execute Cash Out on a market (1:1 with Winbook24 `onCashOutConfirm` in chunk933.js):
-     * - If an active hedge trade offer (`cashOutAPIData`) exists with stake >= 0.5, places the exact
-     *   offsetting BACK/LAY bet on the favorite runner so both runners equalize (green book),
-     *   returning staked money to wallet and releasing exposure to 0.
-     * - If runners are already equalized (stake < 0.5), settles/cashes out the market into permanent balance.
+     * Execute Cash Out on a market (1:1 with Winbook24 two-step `calculateCashOut` + `onCashOutConfirm` in chunk933.js):
+     * - Step 1 (First click on [ ● Cash Out ]): Calculates & reveals the live Cash Out amount [ ☑ 1112.00 ]
+     *   updating every second as odds change.
+     * - Step 2 (Second click on [ ☑ 1112.00 ]): Confirms & executes the Cash Out hedge bet (or settles market book),
+     *   returning staked money to wallet and resetting the button back to [ ● Cash Out ].
      */
     cashoutMarket: async function (marketName, btnEl, mktKey) {
       if (!window.WB24) return;
       const resolvedKey = mktKey || btnEl?.dataset?.marketKey || '';
+      const sMkt = String(marketName || '').trim().toLowerCase();
+      const mktPlacedBets = (this.placedBets || []).filter((b) => {
+        return String(b.market_name || '').trim().toLowerCase() === sMkt;
+      });
+
+      if (mktPlacedBets.length === 0) {
+        WB24.toast(`No open bets found in ${marketName || 'this market'} to cash out.`, 'danger');
+        return;
+      }
+
+      // Recompute fresh offer before deciding Step 1 vs Step 2
+      this.recalcAllPositions();
       const offer = resolvedKey ? this.cashoutOffers[resolvedKey] : null;
+
+      // STEP 1: If Cash Out amount is not yet revealed on the button, reveal it now!
+      if (resolvedKey && !this.cashoutRevealed[resolvedKey]) {
+        if (!offer) {
+          WB24.toast('Cash Out is not possible on this odds.', 'danger');
+          return;
+        }
+        this.cashoutRevealed[resolvedKey] = true;
+        this.recalcAllPositions();
+        return;
+      }
+
+      // STEP 2: User clicked the revealed [ ☑ 1112.00 ] button -> Confirm & execute Cash Out!
+      if (resolvedKey) {
+        this.cashoutRevealed[resolvedKey] = false;
+      }
 
       if (btnEl) btnEl.disabled = true;
       try {
@@ -2518,6 +2576,7 @@
             return;
           } else {
             WB24.toast(data.message || 'Cash Out not possible on this price.', 'danger');
+            this.recalcAllPositions();
             return;
           }
         }
@@ -2527,6 +2586,30 @@
         }
       } catch (e) {
         WB24.toast('Cash Out not possible right now.', 'danger');
+      } finally {
+        if (btnEl) btnEl.disabled = false;
+        this.recalcAllPositions();
+      }
+    },
+
+    /**
+     * Settle an open Fancy market directly from the Fancy row ("Settle" button)
+     * so winning Fancy profit + staked money is immediately credited to the user's wallet.
+     */
+    settleFancyMarket: async function (marketName, btnEl) {
+      if (!window.WB24) return;
+      const sMkt = String(marketName || '').trim().toLowerCase();
+      const fancyBets = (this.placedBets || []).filter((b) => {
+        return String(b.market_name || '').trim().toLowerCase() === sMkt;
+      });
+      if (fancyBets.length === 0) {
+        WB24.toast('No open Fancy bet found on this market.', 'danger');
+        return;
+      }
+      const targetBet = fancyBets[fancyBets.length - 1];
+      if (btnEl) btnEl.disabled = true;
+      try {
+        await WB24.cashoutBet(targetBet.id, 'instant_settle');
       } finally {
         if (btnEl) btnEl.disabled = false;
       }
@@ -2573,6 +2656,22 @@
         const res = await fetch(`/api/exchange/market/live/${this.sportId}/${this.eventId}`);
         if (!res.ok) return;
         const json = await res.json();
+        if (json.wallet && window.WB24 && typeof WB24.updateWalletDisplay === 'function') {
+          WB24.updateWalletDisplay(json.wallet);
+        }
+        if (Array.isArray(json.autoSettledBets) && json.autoSettledBets.length > 0) {
+          json.autoSettledBets.forEach((sb) => {
+            document.getElementById(`openBetRow_${sb.id}`)?.remove();
+            this.onBetRemoved(sb.id);
+            if (window.WB24 && typeof WB24.toast === 'function') {
+              const sign = Number(sb.profit_loss || 0) >= 0 ? '+' : '';
+              WB24.toast(
+                `Fancy Settled (${sb.market_name}): ${sb.status} (${sign}${Number(sb.profit_loss || 0).toFixed(2)} PTI)`,
+                sb.status === 'WON' ? 'success' : 'info'
+              );
+            }
+          });
+        }
         if (json.liveScore && typeof json.liveScore === 'object') {
           this.updateLiveScoreDom(json.liveScore);
         }
@@ -2768,12 +2867,15 @@
         const fId = String(fItem.exMarketId || fItem.marketId || ('f_' + fIdx));
         const fName = String(fItem.marketName || fItem.runnerName || 'Session Runs').trim();
         const fRunner = fItem.oddsData?.runners?.[0] || {};
-        const noRun = fRunner.price?.lay?.[0]?.price ?? fItem.noRun ?? 0;
-        const noRate = fRunner.price?.lay?.[0]?.size ?? fItem.noRate ?? 0;
-        const yesRun = fRunner.price?.back?.[0]?.price ?? fItem.yesRun ?? 0;
-        const yesRate = fRunner.price?.back?.[0]?.size ?? fItem.yesRate ?? 0;
+        const noRun = parseFloat(fRunner.price?.lay?.[0]?.price ?? fItem.noRun ?? 0) || 0;
+        const rawNoRate = parseFloat(fRunner.price?.lay?.[0]?.size ?? fItem.noRate ?? 100) || 100;
+        const noRate = (rawNoRate >= 5 && rawNoRate <= 300) ? rawNoRate : 100;
+        const yesRun = parseFloat(fRunner.price?.back?.[0]?.price ?? fItem.yesRun ?? 0) || 0;
+        const rawYesRate = parseFloat(fRunner.price?.back?.[0]?.size ?? fItem.yesRate ?? 100) || 100;
+        const yesRate = (rawYesRate >= 5 && rawYesRate <= 300) ? rawYesRate : 100;
         const fStatus = String(fItem.oddsData?.status || fRunner.status || 'ONLINE').toUpperCase();
         const isSusp = ['SUSPENDED', 'SUSPEND', 'BALLRUN', 'BALL RUNNING', 'CLOSED'].includes(fStatus) || (noRun == 0 && yesRun == 0);
+        const slipId = 'fancySlip_' + fIdx;
 
         let row = document.querySelector(`.js-fancy-row[data-fancy-id="${fId}"]`) ||
                   document.querySelector(`.js-fancy-row[data-market-name="${fName}"]`);
@@ -2784,35 +2886,57 @@
             div.className = 'd-flex align-items-center border-bottom py-1 px-2 js-fancy-row js-market-pos-scope';
             div.setAttribute('data-fancy-id', fId);
             div.setAttribute('data-fcat', fItem.catName || 'Fancy');
-            div.setAttribute('data-market-key', 'fancy_' + fId);
+            div.setAttribute('data-market-key', 'fancy_' + fIdx);
             div.setAttribute('data-market-name', fName);
             div.setAttribute('data-market-category', 'fancy');
             div.innerHTML = `
               <div class="flex-grow-1 d-flex justify-content-between align-items-center pe-2">
                 <div class="d-flex flex-column">
                   <span class="fw-bold text-dark">${fName}</span>
-                  <span class="fm-runner-pl js-runner-pl d-none" data-market-key="fancy_${fId}" data-market-name="${fName}" data-selection-id="${fId}" data-runner-name="${fName}"></span>
+                  <span class="fm-runner-pl js-runner-pl d-none" data-market-key="fancy_${fIdx}" data-market-name="${fName}" data-selection-id="${fId}" data-runner-name="${fName}"></span>
                 </div>
-                <button type="button" class="btn btn-sm text-white py-0 px-2 fw-bold" style="background:var(--exchange-bg);font-size:11px;" onclick="showFancyBook('${fName.replace(/'/g, "\\'")}', ${parseInt(noRun)}, ${parseInt(yesRun)})">Book</button>
+                <div class="d-flex align-items-center gap-1">
+                  <button type="button" class="btn btn-sm btn-success py-0 px-2 fw-bold js-fancy-settle-btn d-none" style="font-size:10.5px;" onclick="FullMkt.settleFancyMarket('${fName.replace(/'/g, "\\'")}', this)">Settle</button>
+                  <button type="button" class="btn btn-sm text-white py-0 px-2 fw-bold" style="background:var(--exchange-bg);font-size:11px;" onclick="showFancyBook('${fName.replace(/'/g, "\\'")}', ${parseInt(noRun)}, ${parseInt(yesRun)})">Book</button>
+                </div>
               </div>
               <div class="d-flex position-relative">
                 <div class="fm-suspend-overlay ${isSusp ? '' : 'd-none'}"><span>Suspended</span></div>
-                <a href="javascript:void(0)" class="fm-odd-cell wb-odd-lay js-fancy-no-cell" onclick="FullMkt.openInlineSlip('fancySlip_${fIdx}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (NO @ ${noRun})', 'NO', ${noRate || 100}, 'fancy', ${parseFloat(noRun)}, 'fancy_${fId}', this)">
+                <a href="javascript:void(0)" class="fm-odd-cell wb-odd-lay js-fancy-no-cell" onclick="FullMkt.openInlineSlip('${slipId}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (NO @ ${noRun})', 'NO', ${noRate}, 'fancy', ${parseFloat(noRun)}, 'fancy_${fIdx}', this)">
                   <strong>${noRun || '0'}</strong>
-                  <small>${noRate || '0'}</small>
+                  <small>${noRate}</small>
                 </a>
-                <a href="javascript:void(0)" class="fm-odd-cell wb-odd-back ms-1 js-fancy-yes-cell" onclick="FullMkt.openInlineSlip('fancySlip_${fIdx}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (YES @ ${yesRun})', 'YES', ${yesRate || 100}, 'fancy', ${parseFloat(yesRun)}, 'fancy_${fId}', this)">
+                <a href="javascript:void(0)" class="fm-odd-cell wb-odd-back ms-1 js-fancy-yes-cell" onclick="FullMkt.openInlineSlip('${slipId}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (YES @ ${yesRun})', 'YES', ${yesRate}, 'fancy', ${parseFloat(yesRun)}, 'fancy_${fIdx}', this)">
                   <strong>${yesRun || '0'}</strong>
-                  <small>${yesRate || '0'}</small>
+                  <small>${yesRate}</small>
                 </a>
               </div>
               <div style="width:110px;text-align:center;" class="fw-bold small text-dark fm-fancy-minmax-col">10 - 50000</div>
             `;
             pane.appendChild(div);
+            if (!document.getElementById(slipId)) {
+              const slipDiv = document.createElement('div');
+              slipDiv.id = slipId;
+              slipDiv.className = 'fm-inline-slip d-none';
+              pane.appendChild(slipDiv);
+            }
             row = div;
           }
         }
         if (!row) return;
+
+        // Ensure slip container exists right after row
+        const rowMktKey = row.getAttribute('data-market-key') || ('fancy_' + fIdx);
+        let actualSlipId = slipId;
+        const nextEl = row.nextElementSibling;
+        if (nextEl && nextEl.classList.contains('fm-inline-slip') && nextEl.id) {
+          actualSlipId = nextEl.id;
+        } else if (!document.getElementById(actualSlipId)) {
+          const slipDiv = document.createElement('div');
+          slipDiv.id = actualSlipId;
+          slipDiv.className = 'fm-inline-slip d-none';
+          row.insertAdjacentElement('afterend', slipDiv);
+        }
 
         const isBallrun = fStatus.includes('BALL');
         const suspTxt = isBallrun ? 'Ballrun' : 'Suspended';
@@ -2831,14 +2955,14 @@
           const strEl = noCell.querySelector('strong');
           const smEl = noCell.querySelector('small');
           const noStr = String(noRun || '0');
-          const rateStr = String(noRate || '0');
+          const rateStr = String(noRate);
           if (strEl && strEl.textContent.trim() !== noStr) {
             strEl.textContent = noStr;
             noCell.classList.add('flash-change');
             setTimeout(() => noCell.classList.remove('flash-change'), 600);
           }
           if (smEl) smEl.textContent = rateStr;
-          noCell.setAttribute('onclick', `FullMkt.openInlineSlip('fancySlip_${fIdx}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (NO @ ${noRun})', 'NO', ${noRate || 100}, 'fancy', ${parseFloat(noRun)}, 'fancy_${fIdx}', this)`);
+          noCell.setAttribute('onclick', `FullMkt.openInlineSlip('${actualSlipId}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (NO @ ${noRun})', 'NO', ${noRate}, 'fancy', ${parseFloat(noRun)}, '${rowMktKey}', this)`);
         }
 
         const yesCell = row.querySelector('.js-fancy-yes-cell');
@@ -2846,16 +2970,17 @@
           const strEl = yesCell.querySelector('strong');
           const smEl = yesCell.querySelector('small');
           const yesStr = String(yesRun || '0');
-          const rateStr = String(yesRate || '0');
+          const rateStr = String(yesRate);
           if (strEl && strEl.textContent.trim() !== yesStr) {
             strEl.textContent = yesStr;
             yesCell.classList.add('flash-change');
             setTimeout(() => yesCell.classList.remove('flash-change'), 600);
           }
           if (smEl) smEl.textContent = rateStr;
-          yesCell.setAttribute('onclick', `FullMkt.openInlineSlip('fancySlip_${fIdx}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (YES @ ${yesRun})', 'YES', ${yesRate || 100}, 'fancy', ${parseFloat(yesRun)}, 'fancy_${fIdx}', this)`);
+          yesCell.setAttribute('onclick', `FullMkt.openInlineSlip('${actualSlipId}', '${fName.replace(/'/g, "\\'")}', '${fId}', '${fName.replace(/'/g, "\\'")} (YES @ ${yesRun})', 'YES', ${yesRate}, 'fancy', ${parseFloat(yesRun)}, '${rowMktKey}', this)`);
         }
       });
+      this.recalcAllPositions();
     },
 
     updateSportsbookDom: function (sbData) {
@@ -3009,6 +3134,7 @@
     },
 
     openInlineSlip: function (containerId, marketName, selectionId, selectionName, betType, odds, category, runLine, marketKey, triggerEl) {
+      this.cashoutRevealed = {};
       document.querySelectorAll('.fm-inline-slip').forEach(el => {
         el.classList.add('d-none');
         el.innerHTML = '';
@@ -3222,12 +3348,35 @@
 
   function showFancyBook(title, noRun, yesRun) {
     document.getElementById('fancyBookTitle').textContent = title;
-    const base = Math.max(1, noRun || yesRun || 45);
+    const tNorm = String(title || '').trim().toLowerCase();
+    const mktBets = (FullMkt.placedBets || []).filter(b => String(b.market_name || '').trim().toLowerCase() === tNorm);
+    const lines = mktBets.map(b => parseFloat(b.run_line || 0)).filter(n => n > 0);
+    const minLine = lines.length ? Math.min(...lines) : Math.max(1, noRun || yesRun || 45);
+    const maxLine = lines.length ? Math.max(...lines) : Math.max(1, yesRun || noRun || 45);
+    const startR = Math.max(0, Math.floor(minLine) - 3);
+    const endR = Math.ceil(maxLine) + 3;
+
     let html = '';
-    for (let r = Math.max(0, base - 3); r <= base + 3; r++) {
-      const pl = r >= (yesRun || base) ? '+100.00' : '-100.00';
-      const cls = r >= (yesRun || base) ? 'text-success fw-bold' : 'text-danger fw-bold';
-      html += `<tr><td>${r}</td><td class="${cls}">${pl}</td></tr>`;
+    for (let r = startR; r <= endR; r++) {
+      let net = 0;
+      if (mktBets.length > 0) {
+        mktBets.forEach(b => {
+          const stake = parseFloat(b.stake || 0);
+          const rate = (parseFloat(b.odds || 100) || 100) / 100;
+          const line = parseFloat(b.run_line || yesRun || noRun || 0);
+          const bt = String(b.bet_type || 'YES').toUpperCase();
+          if (bt === 'YES') {
+            net += (r >= line) ? (stake * rate) : -stake;
+          } else {
+            net += (r < line) ? stake : -(stake * rate);
+          }
+        });
+      } else {
+        net = r >= (yesRun || minLine) ? 100 : -100;
+      }
+      const cls = net >= 0 ? 'text-success fw-bold' : 'text-danger fw-bold';
+      const sign = net >= 0 ? '+' : '';
+      html += `<tr><td>${r}</td><td class="${cls}">${sign}${net.toFixed(2)}</td></tr>`;
     }
     document.getElementById('fancyBookBody').innerHTML = html;
     new bootstrap.Modal(document.getElementById('fancyBookModal')).show();

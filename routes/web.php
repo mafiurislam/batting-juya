@@ -137,6 +137,7 @@ Route::post('/api/exchange/markets/getMarketsEventList', [ExchangeController::cl
 Route::match(['get', 'post'], '/api/exchange/market/matchodds/allEventsList', [ExchangeController::class, 'allEventsListApi'])->name('api.exchange.allEventsList');
 Route::get('/api/exchange/live-inplay-events', [ExchangeController::class, 'liveInplayEventsApi'])->name('api.exchange.liveInplay');
 Route::post('/api/casino/play-round', [CasinoController::class, 'playRoundApi'])->name('api.casino.play');
+Route::post('/api/casino/table/settle-round', [CasinoController::class, 'tableSettleRound'])->name('api.casino.table.settle');
 
 // Sportmonks Live Score Backend APIs (Token stays strictly in Laravel Backend, never exposed in Frontend JS)
 Route::get('/api/sportmonks/status', [ExchangeController::class, 'sportmonksStatus'])->name('api.sportmonks.status');

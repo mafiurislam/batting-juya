@@ -840,12 +840,12 @@ class AdminController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'category' => 'required|in:exchange,casino',
+            'category' => 'required|in:exchange,bookmaker,fancy,sportsbook,casino',
             'sport_name' => 'required|string|max:80',
             'event_name' => 'required|string|max:200',
             'market_name' => 'required|string|max:120',
             'selection_name' => 'required|string|max:150',
-            'bet_type' => 'required|in:BACK,LAY',
+            'bet_type' => 'required|in:BACK,LAY,YES,NO',
             'odds' => 'required|numeric|min:1.01',
             'stake' => 'required|numeric|min:1',
             'status' => 'required|in:MATCHED,WON,LOST,CASHOUT,VOID',
@@ -856,9 +856,14 @@ class AdminController extends Controller
         $stake = round((float) $request->input('stake'), 2);
         $betType = $request->input('bet_type');
         $status = $request->input('status');
-
-        $potentialProfit = $betType === 'BACK' ? round($stake * ($odds - 1), 2) : $stake;
-        $liability = $betType === 'BACK' ? $stake : round($stake * ($odds - 1), 2);
+        $calc = app(\App\Services\ExchangeBookService::class)->calculateProfitAndLiability(
+            (string) $request->input('category', 'exchange'),
+            $betType,
+            $odds,
+            $stake
+        );
+        $potentialProfit = $calc['profit'];
+        $liability = $calc['liability'];
         $pl = $status === 'WON' ? $potentialProfit : ($status === 'LOST' ? -$liability : 0);
 
         Bet::create([
@@ -897,7 +902,7 @@ class AdminController extends Controller
             'event_name' => 'required|string|max:200',
             'market_name' => 'required|string|max:120',
             'selection_name' => 'required|string|max:150',
-            'bet_type' => 'required|in:BACK,LAY',
+            'bet_type' => 'required|in:BACK,LAY,YES,NO',
             'odds' => 'required|numeric|min:1.01',
             'stake' => 'required|numeric|min:1',
             'profit_loss' => 'required|numeric',
@@ -1420,11 +1425,23 @@ class AdminController extends Controller
             foreach ($openBets as $bet) {
                 $user = User::find($bet->user_id);
                 if (!$user) continue;
-                $affectedUserIds[$user->id] = true;
 
-                $matchedRunner = strcasecmp(trim($bet->selection_name), $winner) === 0;
-                $won = ($bet->bet_type === 'BACK' && $matchedRunner) || ($bet->bet_type === 'LAY' && !$matchedRunner);
-                $pl = $won ? $bet->potential_profit : -$bet->liability;
+                $bt = strtoupper(trim((string) $bet->bet_type));
+                if ($bet->category === 'fancy' || in_array($bt, ['YES', 'NO'], true)) {
+                    // Only settle Fancy bets if winner_selection is a numeric run score; otherwise leave Fancy bets for Fancy settlement
+                    if (!is_numeric($winner)) {
+                        continue;
+                    }
+                    $actualRuns = (float) $winner;
+                    $runLine = (float) ($bet->run_line ?? 0);
+                    $won = ($bt === 'YES') ? ($actualRuns >= $runLine) : ($actualRuns < $runLine);
+                } else {
+                    $matchedRunner = strcasecmp(trim($bet->selection_name), $winner) === 0;
+                    $won = ($bt === 'BACK' && $matchedRunner) || ($bt === 'LAY' && !$matchedRunner);
+                }
+
+                $affectedUserIds[$user->id] = true;
+                $pl = $won ? round((float) $bet->potential_profit, 2) : -round((float) $bet->liability, 2);
 
                 $user->increment('balance', $pl);
 
