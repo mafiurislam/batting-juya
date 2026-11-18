@@ -36,13 +36,18 @@
             </div>
 
             <div class="row g-2 mb-2">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label class="small fw-bold">WhatsApp Customer Support</label>
                 <input type="text" name="support_whatsapp" value="{{ $settings['support_whatsapp'] }}" class="form-control form-control-sm">
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label class="small fw-bold">Signup Welcome Bonus (PTI)</label>
                 <input type="number" step="10" name="welcome_bonus_pti" value="{{ $settings['welcome_bonus_pti'] }}" class="form-control form-control-sm fw-bold text-success">
+              </div>
+              <div class="col-md-4">
+                <label class="small fw-bold text-danger">Casino House Win Control (%)</label>
+                <input type="number" min="50" max="85" name="casino_house_edge_pct" value="{{ $settings['casino_house_edge_pct'] ?? 70 }}" class="form-control form-control-sm fw-bold text-danger">
+                <small class="text-muted" style="font-size:10px;">50–85% (Default: 70% House / 30% Player)</small>
               </div>
             </div>
 

@@ -3,12 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\AccountStatement;
+use App\Models\BankingTransaction;
 use App\Models\Bet;
 use App\Models\CasinoGame;
 use App\Models\ExchangeEvent;
+use App\Models\SiteSetting;
 use App\Models\User;
 use App\Services\CasinoEngineService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class VoiceFixesVerificationTest extends TestCase
@@ -170,5 +173,178 @@ class VoiceFixesVerificationTest extends TestCase
             AccountStatement::where('user_id', $user->id)->delete();
             $user->delete();
         }
+    }
+
+    public function test_banking_pages_show_deposit_and_withdrawal_history_tables(): void
+    {
+        $user = User::create([
+            'username' => 'bank_hist_' . rand(1000, 9999),
+            'name' => 'Bank History User',
+            'phone' => '9876543213',
+            'email' => 'bank_hist_' . rand(1000, 9999) . '@example.com',
+            'password' => bcrypt('password123'),
+            'balance' => 5000.00,
+            'exposure' => 0.00,
+            'role' => 'user',
+        ]);
+
+        BankingTransaction::create([
+            'tx_ref' => 'DEP-TEST-001',
+            'user_id' => $user->id,
+            'type' => 'deposit',
+            'method' => 'UPI',
+            'amount' => 5000,
+            'charges' => 0,
+            'final_amount' => 5000,
+            'utr_number' => '390063985807',
+            'status' => 'APPROVED',
+            'admin_note' => 'Verified UPI',
+        ]);
+
+        BankingTransaction::create([
+            'tx_ref' => 'WDR-TEST-001',
+            'user_id' => $user->id,
+            'type' => 'withdraw',
+            'method' => 'NORMAL',
+            'amount' => 2200,
+            'charges' => 0,
+            'final_amount' => 2200,
+            'status' => 'PENDING',
+        ]);
+
+        $this->actingAs($user)->get('/banking')
+            ->assertOk()
+            ->assertSee('390063985807')
+            ->assertSee('Deposit History')
+            ->assertSee('Withdrawal History')
+            ->assertSee('2200');
+
+        $this->actingAs($user)->get('/banking/withdraw')
+            ->assertOk()
+            ->assertSee('Withdrawal Type')
+            ->assertSee('Request Time')
+            ->assertSee('2200')
+            ->assertSee('NORMAL');
+    }
+
+    public function test_vimaan_server_authoritative_crash_point_blocks_late_cashout_exploit(): void
+    {
+        $user = User::create([
+            'username' => 'vimaan_edge_' . rand(1000, 9999),
+            'name' => 'Vimaan Edge Tester',
+            'phone' => '9876543214',
+            'email' => 'vimaan_edge_' . rand(1000, 9999) . '@example.com',
+            'password' => bcrypt('password123'),
+            'balance' => 1000.00,
+            'exposure' => 0.00,
+            'role' => 'user',
+        ]);
+
+        $roundId = 'VM_AUTH_' . rand(10000, 99999);
+
+        // 1. User places 100 PTI bet during WAIT phase
+        $placeRes = $this->actingAs($user)->postJson('/api/vimaan/place-bet', [
+            'stake' => 100,
+            'slot' => 1,
+            'round_id' => $roundId,
+        ]);
+        $placeRes->assertOk()->assertJsonPath('status', true);
+        $betId = $placeRes->json('bet.id');
+
+        // 2. Round starts -> server locks crash point in Cache
+        $startRes = $this->actingAs($user)->postJson('/api/vimaan/round-start', [
+            'round_id' => $roundId,
+        ]);
+        $startRes->assertOk()->assertJsonPath('status', true);
+        $this->assertNotNull(Cache::get("vimaan_crash_{$roundId}"));
+
+        // Force crash point to 1.20x in cache and attempt client exploit cashout at 3.50x
+        Cache::put("vimaan_crash_{$roundId}", 1.20, 600);
+
+        $exploitRes = $this->actingAs($user)->postJson('/api/vimaan/cashout', [
+            'bet_id' => $betId,
+            'multiplier' => 3.50,
+        ]);
+
+        $exploitRes->assertStatus(422)->assertJsonPath('status', false);
+        $this->assertEquals(900.0, (float) $exploitRes->json('wallet.balance'));
+        $this->assertEquals(0.0, (float) $exploitRes->json('wallet.exposure'));
+        $this->assertEquals('LOST', Bet::find($betId)->status);
+    }
+
+    public function test_dragon_tiger_and_fancy_live_pulse_auto_settlement_credit_wallet(): void
+    {
+        $user = User::create([
+            'username' => 'dt_fancy_' . rand(1000, 9999),
+            'name' => 'DT Fancy Tester',
+            'phone' => '9876543215',
+            'email' => 'dt_fancy_' . rand(1000, 9999) . '@example.com',
+            'password' => bcrypt('password123'),
+            'balance' => 5000.00,
+            'exposure' => 0.00,
+            'role' => 'user',
+        ]);
+
+        // 1. Dragon Tiger settlement with house edge returns genuine cards matching declared winner
+        SiteSetting::setValue('casino_house_edge_pct', '70', 'casino');
+        $this->actingAs($user)->postJson('/api/casino/teenpatti/place-bet', [
+            'event_id' => '99.0019',
+            'round_id' => 'DT_EDGE_01',
+            'market_key' => 'WINNER',
+            'market_name' => 'WINNER',
+            'selection_key' => 'DRAGON',
+            'selection_name' => 'DRAGON',
+            'odds' => 2.00,
+            'stake' => 100,
+        ])->assertOk();
+
+        $dtRes = $this->actingAs($user)->postJson('/api/casino/dragontiger/settle-round', [
+            'event_id' => '99.0019',
+            'round_id' => 'DT_EDGE_01',
+        ]);
+        $dtRes->assertOk()->assertJsonPath('status', true);
+        $this->assertContains($dtRes->json('winner'), ['DRAGON', 'TIGER', 'TIE']);
+        $this->assertEquals(0.0, (float) $dtRes->json('wallet.exposure'));
+
+        // 2. Fancy over-runs auto-settles via /api/live-pulse and credits Principal + Profit to Main PTI
+        $event = ExchangeEvent::where('sport_id', '4')->where('event_id', '!=', '3544687543453')->firstOrFail();
+        $sj = is_array($event->score_json) ? $event->score_json : [];
+        $sj['universeScore'] = [
+            'isScore' => true,
+            'sportId' => '4',
+            'score1' => '56/1',
+            'overs1' => '6.0',
+            'team1Flag' => true,
+            'team2Flag' => false,
+        ];
+        $event->score_json = $sj;
+        $event->save();
+
+        $balBefore = (float) $user->fresh()->balance;
+
+        $fancyRes = $this->actingAs($user)->postJson('/api/exchange/place-bet', [
+            'event_id' => $event->event_id,
+            'event_name' => $event->event_name,
+            'market_name' => '6 Overs Runs',
+            'selection_id' => 'f_6ov_auto',
+            'selection_name' => '6 Overs Runs (YES @ 48)',
+            'bet_type' => 'YES',
+            'odds' => 100,
+            'stake' => 1000,
+            'category' => 'fancy',
+            'run_line' => 48,
+        ]);
+        $fancyRes->assertOk();
+        $fancyBetId = $fancyRes->json('bet.id');
+
+        // Trigger live-pulse -> 56 >= 48 -> YES wins +1000 profit + 1000 exposure returned!
+        $pulseRes = $this->actingAs($user)->getJson('/api/live-pulse');
+        $pulseRes->assertOk()->assertJsonPath('status', true);
+
+        $settledBet = Bet::find($fancyBetId);
+        $this->assertEquals('WON', $settledBet->status);
+        $this->assertEquals(round($balBefore + 1000.0, 2), (float) $pulseRes->json('wallet.balance'));
+        $this->assertEquals(0.0, (float) $pulseRes->json('wallet.exposure'));
+        $this->assertEquals(round($balBefore + 1000.0, 2), (float) $pulseRes->json('wallet.available'));
     }
 }

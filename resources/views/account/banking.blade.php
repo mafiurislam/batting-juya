@@ -178,32 +178,33 @@
       </form>
 
       <div class="table-responsive">
-        <table class="wb-dt-table mb-0">
+        <table class="wb-dt-table mb-0 text-center">
           <thead>
             <tr>
               <th>Amount</th>
               <th>Withdrawal Type</th>
               <th>Request Time</th>
               <th>Status</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             @forelse($withdrawals as $w)
               <tr>
-                <td class="fw-bold">{{ number_format($w->amount, 2) }}</td>
-                <td>{{ $w->method ?: 'IMPS/BANK' }}</td>
-                <td>{{ $w->created_at->format('M j, Y, g:i:s A') }}</td>
+                <td class="fw-bold">{{ number_format($w->amount, 0, '.', '') }}</td>
+                <td>{{ strtoupper($w->method ?: 'NORMAL') }}</td>
+                <td>
+                  <div>{{ $w->created_at->format('d-m-Y') }}</div>
+                  <div class="small text-muted">{{ $w->created_at->format('H:i:s') }}</div>
+                </td>
                 <td>
                   <span class="badge {{ $w->status === 'APPROVED' ? 'bg-success' : ($w->status === 'REJECTED' ? 'bg-danger' : 'bg-warning text-dark') }}">
                     {{ $w->status }}
                   </span>
                 </td>
-                <td>-</td>
               </tr>
             @empty
               <tr>
-                <td colspan="5" class="text-center py-2 text-muted">No withdrawal requests found</td>
+                <td colspan="4" class="text-center py-2 text-muted">No withdrawal requests found</td>
               </tr>
             @endforelse
           </tbody>
@@ -409,6 +410,97 @@
         <a href="{{ route('banking.reward') }}" class="wb-brand-card">
           <h2><b>Reward</b></h2>
         </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deposit & Withdrawal History Tables (1:1 winbook24.com) -->
+  <div class="row g-3 mt-1">
+    <div class="col-lg-6">
+      <div class="wb-acct-card">
+        <div class="wb-acct-head">
+          <span>Deposit History</span>
+        </div>
+        <div class="p-2">
+          <div class="table-responsive">
+            <table class="wb-dt-table mb-0 text-center">
+              <thead>
+                <tr>
+                  <th>Amount</th>
+                  <th>UTR</th>
+                  <th>Note</th>
+                  <th>Status</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                @forelse(($deposits ?? collect()) as $d)
+                  <tr>
+                    <td class="fw-bold">{{ number_format($d->amount, 0, '.', '') }}</td>
+                    <td class="small">{{ $d->utr_number ?: $d->tx_ref }}</td>
+                    <td class="small">{{ $d->admin_note ?: '-' }}</td>
+                    <td>
+                      <span class="badge {{ $d->status === 'APPROVED' ? 'bg-success' : ($d->status === 'REJECTED' ? 'bg-danger' : 'bg-warning text-dark') }}">
+                        {{ $d->status }}
+                      </span>
+                    </td>
+                    <td class="small">
+                      <div>{{ $d->created_at->format('d-m-Y') }}</div>
+                      <div class="text-muted">{{ $d->created_at->format('H:i:s') }}</div>
+                    </td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td colspan="5" class="text-center py-2 text-muted">No deposit history found</td>
+                  </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="wb-acct-card">
+        <div class="wb-acct-head">
+          <span>Withdrawal History</span>
+        </div>
+        <div class="p-2">
+          <div class="table-responsive">
+            <table class="wb-dt-table mb-0 text-center">
+              <thead>
+                <tr>
+                  <th>Amount</th>
+                  <th>Withdrawal Type</th>
+                  <th>Request Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @forelse(($withdrawals ?? collect()) as $w)
+                  <tr>
+                    <td class="fw-bold">{{ number_format($w->amount, 0, '.', '') }}</td>
+                    <td>{{ strtoupper($w->method ?: 'NORMAL') }}</td>
+                    <td class="small">
+                      <div>{{ $w->created_at->format('d-m-Y') }}</div>
+                      <div class="text-muted">{{ $w->created_at->format('H:i:s') }}</div>
+                    </td>
+                    <td>
+                      <span class="badge {{ $w->status === 'APPROVED' ? 'bg-success' : ($w->status === 'REJECTED' ? 'bg-danger' : 'bg-warning text-dark') }}">
+                        {{ $w->status }}
+                      </span>
+                    </td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td colspan="4" class="text-center py-2 text-muted">No withdrawal history found</td>
+                  </tr>
+                @endforelse
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>

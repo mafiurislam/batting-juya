@@ -567,7 +567,7 @@
             <div class="dt18-card-group">
               <h3 class="dt18-card-head">DRAGON</h3>
               <div>
-                <img id="dt18DragonCard" src="/assets/cards/S9_.png" class="dt18-card-img" alt="Dragon Card">
+                <img id="dt18DragonCard" src="/assets/cards/0.png" class="dt18-card-img" alt="Dragon Card">
               </div>
             </div>
             <div class="dt18-card-group">
@@ -1177,10 +1177,14 @@
         });
         const data = await res.json();
         if (data && data.status) {
-          setCard('dt18DragonCard', data.card_dragon || 'S9_');
+          // Sequential 1-by-1 reveal AFTER countdown hits 0: Dragon card opens first, then Tiger card ~1s later
+          setTimeout(() => {
+            setCard('dt18DragonCard', data.card_dragon || 'S9_');
+          }, 350);
+
           setTimeout(() => {
             setCard('dt18TigerCard', data.card_tiger || 'H6_');
-          }, 120);
+          }, 1250);
 
           setTimeout(() => {
             (data.winning_keys || []).forEach(k => {
@@ -1210,7 +1214,7 @@
               winner: data.summary || data.winner || 'DRAGON'
             });
             renderRecentBalls();
-          }, 300);
+          }, 1700);
         }
       } catch (e) {
         console.error('Dragon Tiger 99.0018 settle error:', e);
@@ -1218,7 +1222,7 @@
         setTimeout(() => {
           settlingInProgress = false;
           startNewBettingRound();
-        }, 3800);
+        }, 5200);
       }
     }
 

@@ -628,11 +628,11 @@
       <div id="vmAllBetsStatsHeader">
         <div class="vm-stats-bar">
           <div>
-            <div class="vm-stat-title">ALL BETS</div>
-            <div class="vm-stat-num" id="vmTotalBetsCount">95</div>
+            <div class="vm-stat-title">ACTIVE BETS</div>
+            <div class="vm-stat-num" id="vmTotalBetsCount">0</div>
           </div>
           <div class="text-end">
-            <div class="vm-stat-title">Users</div>
+            <div class="vm-stat-title">Cashed Out</div>
             <div class="vm-stat-num" id="vmActiveUsersCount">0</div>
           </div>
         </div>
@@ -1121,7 +1121,7 @@ const VimaanApp = (() => {
   function buildRoundBots() {
     liveBetsRows = [];
 
-    // Add current user's active/queued slots at the top
+    // Show ONLY real user active slots (no fake bot list clutter)
     [1, 2, 3, 4].forEach(s => {
       if (slots[s].status === 'ACTIVE') {
         liveBetsRows.push({
@@ -1138,28 +1138,25 @@ const VimaanApp = (() => {
       }
     });
 
-    // Add bot rows matching the screenshot
-    botProfiles.forEach((b, idx) => {
-      liveBetsRows.push({
-        id: 'bot_' + idx,
-        isMe: false,
-        user: b.user,
-        avatar: b.avatar,
-        stake: b.baseStake,
-        cashedOut: false,
-        cashoutMult: null,
-        cashoutAmount: null,
-        targetMult: b.targetMult
-      });
-    });
-
-    document.getElementById('vmTotalBetsCount').textContent = 95;
-    document.getElementById('vmActiveUsersCount').textContent = 0;
+    const totalEl = document.getElementById('vmTotalBetsCount');
+    const cashedEl = document.getElementById('vmActiveUsersCount');
+    if (totalEl) totalEl.textContent = liveBetsRows.length;
+    if (cashedEl) cashedEl.textContent = liveBetsRows.filter(r => r.cashedOut).length;
   }
 
   function renderAllBetsList() {
     const ul = document.getElementById('vmAllBetsList');
     if (!ul) return;
+
+    const totalEl = document.getElementById('vmTotalBetsCount');
+    const cashedEl = document.getElementById('vmActiveUsersCount');
+    if (totalEl) totalEl.textContent = liveBetsRows.length;
+    if (cashedEl) cashedEl.textContent = liveBetsRows.filter(r => r.cashedOut).length;
+
+    if (liveBetsRows.length === 0) {
+      ul.innerHTML = `<li class="text-center text-secondary py-4 small">No active bets in this round.</li>`;
+      return;
+    }
 
     ul.innerHTML = liveBetsRows.map(r => {
       const mColor = r.cashoutMult ? getMultHex(r.cashoutMult) : '#34b4ff';
@@ -1353,6 +1350,8 @@ const VimaanApp = (() => {
 
         // Prepend to My Bets
         prependMyBetRow(data.cashout.time, data.cashout.stake, data.cashout.multiplier, data.cashout.payout, true);
+      } else if (data.wallet) {
+        updateWalletDom(data.wallet);
       }
     } catch (e) {
       console.error(e);
@@ -1391,21 +1390,45 @@ const VimaanApp = (() => {
   }
 
   // ================= ROUND LIFECYCLE =================
+  let flightStarting = false;
+
   function generateCrashPoint() {
     const r = Math.random();
-    if (r < 0.04) return 1.00;
-    if (r < 0.54) return +(1.05 + Math.random() * 0.90).toFixed(2);
-    if (r < 0.86) return +(2.00 + Math.random() * 2.80).toFixed(2);
-    if (r < 0.96) return +(4.80 + Math.random() * 6.00).toFixed(2);
-    return +(10.80 + Math.random() * 14.00).toFixed(2);
+    if (r < 0.16) return +(1.00 + Math.random() * 0.05).toFixed(2);
+    if (r < 0.64) return +(1.06 + Math.random() * 0.42).toFixed(2);
+    if (r < 0.86) return +(1.49 + Math.random() * 0.66).toFixed(2);
+    if (r < 0.96) return +(2.16 + Math.random() * 1.64).toFixed(2);
+    return +(3.81 + Math.random() * 5.69).toFixed(2);
   }
 
-  function startFlightRound(customTarget = null) {
+  async function startFlightRound(customTarget = null) {
+    if (flightStarting) return;
+    flightStarting = true;
+
+    let serverTarget = customTarget;
+    if (!serverTarget) {
+      try {
+        const res = await fetch('{{ route("api.vimaan.round_start") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': WB24.csrfToken,
+          },
+          body: JSON.stringify({ round_id: roundId }),
+        });
+        const data = await res.json();
+        if (data && data.status && data.crash_point) {
+          serverTarget = parseFloat(data.crash_point);
+        }
+      } catch (e) {}
+    }
+
     gameState = 'RUN';
-    roundId = 'VM' + Date.now();
     currentMultiplier = 1.00;
     flightProgress = 0.0;
-    targetCrashMultiplier = customTarget || generateCrashPoint();
+    targetCrashMultiplier = serverTarget || generateCrashPoint();
+    flightStarting = false;
 
     // Promote any QUEUED slots to ACTIVE
     [1, 2, 3, 4].forEach(s => {
@@ -1486,8 +1509,12 @@ const VimaanApp = (() => {
 
   function startWaitingPhase() {
     gameState = 'WAIT';
+    roundId = 'VM' + Date.now();
     waitProgress = 1.0;
     flightProgress = 0.0;
+
+    buildRoundBots();
+    renderAllBetsList();
 
     document.getElementById('vmFlightOverlay').style.display = 'none';
     document.getElementById('vmWaitingOverlay').style.display = 'flex';

@@ -847,22 +847,32 @@ document.addEventListener('DOMContentLoaded', function () {
         profilePill.classList.toggle('collapsed');
     });
 
-    // Simulated live players for social proof
+    // Real active bets list (no fake bot clutter)
     let livePlayers = [];
     function generateLivePlayers() {
-        const masks = ['r*****9', 'a*****4', 'k*****2', 'm*****7', 's*****1', 'v*****8', 'p*****5', 'd*****3', 'j*****6', 'n*****0'];
-        const stakes = [100, 250, 500, 1000, 2500, 50, 5000];
-        livePlayers = masks.map(u => ({
-            user: u,
-            stake: stakes[Math.floor(Math.random() * stakes.length)],
-            targetMult: +(1.25 + Math.random() * 4.5).toFixed(2),
-            cashed: false
-        }));
+        livePlayers = [];
+        if (typeof slots !== 'undefined') {
+            [1, 2].forEach(s => {
+                if (slots[s] && (slots[s].state === 'ACTIVE' || slots[s].state === 'PLACED_WAITING')) {
+                    livePlayers.push({
+                        slot: s,
+                        user: '{{ auth()->check() ? auth()->user()->username : "You" }}',
+                        stake: slots[s].stake,
+                        targetMult: 0,
+                        cashed: false
+                    });
+                }
+            });
+        }
         document.getElementById('blnActivePlayersCount').textContent = livePlayers.length;
         renderLivePlayers();
     }
 
     function renderLivePlayers() {
+        if (livePlayers.length === 0) {
+            playersListEl.innerHTML = `<div class="text-center text-white-50 py-2 small">No active bets</div>`;
+            return;
+        }
         playersListEl.innerHTML = livePlayers.map(p => `
             <div class="bln-player-row ${p.cashed ? 'cashed' : ''}">
                 <span class="fw-bold">${p.user}</span>
@@ -871,7 +881,7 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         `).join('');
     }
-    generateLivePlayers();
+    renderLivePlayers();
 
     // Quick Stakes & Edit Mode
     let stakes = [10, 50, 100, 500, 1000, 2500, 5000, 10000];
@@ -1059,6 +1069,7 @@ document.addEventListener('DOMContentLoaded', function () {
             playSound('heat');
             updateWalletDOM(data.wallet);
             updateHeatButtonLabels();
+            generateLivePlayers();
         } catch (err) {
             slot.state = 'IDLE';
             updateHeatButtonLabels();
@@ -1117,6 +1128,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const winAmt = (slot.stake * cashMult).toFixed(2);
                 showWinToast(`WON ₹${winAmt} @ ${cashMult.toFixed(2)}x!`);
                 updateWalletDOM(data.wallet);
+                const row = livePlayers.find(p => p.slot === s && !p.cashed);
+                if (row) {
+                    row.cashed = true;
+                    row.targetMult = cashMult;
+                    renderLivePlayers();
+                }
+            } else if (data.wallet) {
+                updateWalletDOM(data.wallet);
+                if (data.message) showWinToast(data.message);
             }
         } catch (e) {}
 
@@ -1190,15 +1210,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function generateCrashPoint() {
         const r = Math.random();
-        if (r < 0.38) return +(1.04 + Math.random() * 0.88).toFixed(2);
-        if (r < 0.78) return +(2.01 + Math.random() * 3.80).toFixed(2);
-        return +(6.00 + Math.random() * 14.00).toFixed(2);
+        if (r < 0.16) return +(1.00 + Math.random() * 0.05).toFixed(2);
+        if (r < 0.64) return +(1.06 + Math.random() * 0.42).toFixed(2);
+        if (r < 0.86) return +(1.49 + Math.random() * 0.66).toFixed(2);
+        if (r < 0.96) return +(2.16 + Math.random() * 1.64).toFixed(2);
+        return +(3.81 + Math.random() * 5.69).toFixed(2);
     }
 
-    function startFlightPhase() {
+    async function startFlightPhase() {
+        let serverCrash = null;
+        try {
+            const res = await fetch('/api/balloon/round-start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ round_id: roundId })
+            });
+            const data = await res.json();
+            if (data && data.status && data.crash_point) {
+                serverCrash = parseFloat(data.crash_point);
+            }
+        } catch (e) {}
+
         phase = 'IN_FLIGHT';
         currentMultiplier = 1.00;
-        crashPoint = generateCrashPoint();
+        crashPoint = serverCrash || generateCrashPoint();
         playSound('fly');
 
         document.getElementById('blnWaitingWrap').style.display = 'none';
@@ -1213,6 +1252,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         updateHeatButtonLabels();
+        generateLivePlayers();
     }
 
     async function triggerBurst() {
@@ -1298,16 +1338,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
             updateHeatButtonLabels();
-
-            // Update simulated players cashing out
-            let changed = false;
-            livePlayers.forEach(p => {
-                if (!p.cashed && currentMultiplier >= p.targetMult) {
-                    p.cashed = true;
-                    changed = true;
-                }
-            });
-            if (changed) renderLivePlayers();
 
             if (currentMultiplier >= crashPoint) {
                 triggerBurst();

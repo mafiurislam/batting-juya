@@ -10,6 +10,7 @@ use App\Models\Sport;
 use App\Services\CasinoEngineService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -381,6 +382,86 @@ class CasinoController extends Controller
         ]);
     }
 
+    private function getHouseEdgePct(): int
+    {
+        $val = (int) SiteSetting::getValue('casino_house_edge_pct', '70');
+        return max(50, min(85, $val));
+    }
+
+    /**
+     * Decide whether the house should hold the advantage on this round based on Admin-configured house edge.
+     */
+    private function shouldHouseWin($openBets): bool
+    {
+        if (!$openBets || $openBets->isEmpty()) {
+            return false;
+        }
+        return random_int(1, 100) <= $this->getHouseEdgePct();
+    }
+
+    /**
+     * Compute aggregate player net P/L for a set of open casino bets against a candidate winning-keys list.
+     */
+    private function estimateBetsNetPl($openBets, array $winningKeys, bool $caseInsensitive = false): float
+    {
+        $keys = $caseInsensitive ? array_map('strtoupper', $winningKeys) : $winningKeys;
+        $total = 0.0;
+        foreach ($openBets as $bet) {
+            $selId = $caseInsensitive ? strtoupper((string) $bet->selection_id) : (string) $bet->selection_id;
+            $selName = $caseInsensitive ? strtoupper((string) $bet->selection_name) : (string) $bet->selection_name;
+            $hit = in_array($selId, $keys, true) || in_array($selName, $keys, true);
+            $side = strtoupper((string) ($bet->bet_type ?: 'BACK'));
+            $won = ($side === 'LAY') ? !$hit : $hit;
+            $stake = (float) $bet->stake;
+            $odds = (float) $bet->odds;
+            if ($side === 'LAY') {
+                $total += $won ? $stake : -round($stake * ($odds - 1), 2);
+            } else {
+                $total += $won ? round($stake * ($odds - 1), 2) : -$stake;
+            }
+        }
+        return round($total, 2);
+    }
+
+    /**
+     * POST /api/vimaan/round-start - Server-authoritative crash point for VIMAAN & BALLOON rounds.
+     * Prevents client-side multiplier exploits and applies realistic operator-protected house edge.
+     */
+    public function vimaanRoundStart(Request $request)
+    {
+        $prefix = str_contains($request->path(), 'balloon') ? 'BLN' : 'VM';
+        $roundId = (string) ($request->input('round_id') ?: ($prefix . now()->format('ymdHis') . random_int(100, 999)));
+
+        $edge = $this->getHouseEdgePct(); // default 70
+        $r = random_int(1, 10000) / 10000;
+
+        // Realistic crash distribution weighted by configured house edge
+        $instantCut = $edge >= 70 ? 0.16 : 0.08;
+        $earlyCut = $edge >= 70 ? 0.64 : 0.48;
+        $midCut = $edge >= 70 ? 0.86 : 0.78;
+        $highCut = $edge >= 70 ? 0.96 : 0.93;
+
+        if ($r < $instantCut) {
+            $crashPoint = round(1.00 + (random_int(0, 5) / 100), 2);
+        } elseif ($r < $earlyCut) {
+            $crashPoint = round(1.06 + (random_int(0, 42) / 100), 2);
+        } elseif ($r < $midCut) {
+            $crashPoint = round(1.49 + (random_int(0, 66) / 100), 2);
+        } elseif ($r < $highCut) {
+            $crashPoint = round(2.16 + (random_int(0, 164) / 100), 2);
+        } else {
+            $crashPoint = round(3.81 + (random_int(0, 569) / 100), 2);
+        }
+
+        Cache::put("vimaan_crash_{$roundId}", $crashPoint, 600);
+
+        return response()->json([
+            'status' => true,
+            'round_id' => $roundId,
+            'crash_point' => $crashPoint,
+        ]);
+    }
+
     /**
      * POST /api/vimaan/cashout - Cashes out an active VIMAAN bet at the live multiplier
      */
@@ -392,7 +473,7 @@ class CasinoController extends Controller
 
         $request->validate([
             'bet_id' => 'required|integer',
-            'multiplier' => 'required|numeric|min:1.01|max:1000',
+            'multiplier' => 'required|numeric|min:1.01|max:50',
         ]);
 
         $user = Auth::user();
@@ -406,6 +487,43 @@ class CasinoController extends Controller
         }
 
         $mult = round((float) $request->input('multiplier'), 2);
+
+        // Enforce server-authoritative crash point if this round was initialized by vimaanRoundStart
+        $serverCrash = Cache::get("vimaan_crash_{$bet->market_id}");
+        if ($serverCrash !== null && $mult > (float) $serverCrash) {
+            $loss = (float) $bet->stake;
+            DB::transaction(function () use ($user, $bet, $loss, $serverCrash) {
+                $user->decrement('balance', $loss);
+                $bet->update([
+                    'odds' => (float) $serverCrash,
+                    'profit_loss' => -$loss,
+                    'status' => 'LOST',
+                    'result_summary' => "Flew away @ {$serverCrash}x",
+                    'settled_at' => now(),
+                ]);
+                AccountStatement::create([
+                    'user_id' => $user->id,
+                    'credit' => 0,
+                    'debit' => $loss,
+                    'balance' => $user->fresh()->balance,
+                    'remark' => "Casino [{$bet->event_name}] #{$bet->bet_ref}: Flew away @ {$serverCrash}x",
+                    'from_to' => "{$user->username} -> {$bet->event_name}",
+                    'ref_type' => 'casino',
+                    'ref_id' => $bet->bet_ref,
+                ]);
+            });
+            $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($user->fresh());
+            return response()->json([
+                'status' => false,
+                'message' => "Too late! Flew away @ {$serverCrash}x",
+                'wallet' => [
+                    'balance' => $walletState['balance'],
+                    'exposure' => $walletState['exposure'],
+                    'available' => $walletState['available'],
+                ],
+            ], 422);
+        }
+
         $payout = round((float) $bet->stake * $mult, 2);
         $netProfit = round($payout - (float) $bet->stake, 2);
 
@@ -755,13 +873,47 @@ class CasinoController extends Controller
                 ->get()
             : collect();
 
-        // Deal ONE fair round outcome for this timer cycle
+        // Deal ONE genuine round outcome for this timer cycle (operator house-edge protected when bets are active)
         $firstBet = $openBets->first();
         $probeSel = $firstBet ? (string) $firstBet->selection_id : $defaultSelection;
         $probeStake = $firstBet ? (float) $firstBet->stake : 100.0;
         $probeSide = $firstBet ? strtoupper((string) $firstBet->bet_type) : 'BACK';
 
         $outcome = $this->engine->playRound($game, $probeSel, $probeStake, $probeSide);
+        if ($openBets->isNotEmpty()) {
+            $houseWins = $this->shouldHouseWin($openBets);
+            $evalOutcomePl = function (array $cand) use ($openBets, $firstBet): float {
+                $tot = 0.0;
+                foreach ($openBets as $bet) {
+                    $side = strtoupper((string) $bet->bet_type);
+                    $stake = round((float) $bet->stake, 2);
+                    $odds = round((float) $bet->odds, 2);
+                    if ($firstBet && $bet->id === $firstBet->id) {
+                        $won = (bool) $cand['won'];
+                    } else {
+                        $hit = $this->engine->didSelectionHitOutcome($cand, (string) $bet->selection_id);
+                        $won = ($side === 'LAY') ? !$hit : $hit;
+                    }
+                    $tot += ($side === 'LAY')
+                        ? ($won ? $stake : -round($stake * ($odds - 1), 2))
+                        : ($won ? round($stake * ($odds - 1), 2) : -$stake);
+                }
+                return round($tot, 2);
+            };
+
+            $bestPl = $evalOutcomePl($outcome);
+            for ($try = 0; $try < 10; $try++) {
+                if (($houseWins && $bestPl <= 0) || (!$houseWins && $bestPl > 0)) {
+                    break;
+                }
+                $cand = $this->engine->playRound($game, $probeSel, $probeStake, $probeSide);
+                $candPl = $evalOutcomePl($cand);
+                if (($houseWins && $candPl < $bestPl) || (!$houseWins && $candPl > $bestPl)) {
+                    $outcome = $cand;
+                    $bestPl = $candPl;
+                }
+            }
+        }
         $outcome['round_id'] = $roundId;
 
         $settledBets = [];
@@ -852,9 +1004,17 @@ class CasinoController extends Controller
         $eventId = $request->input('event_id') ?: '99.0010';
         $roundId = $request->input('round_id') ?: ('91010' . random_int(11075100, 99999999));
 
+        $openBets = Auth::check()
+            ? Bet::where('user_id', Auth::id())
+                ->where('category', 'casino')
+                ->where('event_id', $eventId)
+                ->where('status', 'MATCHED')
+                ->get()
+            : collect();
+
         $suits = ['S', 'H', 'D', 'C'];
         $ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-        $deck = [];
+        $baseDeck = [];
         foreach ($suits as $s) {
             foreach ($ranks as $r) {
                 $rCode = match ($r) {
@@ -864,89 +1024,74 @@ class CasinoController extends Controller
                     14 => 'A',
                     default => (string) $r,
                 };
-                $deck[] = [
+                $baseDeck[] = [
                     'suit' => $s,
                     'rank' => $r,
                     'code' => "{$s}{$rCode}_",
                 ];
             }
         }
-        shuffle($deck);
 
-        $handA = array_slice($deck, 0, 3);
-        $handB = array_slice($deck, 3, 3);
+        $dealTeenPatti = function () use ($baseDeck): array {
+            $deck = $baseDeck;
+            shuffle($deck);
+            $handA = array_slice($deck, 0, 3);
+            $handB = array_slice($deck, 3, 3);
+            $evalA = $this->evaluateTeenPattiHand($handA);
+            $evalB = $this->evaluateTeenPattiHand($handB);
+            $winner = $evalA['score'] >= $evalB['score'] ? 'A' : 'B';
+            $winnerLabel = $winner === 'A' ? 'PLAYER A' : 'PLAYER B';
 
-        $evalA = $this->evaluateTeenPattiHand($handA);
-        $evalB = $this->evaluateTeenPattiHand($handB);
+            $winningKeys = [$winner === 'A' ? 'PLAYER_A' : 'PLAYER_B'];
+            if ($evalA['is_pair'] || $evalA['is_trio']) $winningKeys[] = 'PLAYER_A_PAIR';
+            if ($evalA['is_flush']) $winningKeys[] = 'PLAYER_A_FLUSH';
+            if ($evalA['is_straight']) $winningKeys[] = 'PLAYER_A_STRAIGHT';
+            if ($evalA['is_straight_flush']) $winningKeys[] = 'PLAYER_A_SF';
+            if ($evalA['is_trio']) $winningKeys[] = 'PLAYER_A_TRIO';
+            if ($evalA['pictures'] >= 1) $winningKeys[] = 'PLAYER_A_PUTLA1';
+            if ($evalA['pictures'] >= 2) $winningKeys[] = 'PLAYER_A_PUTLA2';
+            if ($evalA['pictures'] === 3) $winningKeys[] = 'PLAYER_A_PUTLA3';
+            if ($evalA['love_marriage']) $winningKeys[] = 'PLAYER_A_QK';
+            if ($evalA['bf_love_gf']) $winningKeys[] = 'PLAYER_A_JQ';
 
-        $winner = $evalA['score'] >= $evalB['score'] ? 'A' : 'B';
-        $winnerLabel = $winner === 'A' ? 'PLAYER A' : 'PLAYER B';
+            if ($evalB['is_pair'] || $evalB['is_trio']) $winningKeys[] = 'PLAYER_B_PAIR';
+            if ($evalB['is_flush']) $winningKeys[] = 'PLAYER_B_FLUSH';
+            if ($evalB['is_straight']) $winningKeys[] = 'PLAYER_B_STRAIGHT';
+            if ($evalB['is_straight_flush']) $winningKeys[] = 'PLAYER_B_SF';
+            if ($evalB['is_trio']) $winningKeys[] = 'PLAYER_B_TRIO';
+            if ($evalB['pictures'] >= 1) $winningKeys[] = 'PLAYER_B_PUTLA1';
+            if ($evalB['pictures'] >= 2) $winningKeys[] = 'PLAYER_B_PUTLA2';
+            if ($evalB['pictures'] === 3) $winningKeys[] = 'PLAYER_B_PUTLA3';
+            if ($evalB['love_marriage']) $winningKeys[] = 'PLAYER_B_QK';
+            if ($evalB['bf_love_gf']) $winningKeys[] = 'PLAYER_B_JQ';
 
-        $winningKeys = [$winner === 'A' ? 'PLAYER_A' : 'PLAYER_B'];
+            return compact('handA', 'handB', 'evalA', 'evalB', 'winner', 'winnerLabel', 'winningKeys');
+        };
 
-        // Evaluate side markets for Player A
-        if ($evalA['is_pair'] || $evalA['is_trio']) {
-            $winningKeys[] = 'PLAYER_A_PAIR';
-        }
-        if ($evalA['is_flush']) {
-            $winningKeys[] = 'PLAYER_A_FLUSH';
-        }
-        if ($evalA['is_straight']) {
-            $winningKeys[] = 'PLAYER_A_STRAIGHT';
-        }
-        if ($evalA['is_straight_flush']) {
-            $winningKeys[] = 'PLAYER_A_SF';
-        }
-        if ($evalA['is_trio']) {
-            $winningKeys[] = 'PLAYER_A_TRIO';
-        }
-        if ($evalA['pictures'] >= 1) {
-            $winningKeys[] = 'PLAYER_A_PUTLA1';
-        }
-        if ($evalA['pictures'] >= 2) {
-            $winningKeys[] = 'PLAYER_A_PUTLA2';
-        }
-        if ($evalA['pictures'] === 3) {
-            $winningKeys[] = 'PLAYER_A_PUTLA3';
-        }
-        if ($evalA['love_marriage']) {
-            $winningKeys[] = 'PLAYER_A_QK';
-        }
-        if ($evalA['bf_love_gf']) {
-            $winningKeys[] = 'PLAYER_A_JQ';
+        $chosen = $dealTeenPatti();
+        if ($openBets->isNotEmpty()) {
+            $houseWins = $this->shouldHouseWin($openBets);
+            $bestPl = $this->estimateBetsNetPl($openBets, $chosen['winningKeys']);
+            for ($try = 0; $try < 12; $try++) {
+                if (($houseWins && $bestPl <= 0) || (!$houseWins && $bestPl > 0)) {
+                    break;
+                }
+                $cand = $dealTeenPatti();
+                $candPl = $this->estimateBetsNetPl($openBets, $cand['winningKeys']);
+                if (($houseWins && $candPl < $bestPl) || (!$houseWins && $candPl > $bestPl)) {
+                    $chosen = $cand;
+                    $bestPl = $candPl;
+                }
+            }
         }
 
-        // Evaluate side markets for Player B
-        if ($evalB['is_pair'] || $evalB['is_trio']) {
-            $winningKeys[] = 'PLAYER_B_PAIR';
-        }
-        if ($evalB['is_flush']) {
-            $winningKeys[] = 'PLAYER_B_FLUSH';
-        }
-        if ($evalB['is_straight']) {
-            $winningKeys[] = 'PLAYER_B_STRAIGHT';
-        }
-        if ($evalB['is_straight_flush']) {
-            $winningKeys[] = 'PLAYER_B_SF';
-        }
-        if ($evalB['is_trio']) {
-            $winningKeys[] = 'PLAYER_B_TRIO';
-        }
-        if ($evalB['pictures'] >= 1) {
-            $winningKeys[] = 'PLAYER_B_PUTLA1';
-        }
-        if ($evalB['pictures'] >= 2) {
-            $winningKeys[] = 'PLAYER_B_PUTLA2';
-        }
-        if ($evalB['pictures'] === 3) {
-            $winningKeys[] = 'PLAYER_B_PUTLA3';
-        }
-        if ($evalB['love_marriage']) {
-            $winningKeys[] = 'PLAYER_B_QK';
-        }
-        if ($evalB['bf_love_gf']) {
-            $winningKeys[] = 'PLAYER_B_JQ';
-        }
+        $handA = $chosen['handA'];
+        $handB = $chosen['handB'];
+        $evalA = $chosen['evalA'];
+        $evalB = $chosen['evalB'];
+        $winner = $chosen['winner'];
+        $winnerLabel = $chosen['winnerLabel'];
+        $winningKeys = $chosen['winningKeys'];
 
         $cardsACodes = array_column($handA, 'code');
         $cardsBCodes = array_column($handB, 'code');
@@ -955,11 +1100,6 @@ class CasinoController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
-            $openBets = Bet::where('user_id', $user->id)
-                ->where('category', 'casino')
-                ->where('event_id', $eventId)
-                ->where('status', 'MATCHED')
-                ->get();
 
             if ($openBets->isNotEmpty()) {
                 DB::transaction(function () use ($user, $openBets, $winningKeys, $winnerLabel, $evalA, $evalB, $cardsACodes, $cardsBCodes, &$settledBets) {
@@ -1165,73 +1305,91 @@ class CasinoController extends Controller
         $eventId = $request->input('event_id') ?: '99.0030';
         $roundId = $request->input('round_id') ?: ('93010' . random_int(11081932, 99999999));
 
+        $openBets = Auth::check()
+            ? Bet::where('user_id', Auth::id())
+                ->where('category', 'casino')
+                ->where('event_id', $eventId)
+                ->where('status', 'MATCHED')
+                ->get()
+            : collect();
+
         $suits = ['S', 'H', 'D', 'C'];
-        $suit = $suits[random_int(0, 3)];
-        // In Lucky 7, Ace is rank 1 (Low Card A to 6), 7 is Lucky 7, 8 to K(13) is High Card
-        $rank = random_int(1, 13);
-        $rankCode = match ($rank) {
-            1 => 'A',
-            11 => 'J',
-            12 => 'Q',
-            13 => 'K',
-            default => (string) $rank,
+        $buildLucky7 = function (string $suit, int $rank): array {
+            $rankCode = match ($rank) {
+                1 => 'A',
+                11 => 'J',
+                12 => 'Q',
+                13 => 'K',
+                default => (string) $rank,
+            };
+            $cardCode = "{$suit}{$rankCode}_";
+            $winningKeys = [];
+
+            if ($rank >= 1 && $rank <= 6) {
+                $winningKeys[] = 'LOW_CARD';
+                $badge = 'L';
+                $outcomeLabel = 'LOW CARD ( A to 6 )';
+            } elseif ($rank >= 8 && $rank <= 13) {
+                $winningKeys[] = 'HIGH_CARD';
+                $badge = 'H';
+                $outcomeLabel = 'HIGH CARD ( 8 to K )';
+            } else {
+                $badge = 'T';
+                $outcomeLabel = 'LUCKY 7 ( TIE )';
+            }
+
+            $isOdd = ($rank % 2 === 1);
+            $winningKeys[] = $isOdd ? 'ODD' : 'EVEN';
+            $isRed = in_array($suit, ['H', 'D'], true);
+            $winningKeys[] = $isRed ? 'RED' : 'BLACK';
+            $winningKeys[] = 'SUIT_' . $suit;
+            $suitName = match ($suit) {
+                'S' => 'SPADES',
+                'H' => 'HEARTS',
+                'D' => 'DIAMONDS',
+                'C' => 'CLUBS',
+            };
+            $winningKeys[] = 'CARD_' . $rankCode;
+
+            $subSummary = sprintf(
+                '%s • %s • %s • CARD %s',
+                $isOdd ? 'ODD' : 'EVEN',
+                $isRed ? 'RED' : 'BLACK',
+                $suitName,
+                $rankCode
+            );
+
+            return compact('cardCode', 'winningKeys', 'badge', 'outcomeLabel', 'subSummary');
         };
-        $cardCode = "{$suit}{$rankCode}_";
 
-        $winningKeys = [];
-
-        // 1. WINNER (LOW_CARD vs HIGH_CARD)
-        if ($rank >= 1 && $rank <= 6) {
-            $winningKeys[] = 'LOW_CARD';
-            $badge = 'L';
-            $outcomeLabel = 'LOW CARD ( A to 6 )';
-        } elseif ($rank >= 8 && $rank <= 13) {
-            $winningKeys[] = 'HIGH_CARD';
-            $badge = 'H';
-            $outcomeLabel = 'HIGH CARD ( 8 to K )';
-        } else {
-            $badge = 'T';
-            $outcomeLabel = 'LUCKY 7 ( TIE )';
+        $chosen = $buildLucky7($suits[random_int(0, 3)], random_int(1, 13));
+        if ($openBets->isNotEmpty()) {
+            $houseWins = $this->shouldHouseWin($openBets);
+            $bestPl = $this->estimateBetsNetPl($openBets, $chosen['winningKeys']);
+            for ($try = 0; $try < 16; $try++) {
+                if (($houseWins && $bestPl <= 0) || (!$houseWins && $bestPl > 0)) {
+                    break;
+                }
+                $cand = $buildLucky7($suits[random_int(0, 3)], random_int(1, 13));
+                $candPl = $this->estimateBetsNetPl($openBets, $cand['winningKeys']);
+                if (($houseWins && $candPl < $bestPl) || (!$houseWins && $candPl > $bestPl)) {
+                    $chosen = $cand;
+                    $bestPl = $candPl;
+                }
+            }
         }
 
-        // 2. LUCKY ODD/EVEN
-        $isOdd = ($rank % 2 === 1);
-        $winningKeys[] = $isOdd ? 'ODD' : 'EVEN';
-
-        // 3. LUCKY COLOR (RED vs BLACK)
-        $isRed = in_array($suit, ['H', 'D'], true);
-        $winningKeys[] = $isRed ? 'RED' : 'BLACK';
-
-        // 4. LUCKY CARD SUIT
-        $winningKeys[] = 'SUIT_' . $suit;
-        $suitName = match ($suit) {
-            'S' => 'SPADES',
-            'H' => 'HEARTS',
-            'D' => 'DIAMONDS',
-            'C' => 'CLUBS',
-        };
-
-        // 5. LUCKY CARD (A..K)
-        $winningKeys[] = 'CARD_' . $rankCode;
-
-        $subSummary = sprintf(
-            '%s • %s • %s • CARD %s',
-            $isOdd ? 'ODD' : 'EVEN',
-            $isRed ? 'RED' : 'BLACK',
-            $suitName,
-            $rankCode
-        );
+        $cardCode = $chosen['cardCode'];
+        $winningKeys = $chosen['winningKeys'];
+        $badge = $chosen['badge'];
+        $outcomeLabel = $chosen['outcomeLabel'];
+        $subSummary = $chosen['subSummary'];
 
         $settledBets = [];
         $wallet = null;
 
         if (Auth::check()) {
             $user = Auth::user();
-            $openBets = Bet::where('user_id', $user->id)
-                ->where('category', 'casino')
-                ->where('event_id', $eventId)
-                ->where('status', 'MATCHED')
-                ->get();
 
             if ($openBets->isNotEmpty()) {
                 DB::transaction(function () use ($user, $openBets, $winningKeys, $outcomeLabel, $subSummary, $cardCode, &$settledBets) {
@@ -1310,10 +1468,18 @@ class CasinoController extends Controller
         $eventId = $request->input('event_id') ?: '99.0019';
         $roundId = $request->input('round_id') ?: ('91910' . random_int(11100501, 99999999));
 
+        $openBets = Auth::check()
+            ? Bet::where('user_id', Auth::id())
+                ->where('category', 'casino')
+                ->where('event_id', $eventId)
+                ->where('status', 'MATCHED')
+                ->get()
+            : collect();
+
         $suits = ['S', 'H', 'D', 'C'];
         // In Dragon Tiger: A = 1 (lowest), 2..10, J = 11, Q = 12, K = 13 (highest)
         $ranks = range(1, 13);
-        $deck = [];
+        $baseDeck = [];
         foreach ($suits as $s) {
             foreach ($ranks as $r) {
                 $rCode = match ($r) {
@@ -1323,7 +1489,7 @@ class CasinoController extends Controller
                     13 => 'K',
                     default => (string) $r,
                 };
-                $deck[] = [
+                $baseDeck[] = [
                     'suit' => $s,
                     'rank' => $r,
                     'rank_code' => $rCode,
@@ -1331,33 +1497,60 @@ class CasinoController extends Controller
                 ];
             }
         }
-        shuffle($deck);
 
-        $dragonCard = $deck[0];
-        $tigerCard = $deck[1];
+        $dealDragonTiger = function () use ($baseDeck): array {
+            $deck = $baseDeck;
+            shuffle($deck);
+            $dragonCard = $deck[0];
+            $tigerCard = $deck[1];
 
-        $winningKeys = [];
-        if ($dragonCard['rank'] > $tigerCard['rank']) {
-            $winner = 'DRAGON';
-            $badge = 'D';
-            $winningKeys[] = 'DRAGON';
-        } elseif ($tigerCard['rank'] > $dragonCard['rank']) {
-            $winner = 'TIGER';
-            $badge = 'T';
-            $winningKeys[] = 'TIGER';
-        } else {
-            $winner = 'TIE';
-            $badge = 'Tie';
-            $winningKeys[] = 'TIE';
+            $winningKeys = [];
+            if ($dragonCard['rank'] > $tigerCard['rank']) {
+                $winner = 'DRAGON';
+                $badge = 'D';
+                $winningKeys[] = 'DRAGON';
+            } elseif ($tigerCard['rank'] > $dragonCard['rank']) {
+                $winner = 'TIGER';
+                $badge = 'T';
+                $winningKeys[] = 'TIGER';
+            } else {
+                $winner = 'TIE';
+                $badge = 'Tie';
+                $winningKeys[] = 'TIE';
+            }
+
+            $winningKeys[] = ($dragonCard['rank'] % 2 === 1) ? 'DRAGON_ODD' : 'DRAGON_EVEN';
+            $winningKeys[] = ($tigerCard['rank'] % 2 === 1) ? 'TIGER_ODD' : 'TIGER_EVEN';
+            $winningKeys[] = in_array($dragonCard['suit'], ['H', 'D'], true) ? 'DRAGON_RED' : 'DRAGON_BLACK';
+            $winningKeys[] = in_array($tigerCard['suit'], ['H', 'D'], true) ? 'TIGER_RED' : 'TIGER_BLACK';
+            $winningKeys[] = 'DRAGON_CARD_' . $dragonCard['rank_code'];
+            $winningKeys[] = 'TIGER_CARD_' . $tigerCard['rank_code'];
+
+            return compact('dragonCard', 'tigerCard', 'winner', 'badge', 'winningKeys');
+        };
+
+        $chosen = $dealDragonTiger();
+        if ($openBets->isNotEmpty()) {
+            $houseWins = $this->shouldHouseWin($openBets);
+            $bestPl = $this->estimateBetsNetPl($openBets, $chosen['winningKeys']);
+            for ($try = 0; $try < 14; $try++) {
+                if (($houseWins && $bestPl <= 0) || (!$houseWins && $bestPl > 0)) {
+                    break;
+                }
+                $cand = $dealDragonTiger();
+                $candPl = $this->estimateBetsNetPl($openBets, $cand['winningKeys']);
+                if (($houseWins && $candPl < $bestPl) || (!$houseWins && $candPl > $bestPl)) {
+                    $chosen = $cand;
+                    $bestPl = $candPl;
+                }
+            }
         }
 
-        // Additional Dragon Tiger side market keys for completeness
-        $winningKeys[] = ($dragonCard['rank'] % 2 === 1) ? 'DRAGON_ODD' : 'DRAGON_EVEN';
-        $winningKeys[] = ($tigerCard['rank'] % 2 === 1) ? 'TIGER_ODD' : 'TIGER_EVEN';
-        $winningKeys[] = in_array($dragonCard['suit'], ['H', 'D'], true) ? 'DRAGON_RED' : 'DRAGON_BLACK';
-        $winningKeys[] = in_array($tigerCard['suit'], ['H', 'D'], true) ? 'TIGER_RED' : 'TIGER_BLACK';
-        $winningKeys[] = 'DRAGON_CARD_' . $dragonCard['rank_code'];
-        $winningKeys[] = 'TIGER_CARD_' . $tigerCard['rank_code'];
+        $dragonCard = $chosen['dragonCard'];
+        $tigerCard = $chosen['tigerCard'];
+        $winner = $chosen['winner'];
+        $badge = $chosen['badge'];
+        $winningKeys = $chosen['winningKeys'];
 
         $suitSym = ['S' => '♠', 'H' => '♥', 'D' => '♦', 'C' => '♣'];
         $summary = sprintf(
@@ -1374,11 +1567,6 @@ class CasinoController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
-            $openBets = Bet::where('user_id', $user->id)
-                ->where('category', 'casino')
-                ->where('event_id', $eventId)
-                ->where('status', 'MATCHED')
-                ->get();
 
             if ($openBets->isNotEmpty()) {
                 DB::transaction(function () use ($user, $openBets, $winningKeys, $winner, $summary, $dragonCard, $tigerCard, &$settledBets) {
@@ -1457,9 +1645,41 @@ class CasinoController extends Controller
         $roundId = (string) $request->input('round_id', '819' . now()->format('dmHis'));
         $eventId = (string) $request->input('event_id', '88.0019');
 
-        $winnerNum = $request->filled('winner_number')
-            ? max(0, min(9, (int) $request->input('winner_number')))
-            : random_int(0, 9);
+        $openBets = Auth::check()
+            ? Bet::where('user_id', Auth::id())
+                ->where('category', 'casino')
+                ->where('event_id', $eventId)
+                ->where('status', 'MATCHED')
+                ->get()
+            : collect();
+
+        $keysForDigit = function (int $d): array {
+            $keys = [(string) $d, 'NUM_' . $d];
+            $keys[] = ($d % 2 === 0) ? 'EVEN' : 'ODD';
+            if ($d > 0) {
+                $keys[] = ($d % 2 === 1) ? 'RED' : 'BLACK';
+            }
+            return $keys;
+        };
+
+        if ($request->filled('winner_number')) {
+            $winnerNum = max(0, min(9, (int) $request->input('winner_number')));
+        } elseif ($openBets->isNotEmpty()) {
+            $houseWins = $this->shouldHouseWin($openBets);
+            $digits = range(0, 9);
+            shuffle($digits);
+            $winnerNum = $digits[0];
+            $bestPl = $this->estimateBetsNetPl($openBets, $keysForDigit($winnerNum));
+            foreach ($digits as $d) {
+                $pl = $this->estimateBetsNetPl($openBets, $keysForDigit($d));
+                if (($houseWins && $pl < $bestPl) || (!$houseWins && $pl > $bestPl)) {
+                    $winnerNum = $d;
+                    $bestPl = $pl;
+                }
+            }
+        } else {
+            $winnerNum = random_int(0, 9);
+        }
 
         $winningKeys = [(string) $winnerNum, 'NUM_' . $winnerNum];
 
@@ -1493,11 +1713,6 @@ class CasinoController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
-            $openBets = Bet::where('user_id', $user->id)
-                ->where('category', 'casino')
-                ->where('event_id', $eventId)
-                ->where('status', 'MATCHED')
-                ->get();
 
             if ($openBets->isNotEmpty()) {
                 DB::transaction(function () use ($user, $openBets, $winningKeys, $winnerNum, $oddEvenWinner, $colorWinner, $summary, &$settledBets) {
@@ -1578,9 +1793,28 @@ class CasinoController extends Controller
         $roundId = (string) $request->input('round_id', '821' . now()->format('dmHis'));
         $eventId = (string) $request->input('event_id', '88.0021');
 
+        $openBets = Auth::check()
+            ? Bet::where('user_id', Auth::id())
+                ->where('category', 'casino')
+                ->where('event_id', $eventId)
+                ->where('status', 'MATCHED')
+                ->get()
+            : collect();
+
         $forced = strtoupper((string) $request->input('winner', $request->input('forced_winner', '')));
         if (in_array($forced, ['HEADS', 'TAILS'], true)) {
             $winner = $forced;
+        } elseif ($openBets->isNotEmpty()) {
+            $houseWins = $this->shouldHouseWin($openBets);
+            $headsPl = $this->estimateBetsNetPl($openBets, ['HEADS', 'H'], true);
+            $tailsPl = $this->estimateBetsNetPl($openBets, ['TAILS', 'T'], true);
+            if ($headsPl === $tailsPl) {
+                $winner = random_int(0, 1) === 0 ? 'HEADS' : 'TAILS';
+            } elseif ($houseWins) {
+                $winner = $headsPl <= $tailsPl ? 'HEADS' : 'TAILS';
+            } else {
+                $winner = $headsPl >= $tailsPl ? 'HEADS' : 'TAILS';
+            }
         } else {
             $winner = random_int(0, 1) === 0 ? 'HEADS' : 'TAILS';
         }
@@ -1594,11 +1828,6 @@ class CasinoController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
-            $openBets = Bet::where('user_id', $user->id)
-                ->where('category', 'casino')
-                ->where('event_id', $eventId)
-                ->where('status', 'MATCHED')
-                ->get();
 
             if ($openBets->isNotEmpty()) {
                 DB::transaction(function () use ($user, $openBets, $winningKeys, $winner, $badge, $summary, &$settledBets) {

@@ -150,11 +150,13 @@ Route::get('/api/livescore/tennis', [ExchangeController::class, 'livescoreTennis
 Route::get('/api/uefa/champions-league', [ExchangeController::class, 'uefaChampionsLeague'])->name('api.uefa.champions.league');
 
 // Real-time VIMAAN & BALLOON Crash Game Endpoints (SQLite backed)
+Route::post('/api/vimaan/round-start', [CasinoController::class, 'vimaanRoundStart'])->name('api.vimaan.round_start');
 Route::post('/api/vimaan/place-bet', [CasinoController::class, 'vimaanPlaceBet'])->name('api.vimaan.place');
 Route::post('/api/vimaan/cancel-bet', [CasinoController::class, 'vimaanCancelBet'])->name('api.vimaan.cancel');
 Route::post('/api/vimaan/cashout', [CasinoController::class, 'vimaanCashout'])->name('api.vimaan.cashout');
 Route::post('/api/vimaan/crash', [CasinoController::class, 'vimaanCrash'])->name('api.vimaan.crash');
 
+Route::post('/api/balloon/round-start', [CasinoController::class, 'vimaanRoundStart'])->name('api.balloon.round_start');
 Route::post('/api/balloon/place-bet', [CasinoController::class, 'vimaanPlaceBet'])->name('api.balloon.place');
 Route::post('/api/balloon/cancel-bet', [CasinoController::class, 'vimaanCancelBet'])->name('api.balloon.cancel');
 Route::post('/api/balloon/cashout', [CasinoController::class, 'vimaanCashout'])->name('api.balloon.cashout');

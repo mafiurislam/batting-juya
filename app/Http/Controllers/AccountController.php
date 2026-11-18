@@ -119,6 +119,7 @@ class AccountController extends Controller
     {
         $user = Auth::user();
         $transactions = BankingTransaction::where('user_id', $user->id)->latest()->take(30)->get();
+        $deposits = BankingTransaction::where('user_id', $user->id)->where('type', 'deposit')->latest()->take(30)->get();
         $withdrawals = BankingTransaction::where('user_id', $user->id)->where('type', 'withdraw')->latest()->take(30)->get();
         $bankAccounts = UserBankAccount::where('user_id', $user->id)->latest()->get();
 
@@ -126,6 +127,7 @@ class AccountController extends Controller
             'section' => $section,
             'user' => $user,
             'transactions' => $transactions,
+            'deposits' => $deposits,
             'withdrawals' => $withdrawals,
             'bankAccounts' => $bankAccounts,
             'depositUpi' => SiteSetting::getValue('deposit_upi_id', 's7484819820530667@slc'),

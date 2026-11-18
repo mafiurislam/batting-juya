@@ -1301,25 +1301,14 @@ class CasinoEngineService
     private function playSlot(string $roundId, string $gameName, float $stake): array
     {
         $syms = $this->getSlotSymbols($gameName);
-        // Realistic slot symbol weights (~95% RTP, ~34% hit frequency, balanced payouts)
+        // Realistic slot symbol weights with operator-configurable house edge (default 70%)
         // Indices: 0=Top Jackpot, 1=High, 2=Mid-High, 3=Mid, 4=Low-Mid, 5=Low, 6=Wild (rare), 7=Scatter (rare)
-        $weights = [3, 5, 7, 10, 14, 17, 2, 2];
+        $weights = [2, 4, 6, 10, 14, 18, 2, 2];
         $pool = [];
         foreach ($syms as $i => $sym) {
             for ($w = 0; $w < ($weights[$i] ?? 10); $w++) {
                 $pool[] = $i;
             }
-        }
-
-        // 5 columns x 3 rows
-        $grid = [];
-        for ($r = 0; $r < 3; $r++) {
-            $row = [];
-            for ($c = 0; $c < 5; $c++) {
-                $idx = $pool[random_int(0, count($pool) - 1)];
-                $row[] = ['idx' => $idx, 'sym' => $syms[$idx]];
-            }
-            $grid[] = $row;
         }
 
         $paylines = [
@@ -1334,72 +1323,120 @@ class CasinoEngineService
             [1, 2, 2, 2, 1],
             [0, 1, 1, 1, 0],
         ];
-        // Realistic per-line multipliers scaled to total spin stake (stake split across 10 paylines)
+        // Realistic per-line multipliers scaled to total spin stake
         $payMultipliers = [
-            0 => [3 => 1.50, 4 => 4.00, 5 => 12.00],
-            1 => [3 => 1.00, 4 => 2.80, 5 => 8.00],
-            2 => [3 => 0.75, 4 => 2.00, 5 => 5.50],
-            3 => [3 => 0.50, 4 => 1.40, 5 => 4.00],
-            4 => [3 => 0.35, 4 => 1.00, 5 => 2.80],
-            5 => [3 => 0.25, 4 => 0.75, 5 => 2.00],
-            6 => [3 => 1.25, 4 => 3.50, 5 => 10.00], // Wild
+            0 => [3 => 1.40, 4 => 3.50, 5 => 10.00],
+            1 => [3 => 0.90, 4 => 2.50, 5 => 7.00],
+            2 => [3 => 0.70, 4 => 1.80, 5 => 5.00],
+            3 => [3 => 0.45, 4 => 1.25, 5 => 3.50],
+            4 => [3 => 0.30, 4 => 0.90, 5 => 2.40],
+            5 => [3 => 0.25, 4 => 0.65, 5 => 1.80],
+            6 => [3 => 1.15, 4 => 3.00, 5 => 8.00], // Wild
         ];
 
-        $totalMultiplier = 0.0;
-        $winningLines = [];
+        $houseEdge = max(50, min(85, (int) \App\Models\SiteSetting::getValue('casino_house_edge_pct', '70')));
+        $houseShouldWin = random_int(1, 100) <= $houseEdge;
 
-        foreach ($paylines as $lineNo => $coords) {
-            $lineIdxs = [];
-            for ($c = 0; $c < 5; $c++) {
-                $lineIdxs[] = $grid[$coords[$c]][$c]['idx'];
+        $bestSpin = null;
+        $maxTries = $houseShouldWin ? 8 : 5;
+
+        for ($attempt = 0; $attempt < $maxTries; $attempt++) {
+            $grid = [];
+            for ($r = 0; $r < 3; $r++) {
+                $row = [];
+                for ($c = 0; $c < 5; $c++) {
+                    $idx = $pool[random_int(0, count($pool) - 1)];
+                    $row[] = ['idx' => $idx, 'sym' => $syms[$idx]];
+                }
+                $grid[] = $row;
             }
-            $base = $lineIdxs[0];
-            if ($base === 7) continue;
-            if ($base === 6) {
+
+            $totalMultiplier = 0.0;
+            $winningLines = [];
+
+            foreach ($paylines as $lineNo => $coords) {
+                $lineIdxs = [];
+                for ($c = 0; $c < 5; $c++) {
+                    $lineIdxs[] = $grid[$coords[$c]][$c]['idx'];
+                }
+                $base = $lineIdxs[0];
+                if ($base === 7) continue;
+                if ($base === 6) {
+                    foreach ($lineIdxs as $li) {
+                        if ($li !== 6 && $li !== 7) {
+                            $base = $li;
+                            break;
+                        }
+                    }
+                }
+                $matchCount = 0;
                 foreach ($lineIdxs as $li) {
-                    if ($li !== 6 && $li !== 7) {
-                        $base = $li;
+                    if ($li === $base || $li === 6) {
+                        $matchCount++;
+                    } else {
                         break;
                     }
                 }
-            }
-            $matchCount = 0;
-            foreach ($lineIdxs as $li) {
-                if ($li === $base || $li === 6) {
-                    $matchCount++;
-                } else {
-                    break;
+                if ($matchCount >= 3 && isset($payMultipliers[$base][$matchCount])) {
+                    $mult = $payMultipliers[$base][$matchCount];
+                    $totalMultiplier += $mult;
+                    $winningLines[] = [
+                        'line' => $lineNo + 1,
+                        'coords' => $coords,
+                        'count' => $matchCount,
+                        'symbol' => $syms[$base],
+                        'multiplier' => $mult,
+                    ];
                 }
             }
-            if ($matchCount >= 3 && isset($payMultipliers[$base][$matchCount])) {
-                $mult = $payMultipliers[$base][$matchCount];
-                $totalMultiplier += $mult;
-                $winningLines[] = [
-                    'line' => $lineNo + 1,
-                    'coords' => $coords,
-                    'count' => $matchCount,
-                    'symbol' => $syms[$base],
-                    'multiplier' => $mult,
-                ];
+
+            $scatters = 0;
+            foreach ($grid as $row) {
+                foreach ($row as $cell) {
+                    if ($cell['idx'] === 7) $scatters++;
+                }
+            }
+            if ($scatters >= 3) {
+                $scatterBonus = $scatters === 3 ? 1.25 : ($scatters === 4 ? 3.50 : 8.00);
+                $totalMultiplier += $scatterBonus;
+            }
+
+            // Cap maximum single-spin return to 10x stake so payouts stay realistic and controlled
+            $totalMultiplier = round(min(10.0, $totalMultiplier), 2);
+            $totalReturn = round($stake * $totalMultiplier, 2);
+            $netPl = round($totalReturn - $stake, 2);
+
+            $candidate = [
+                'grid' => $grid,
+                'winningLines' => $winningLines,
+                'scatters' => $scatters,
+                'totalMultiplier' => $totalMultiplier,
+                'totalReturn' => $totalReturn,
+                'netPl' => $netPl,
+            ];
+
+            if ($bestSpin === null) {
+                $bestSpin = $candidate;
+            } elseif ($houseShouldWin && $netPl < $bestSpin['netPl']) {
+                $bestSpin = $candidate;
+            } elseif (!$houseShouldWin && $netPl > $bestSpin['netPl']) {
+                $bestSpin = $candidate;
+            }
+
+            if ($houseShouldWin && $netPl <= 0) {
+                break;
+            }
+            if (!$houseShouldWin && $netPl > 0) {
+                break;
             }
         }
 
-        // Check Scatter count anywhere
-        $scatters = 0;
-        foreach ($grid as $row) {
-            foreach ($row as $cell) {
-                if ($cell['idx'] === 7) $scatters++;
-            }
-        }
-        if ($scatters >= 3) {
-            $scatterBonus = $scatters === 3 ? 1.50 : ($scatters === 4 ? 4.00 : 10.00);
-            $totalMultiplier += $scatterBonus;
-        }
-
-        // Cap maximum single-spin return to 15x stake so payouts stay realistic and controlled
-        $totalMultiplier = round(min(15.0, $totalMultiplier), 2);
-        $totalReturn = round($stake * $totalMultiplier, 2);
-        $netPl = round($totalReturn - $stake, 2);
+        $grid = $bestSpin['grid'];
+        $winningLines = $bestSpin['winningLines'];
+        $scatters = $bestSpin['scatters'];
+        $totalMultiplier = $bestSpin['totalMultiplier'];
+        $totalReturn = $bestSpin['totalReturn'];
+        $netPl = $bestSpin['netPl'];
         $won = $netPl > 0;
 
         return [

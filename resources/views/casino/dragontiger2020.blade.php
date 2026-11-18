@@ -915,10 +915,14 @@
         });
         const data = await res.json();
         if (data && data.status) {
-          setCard('dtDragonCard', data.card_dragon || 'SK_');
+          // Sequential 1-by-1 reveal AFTER countdown hits 0: Dragon card opens first, then Tiger card ~1s later
+          setTimeout(() => {
+            setCard('dtDragonCard', data.card_dragon || 'SK_');
+          }, 350);
+
           setTimeout(() => {
             setCard('dtTigerCard', data.card_tiger || 'H9_');
-          }, 120);
+          }, 1250);
 
           setTimeout(() => {
             (data.winning_keys || []).forEach(k => {
@@ -948,7 +952,7 @@
               winner: data.summary || data.winner || 'DRAGON'
             });
             renderRecentBalls();
-          }, 300);
+          }, 1700);
         }
       } catch (e) {
         console.error('Dragon Tiger settle error:', e);
@@ -956,7 +960,7 @@
         setTimeout(() => {
           settlingInProgress = false;
           startNewBettingRound();
-        }, 3800);
+        }, 5200);
       }
     }
 

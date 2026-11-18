@@ -656,8 +656,9 @@ class ExchangeController extends Controller
             }
         }
 
-        // Extract current innings runs and overs from live scoreboard (if available)
+        // Extract current innings runs, wickets and overs from live scoreboard (if available)
         $currentRuns = null;
+        $currentWickets = null;
         $currentOvers = null;
         if (is_array($liveScore)) {
             $activeScoreStr = !empty($liveScore['team2Flag']) && !empty($liveScore['score2'])
@@ -667,7 +668,10 @@ class ExchangeController extends Controller
                 ? (string) $liveScore['overs2']
                 : (string) ($liveScore['overs1'] ?? '');
 
-            if (preg_match('/(\d+)/', $activeScoreStr, $rm)) {
+            if (preg_match('/(\d+)\s*[\/\-]\s*(\d+)/', $activeScoreStr, $rwm)) {
+                $currentRuns = (int) $rwm[1];
+                $currentWickets = (int) $rwm[2];
+            } elseif (preg_match('/(\d+)/', $activeScoreStr, $rm)) {
                 $currentRuns = (int) $rm[1];
             }
             if (preg_match('/(\d+(?:\.\d+)?)/', $activeOversStr, $om)) {
@@ -675,6 +679,7 @@ class ExchangeController extends Controller
             }
         }
 
+        $hasLiveFancyFeed = !empty($payload['fancyData']) && is_array($payload['fancyData']);
         $settled = [];
         foreach ($openFancyBets as $bet) {
             $fNameNorm = strtolower(trim((string) $bet->market_name));
@@ -683,27 +688,51 @@ class ExchangeController extends Controller
             $actualResult = null;
             $reason = null;
 
-            // Case 1: Live feed provides an explicit numeric result for this Fancy market
+            // Case 1: Live feed provides an explicit numeric result or closed/settled status for this Fancy market
             if (is_array($fItem)) {
                 $rawRes = $fItem['result'] ?? ($fItem['oddsData']['result'] ?? null);
                 $fStatus = strtoupper((string) ($fItem['oddsData']['status'] ?? $fItem['status'] ?? 'ONLINE'));
                 if ($rawRes !== null && $rawRes !== '' && is_numeric($rawRes)) {
                     $actualResult = (float) $rawRes;
                     $reason = "Official Result: {$actualResult}";
-                } elseif (in_array($fStatus, ['RESULT', 'SETTLED'], true) && $currentRuns !== null) {
+                } elseif (in_array($fStatus, ['RESULT', 'SETTLED', 'CLOSED'], true) && $currentRuns !== null) {
                     $actualResult = (float) $currentRuns;
                     $reason = "Session Completed ({$actualResult} runs)";
                 }
             }
 
-            // Case 2: Session over target in market name (e.g. "6 Overs PAK Runs", "10 Over Runs") has been reached in live score
+            // Case 2: Over-runs session target in market name (e.g. "6 Overs PAK Runs", "10 Over Runs", "15 Ov Runs") completed
             if ($actualResult === null && $currentOvers !== null && $currentRuns !== null) {
-                if (preg_match('/\b(\d{1,2})\s*(?:st|nd|rd|th)?\s*overs?\b/i', $bet->market_name, $ovMatch)) {
+                if (preg_match('/\b(\d{1,2})\s*(?:st|nd|rd|th)?\s*(?:overs?|ov)\b/i', (string) $bet->market_name, $ovMatch)) {
                     $targetOver = (float) $ovMatch[1];
-                    if ($targetOver > 0 && $currentOvers >= $targetOver && $currentOvers <= ($targetOver + 1.5)) {
-                        $actualResult = (float) $currentRuns;
+                    if ($targetOver > 0 && $currentOvers >= $targetOver) {
+                        if ($currentOvers <= ($targetOver + 1.0)) {
+                            $actualResult = (float) $currentRuns;
+                        } else {
+                            // Innings progressed beyond target over: project runs scored at target over
+                            $actualResult = (float) round(($currentRuns / max(0.1, $currentOvers)) * $targetOver);
+                        }
                         $reason = "{$targetOver} Overs Completed ({$actualResult} runs)";
                     }
+                }
+            }
+
+            // Case 3: Fall of Wicket session (e.g. "Fall of 1st Wicket", "Fall of 3 Wkt") when live wickets reached target
+            if ($actualResult === null && $currentWickets !== null && $currentRuns !== null) {
+                if (preg_match('/fall\s+of\s+(\d+)(?:st|nd|rd|th)?\s*(?:wkt|wicket)/i', (string) $bet->market_name, $wktMatch)) {
+                    $targetWkt = (int) $wktMatch[1];
+                    if ($targetWkt > 0 && $currentWickets >= $targetWkt) {
+                        $actualResult = (float) $currentRuns;
+                        $reason = "Fall of Wicket #{$targetWkt} ({$actualResult} runs)";
+                    }
+                }
+            }
+
+            // Case 4: Live Fancy market removed/closed by winbook24 feed after session ended (>= 30s after bet placement)
+            if ($actualResult === null && $hasLiveFancyFeed && $fItem === null && $currentRuns !== null) {
+                if ($bet->created_at && $bet->created_at->diffInSeconds(now()) >= 30) {
+                    $actualResult = (float) $currentRuns;
+                    $reason = "Market Closed ({$actualResult} runs)";
                 }
             }
 
@@ -2066,8 +2095,34 @@ class ExchangeController extends Controller
 
         $wallet = null;
         $exposureList = [];
+        $autoSettledFancy = [];
         if (Auth::check()) {
             $u = Auth::user()->fresh();
+
+            // Auto-settle any completed Fancy bets across all events where user holds open YES/NO bets
+            $openFancyEventIds = Bet::where('user_id', $u->id)
+                ->where('status', 'MATCHED')
+                ->where(function ($q) {
+                    $q->where('category', 'fancy')
+                      ->orWhereIn('bet_type', ['YES', 'NO']);
+                })
+                ->distinct()
+                ->limit(5)
+                ->pluck('event_id');
+
+            foreach ($openFancyEventIds as $fEvId) {
+                $fEvent = ExchangeEvent::where('event_id', $fEvId)->first();
+                if (!$fEvent) continue;
+                $fSportId = (string) ($fEvent->sport_id ?: '4');
+                $fPayload = $this->resolveMarketsPayload($fSportId, (string) $fEvId, $fEvent);
+                $fLiveScore = $this->fetchUniverseLiveScore($fSportId, (string) $fEvId, $fEvent);
+                $settledItems = $this->autoSettleCompletedFancyBets((string) $fEvId, $fPayload, $fLiveScore);
+                if (!empty($settledItems)) {
+                    $autoSettledFancy = array_merge($autoSettledFancy, $settledItems);
+                }
+            }
+
+            $u = $u->fresh();
             $walletState = app(\App\Services\ExchangeBookService::class)->syncUserWallet($u);
             $wallet = [
                 'balance' => $walletState['balance'],
@@ -2086,6 +2141,7 @@ class ExchangeController extends Controller
             'updates' => $updates,
             'wallet' => $wallet,
             'exposureList' => $exposureList,
+            'autoSettledFancy' => $autoSettledFancy,
         ]);
     }
 
@@ -2910,7 +2966,7 @@ class ExchangeController extends Controller
         }
 
         // For Cricket (sportId=4), prioritize official Cricbuzz Live Score + Miniscore details
-        if ($sportId === '4' && $event) {
+        if ($sportId === '4' && $event && !app()->runningUnitTests()) {
             try {
                 $cricbuzz = app(\App\Services\CricbuzzService::class);
                 $cbMatch = $cricbuzz->matchEventToCricbuzz((string) $event->event_name);
@@ -3033,6 +3089,9 @@ class ExchangeController extends Controller
             if (!isset($uScore['isScore']) || $uScore['isScore'] !== false) {
                 return $this->normalizeUniverseScoreDoc($uScore);
             }
+        }
+        if ($event && (!empty($event->score_json['score1']) || !empty($event->score_json['score2']))) {
+            return $event->score_json;
         }
 
         static $localScores = null;
